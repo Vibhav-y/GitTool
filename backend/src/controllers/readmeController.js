@@ -125,7 +125,8 @@ Please generate the Markdown README now based exclusively on the facts provided 
         readme: finalMarkdown 
     });
   } catch (error) {
-    next(error);
+    console.error("generateReadme ERROR:", error.message, error.stack);
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
 };
 
@@ -197,7 +198,7 @@ Apply the user's request. RETURN ONLY the full raw markdown (no wrapping backtic
 IMPORTANT: Keep "---\\n*Made with: [gittool.dev](https://gittool.dev)*" at the very end.`;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-5-nano-2025-08-07",
       messages: [
         { role: "system", content: "You are a professional README editor with deep knowledge of GitHub markdown, shields.io badges, and readme widgets. When users ask to add socials, stats, or badges, use the exact widget templates from the reference." },
         { role: "user", content: aiPrompt }
