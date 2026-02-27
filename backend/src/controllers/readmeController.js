@@ -100,6 +100,7 @@ Please generate the Markdown README now based exclusively on the facts provided 
     });
     
     const aiMarkdown = completion.choices[0].message.content;
+    const finalMarkdown = aiMarkdown + "\n\n---\n*Made with: [gittool.dev](https://gittool.dev)*\n";
 
     // 4. Insert Output directly to Database (Auto-Save)
     const { data: projectData, error } = await supabase
@@ -109,7 +110,7 @@ Please generate the Markdown README now based exclusively on the facts provided 
         title: data.name,
         repo_url: data.html_url,
         template: tplStyle,
-        generated_markdown: aiMarkdown
+        generated_markdown: finalMarkdown
       })
       .select();
 
@@ -121,7 +122,7 @@ Please generate the Markdown README now based exclusively on the facts provided 
     // 5. Return Project ID and Content
     res.json({ 
         projectId: projectData[0].id,
-        readme: aiMarkdown 
+        readme: finalMarkdown 
     });
   } catch (error) {
     next(error);
@@ -137,6 +138,46 @@ export const saveReadme = async (req, res, next) => {
 
     if (error) throw error;
     res.json({ success: true, data });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const chatReadme = async (req, res, next) => {
+  const { currentMarkdown, prompt } = req.body;
+  
+  if (!currentMarkdown || !prompt) {
+    return res.status(400).json({ error: "Missing currentMarkdown or prompt" });
+  }
+
+  try {
+    const aiPrompt = `You are an expert technical writer and developer advocate assisting a user in refining their GitHub README.md file. 
+
+Here is the CURRENT MARKDOWN:
+\`\`\`markdown
+${currentMarkdown}
+\`\`\`
+
+USER REQUEST TO MODIFY THE README:
+"${prompt}"
+
+Please apply the user's modifications to the markdown. 
+RETURN ONLY THE NEW FULL RAW MARKDOWN. Do not wrap it in markdown backticks. Make sure everything flows cohesively.
+IMPORTANT: ALWAYS ensure the exact string "---
+*Made with: [gittool.dev](https://gittool.dev)*" appears at the very end of the file. If it was removed, add it back.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are a professional README editor." },
+        { role: "user", content: aiPrompt }
+      ],
+      temperature: 0.7,
+    });
+    
+    const refinedMarkdown = completion.choices[0].message.content;
+    
+    res.json({ readme: refinedMarkdown });
   } catch (error) {
     next(error);
   }

@@ -18,22 +18,22 @@ export default function Layout() {
     return (
         <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', backgroundColor: 'var(--background)' }}>
             <nav style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border)', backgroundColor: 'var(--card)' }}>
-                <div className="layout-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '16px 24px' }}>
+                <div className="layout-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '8px 24px' }}>
                     <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)', fontWeight: 600, fontSize: '1.25rem' }}>
-                        <FileText className="text-cyan" size={24} />
-                        GitTool
+                        <FileText className="text-cyan" size={20} />
+                        <span style={{ fontSize: '1rem' }}>GitTool</span>
                     </Link>
                     {user ? (
                         <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-                            <Link to="/dashboard" style={{ textDecoration: 'none', color: 'var(--muted-foreground)', fontSize: '0.9rem', fontWeight: 500 }} className="nav-link">Dashboard</Link>
-                            <Link to="/templates" style={{ textDecoration: 'none', color: 'var(--muted-foreground)', fontSize: '0.9rem', fontWeight: 500 }} className="nav-link">Templates</Link>
+                            <Link to="/dashboard" style={{ textDecoration: 'none', color: 'var(--muted-foreground)', fontSize: '0.8rem', fontWeight: 500 }} className="nav-link">Dashboard</Link>
+                            <Link to="/templates" style={{ textDecoration: 'none', color: 'var(--muted-foreground)', fontSize: '0.8rem', fontWeight: 500 }} className="nav-link">Templates</Link>
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', borderLeft: '1px solid var(--border)', paddingLeft: '24px' }}>
                                 <Link to="/profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'var(--foreground)' }}>
                                     {avatarUrl ? (
-                                        <img src={avatarUrl} alt="Avatar" style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid var(--border)' }} />
+                                        <img src={avatarUrl} alt="Avatar" style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid var(--border)' }} />
                                     ) : (
-                                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
+                                        <div style={{ width: '26px', height: '26px', borderRadius: '50%', backgroundColor: 'var(--muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border)' }}>
                                             <User size={16} />
                                         </div>
                                     )}
@@ -48,7 +48,7 @@ export default function Layout() {
                     )}
                 </div>
             </nav>
-            <main style={{ flex: 1, padding: '40px 24px', display: 'flex', justifyContent: 'center' }}>
+            <main style={{ flex: 1, padding: '16px 24px', display: 'flex', justifyContent: 'center' }}>
                 <div style={{ width: '100%', maxWidth: '1200px' }}>
                     <Outlet />
                 </div>
