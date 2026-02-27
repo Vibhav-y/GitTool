@@ -68,13 +68,25 @@ export default function EditProject() {
         setIsThinking(true);
         const githubToken = localStorage.getItem('github_token');
         const { data: { session } } = await supabase.auth.getSession();
+        // Extract owner/repo from project URL
+        const repoMatch = project?.repo_url?.match(/github\.com\/([^/]+)\/([^/\s]+)/);
+        const owner = repoMatch ? repoMatch[1] : undefined;
+        const repo = repoMatch ? repoMatch[2].replace(/\.git$/, '') : undefined;
         try {
             const res = await axios.post(`${API_BASE}/readme/chat`, {
-                currentMarkdown: markdown, prompt: currentPrompt, token: githubToken
+                currentMarkdown: markdown, prompt: currentPrompt, token: githubToken, owner, repo
             }, { headers: { Authorization: `Bearer ${session.access_token}` } });
             setMarkdown(res.data.readme);
             toast.success("AI updated your README!");
-        } catch (err) { console.error(err); toast.error("AI update failed"); }
+        } catch (err) {
+            console.error(err);
+            const msg = err.response?.data?.error || 'AI update failed';
+            if (msg.includes('token') || err.response?.status === 403) {
+                toast.error('No tokens available! Buy more from your Profile.');
+            } else {
+                toast.error(msg);
+            }
+        }
         finally { setIsThinking(false); }
     };
 

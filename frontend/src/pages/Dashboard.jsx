@@ -1,32 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, BookOpen, Clock, FileText, Trash2 } from 'lucide-react';
+import { Plus, BookOpen, Clock, FileText, Trash2, Coins, ShoppingCart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
+import axios from 'axios';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Dashboard() {
     const { user } = useAuth();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [tokenBalance, setTokenBalance] = useState(null);
 
     useEffect(() => {
-        const fetchProjects = async () => {
+        const fetchData = async () => {
             try {
-                const { data, error } = await supabase
-                    .from('projects')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                const { data: { session } } = await supabase.auth.getSession();
+                const headers = { Authorization: `Bearer ${session.access_token}` };
 
-                if (error) throw error;
-                setProjects(data || []);
+                // Fetch projects and token balance in parallel
+                const [projectsRes, tokensRes] = await Promise.allSettled([
+                    supabase.from('projects').select('*').order('created_at', { ascending: false }),
+                    axios.get(`${API_BASE}/tokens/balance`, { headers }),
+                ]);
+
+                if (projectsRes.status === 'fulfilled' && !projectsRes.value.error) {
+                    setProjects(projectsRes.value.data || []);
+                }
+                if (tokensRes.status === 'fulfilled') {
+                    setTokenBalance(tokensRes.value.data.balance);
+                }
             } catch (error) {
-                toast.error('Failed to load projects');
+                toast.error('Failed to load data');
             } finally {
                 setLoading(false);
             }
         };
-        if (user) fetchProjects();
+        if (user) fetchData();
     }, [user]);
 
     const deleteProject = async (id) => {
@@ -42,10 +54,36 @@ export default function Dashboard() {
 
     return (
         <div>
-            <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Dashboard</h1>
-            <p style={{ color: 'var(--muted-foreground)', marginBottom: '32px' }}>Welcome back! Here are your recent README projects.</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+                <div>
+                    <h1 style={{ fontSize: '2rem', marginBottom: '6px' }}>Dashboard</h1>
+                    <p style={{ color: 'var(--muted-foreground)', margin: 0 }}>Welcome back! Here are your README projects.</p>
+                </div>
 
-            <div style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
+                {/* Token Balance Card */}
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: '16px',
+                    padding: '14px 20px', borderRadius: '10px',
+                    border: '1px solid var(--border)', background: 'var(--card)',
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Coins size={18} style={{ color: '#c9956a' }} />
+                        <div>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Tokens</div>
+                            <div style={{ fontSize: '1.3rem', fontWeight: 700 }}>{tokenBalance !== null ? tokenBalance : '—'}</div>
+                        </div>
+                    </div>
+                    <Link to="/profile" style={{
+                        padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 500,
+                        background: 'var(--muted)', color: 'var(--foreground)', textDecoration: 'none',
+                        display: 'flex', alignItems: 'center', gap: '4px', border: '1px solid var(--border)',
+                    }}>
+                        <ShoppingCart size={12} /> Buy
+                    </Link>
+                </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '28px' }}>
                 <Link to="/create" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
                     <Plus size={18} /> Create New README
                 </Link>

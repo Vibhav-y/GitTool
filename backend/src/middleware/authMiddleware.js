@@ -18,13 +18,7 @@ export const verifyToken = async (req, res, next) => {
       return res.status(401).json({ error: "Invalid or expired Supabase JWT." });
     }
     
-    req.user = user; // Attach the authenticated user to the request
-    
-    // Check for Github token needed for GitHub API operations
-    if (!req.body.token) {
-      return res.status(400).json({ error: "No GitHub token provided in request body." });
-    }
-    
+    req.user = user;
     next();
   } catch (err) {
     console.error("Auth Middleware Error:", err);

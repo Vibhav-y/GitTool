@@ -1,4 +1,6 @@
 import { createOctokitInstance } from "../utils/octokit.js";
+import { fetchRepoContext, formatRepoContext } from "../utils/repoContext.js";
+import { deductToken } from "./tokenController.js";
 import { supabase } from "../config/supabase.js";
 import OpenAI from "openai";
 import dotenv from "dotenv";
@@ -11,11 +13,18 @@ const openai = new OpenAI({
 
 export const generateReadme = async (req, res, next) => {
   const { token, owner, repo, template } = req.body;
-  const userId = req.user.id; // From verifyToken middleware
+  const userId = req.user.id;
   const octokit = createOctokitInstance(token);
 
   try {
-    // 1. Fetch GitHub Repo Data
+    // 0. Check & deduct tokens (2 tokens for generation)
+    try {
+      await deductToken(userId, 2, 'generate', `Generated README for ${owner}/${repo}`);
+    } catch (tokenErr) {
+      return res.status(403).json({ error: tokenErr.message || 'Insufficient tokens' });
+    }
+
+    // 1. Fetch GitHub Repo Data + Rich Context
     const { data } = await octokit.repos.get({ owner, repo });
 
     let languages = [];
@@ -25,6 +34,10 @@ export const generateReadme = async (req, res, next) => {
     } catch (e) {
       console.warn("Could not fetch languages", e.message);
     }
+
+    // Fetch rich repo context (file tree, commits, key files)
+    const repoContext = await fetchRepoContext(octokit, owner, repo);
+    const contextStr = formatRepoContext(data, repoContext);
 
     // 2. Map Template Context
     const tplStyle = template || "professional";
@@ -80,14 +93,17 @@ export const generateReadme = async (req, res, next) => {
         templateInstructions = "Create a standard high-quality Markdown README.";
     }
     
-    const prompt = `Repository Name: ${data.name}
-Description: ${data.description || "An awesome project"}
+    const prompt = `Here is everything I know about this repository:
+
+${contextStr}
+
 Languages used: ${languages.length > 0 ? languages.join(", ") : "Not specified"}
-${data.clone_url ? `Clone URL: ${data.clone_url}` : ""}
 
 ${templateInstructions}
 
-Please generate the Markdown README now based exclusively on the facts provided and the template guidelines. Ensure the markdown is immaculately formatted. Do not include markdown code block backticks surrounding the entire response, just output the raw markdown.`;
+Using ALL the context above (file structure, recent commits, dependencies, config files), generate a comprehensive and accurate Markdown README. Base installation steps, usage examples, and tech stack descriptions on the ACTUAL files and dependencies found in the repo. Do not make up features — infer them from the code structure and commits.
+
+Do not include markdown code block backticks surrounding the entire response, just output the raw markdown.`;
 
     // 3. Generate via OpenAI
     const completion = await openai.chat.completions.create({
@@ -101,7 +117,7 @@ Please generate the Markdown README now based exclusively on the facts provided 
     const aiMarkdown = completion.choices[0].message.content;
     const finalMarkdown = aiMarkdown + "\n\n---\n*Made with: [gittool.dev](https://gittool.dev)*\n";
 
-    // 4. Insert Output directly to Database (Auto-Save)
+    // 4. Insert to Database
     const { data: projectData, error } = await supabase
       .from("projects")
       .insert({
@@ -144,15 +160,41 @@ export const saveReadme = async (req, res, next) => {
 };
 
 export const chatReadme = async (req, res, next) => {
-  const { currentMarkdown = '', prompt } = req.body;
+  const { currentMarkdown = '', prompt, token, owner: reqOwner, repo: reqRepo } = req.body;
+  const userId = req.user.id;
   
   if (!prompt) {
     return res.status(400).json({ error: "Missing prompt" });
   }
 
-  const repoMatch = currentMarkdown.match(/github\.com\/([^/\s]+)\/([^/\s)]+)/);
-  const owner = repoMatch ? repoMatch[1] : 'username';
-  const repo = repoMatch ? repoMatch[2].replace(/[)"'\]]/g, '') : 'repo';
+  // Check & deduct tokens (1 token for chat)
+  try {
+    await deductToken(userId, 1, 'chat', 'AI chat edit');
+  } catch (tokenErr) {
+    return res.status(403).json({ error: tokenErr.message || 'Insufficient tokens' });
+  }
+
+  // Try to get owner/repo from request body first, then from markdown content
+  let owner = reqOwner;
+  let repo = reqRepo;
+  if (!owner || !repo) {
+    const repoMatch = currentMarkdown.match(/github\.com\/([^/\s]+)\/([^/\s)]+)/);
+    owner = repoMatch ? repoMatch[1] : 'username';
+    repo = repoMatch ? repoMatch[2].replace(/[)"'\]]/g, '') : 'repo';
+  }
+
+  // Fetch repo context if we have a token
+  let repoContextStr = '';
+  if (token && owner !== 'username') {
+    try {
+      const octokit = createOctokitInstance(token);
+      const { data: repoData } = await octokit.repos.get({ owner, repo });
+      const repoContext = await fetchRepoContext(octokit, owner, repo);
+      repoContextStr = `\n\nREPO CONTEXT (use this to give accurate answers):\n${formatRepoContext(repoData, repoContext)}`;
+    } catch (e) {
+      console.warn("Could not fetch repo context for chat:", e.message);
+    }
+  }
 
   try {
     const widgetRef = `
@@ -189,17 +231,18 @@ CURRENT MARKDOWN:
 \`\`\`markdown
 ${currentMarkdown}
 \`\`\`
+${repoContextStr}
 
 USER REQUEST: "${prompt}"
 ${widgetRef}
 
-Apply the user's request. RETURN ONLY the full raw markdown (no wrapping backticks).
+Apply the user's request. Use the repo context to give accurate, specific answers based on the actual codebase. RETURN ONLY the full raw markdown (no wrapping backticks).
 IMPORTANT: Keep "---\\n*Made with: [gittool.dev](https://gittool.dev)*" at the very end.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-5-nano-2025-08-07",
       messages: [
-        { role: "system", content: "You are a professional README editor with deep knowledge of GitHub markdown, shields.io badges, and readme widgets. When users ask to add socials, stats, or badges, use the exact widget templates from the reference." },
+        { role: "system", content: "You are a professional README editor with deep knowledge of GitHub markdown, shields.io badges, and readme widgets. You have full access to the repo's file structure, dependencies, and commit history. Use this context to write accurate, specific documentation. When users ask to add socials, stats, or badges, use the exact widget templates from the reference." },
         { role: "user", content: aiPrompt }
       ],
     });
@@ -208,6 +251,7 @@ IMPORTANT: Keep "---\\n*Made with: [gittool.dev](https://gittool.dev)*" at the v
     
     res.json({ readme: refinedMarkdown });
   } catch (error) {
-    next(error);
+    console.error("chatReadme ERROR:", error.message);
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
 };
