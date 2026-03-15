@@ -1,213 +1,313 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
-import { User, Mail, Github, LogOut, Key, Trash2, Coins, Zap, Crown, Rocket } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import axios from 'axios';
+import { useTheme } from '../contexts/ThemeContext';
+import { useTokenBalance, useGitHubTokenStatus, useTokenTransactions } from '../hooks/useQueryHooks';
+import {
+    User, Mail, FileText, Zap, Settings, Link2,
+    Check, Sun, Moon, Monitor, GitBranch, Bell, MessageSquare,
+    Loader2
+} from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Progress } from '@/components/ui/progress';
 
 export default function Profile() {
     const { user } = useAuth();
-    const [loading, setLoading] = useState(false);
-    const [tokenBalance, setTokenBalance] = useState(null);
-    const [packages, setPackages] = useState([]);
-    const [buying, setBuying] = useState(false);
-
-    const email = user?.email || 'No email provided';
-    const name = user?.user_metadata?.full_name || user?.user_metadata?.user_name || 'Anonymous Developer';
+    const { theme, setTheme } = useTheme();
     const avatarUrl = user?.user_metadata?.avatar_url || null;
-    const isGithubUser = user?.app_metadata?.provider === 'github';
+    const fullName = user?.user_metadata?.full_name || user?.user_metadata?.name || 'User';
+    const email = user?.email || '';
+    const initials = fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
-    useEffect(() => {
-        const fetchTokenData = async () => {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                const headers = { Authorization: `Bearer ${session.access_token}` };
+    const [name, setName] = useState(fullName);
+    const [emailVal, setEmailVal] = useState(email);
+    const [bio, setBio] = useState('');
+    const [emailAlerts, setEmailAlerts] = useState(true);
+    const [slackDMs, setSlackDMs] = useState(true);
 
-                const [balanceRes, packagesRes] = await Promise.allSettled([
-                    axios.get(`${API_BASE}/tokens/balance`, { headers }),
-                    axios.get(`${API_BASE}/tokens/packages`),
-                ]);
+    // Live data via React Query (cached, shared with Dashboard)
+    const { data: balance = null, isLoading: loadingBal } = useTokenBalance();
+    const { data: ghStatus = null, isLoading: loadingGh } = useGitHubTokenStatus();
+    const { data: txData = null, isLoading: loadingTx } = useTokenTransactions();
+    const transactions = txData?.transactions || [];
+    const loadingData = loadingBal || loadingGh || loadingTx;
 
-                if (balanceRes.status === 'fulfilled') setTokenBalance(balanceRes.value.data.balance);
-                if (packagesRes.status === 'fulfilled') setPackages(packagesRes.value.data.packages);
-            } catch (err) {
-                console.error('Failed to fetch token data:', err);
-            }
-        };
-        if (user) fetchTokenData();
-    }, [user]);
 
-    const handleBuyTokens = async (packageId) => {
-        setBuying(true);
-        try {
-            const { data: { session } } = await supabase.auth.getSession();
-            const headers = { Authorization: `Bearer ${session.access_token}` };
+    // Derive top tools from transactions
+    const toolCounts = {};
+    transactions.forEach(t => {
+        const name = t.description?.split(' for ')[0]?.replace('Generated ', '') || 'Unknown';
+        toolCounts[name] = (toolCounts[name] || 0) + 1;
+    });
+    const topTools = Object.entries(toolCounts)
+        .sort(([, a], [, b]) => b - a)
+        .slice(0, 3);
 
-            // 1. Create order
-            const { data: orderData } = await axios.post(`${API_BASE}/tokens/order`, { packageId }, { headers });
+    const TOOL_COLORS = ['bg-primary', 'bg-emerald-500', 'bg-amber-500'];
 
-            // 2. Open Razorpay
-            const options = {
-                key: orderData.keyId,
-                amount: orderData.amount,
-                currency: orderData.currency,
-                name: 'GitTool',
-                description: `Purchase tokens`,
-                order_id: orderData.orderId,
-                handler: async (response) => {
-                    try {
-                        const { data: verifyData } = await axios.post(`${API_BASE}/tokens/verify`, {
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                        }, { headers });
-
-                        setTokenBalance(verifyData.newBalance);
-                        toast.success(`${verifyData.tokensAdded} tokens added!`);
-                    } catch (err) {
-                        console.error(err);
-                        toast.error('Payment verification failed');
-                    }
-                },
-                prefill: { email },
-                theme: { color: '#c9956a', backdrop_color: '#0a0a0b' },
-                modal: { backdropclose: true, animation: true },
-            };
-
-            const rzp = new window.Razorpay(options);
-            rzp.open();
-        } catch (err) {
-            console.error(err);
-            toast.error('Failed to create order');
-        } finally {
-            setBuying(false);
-        }
-    };
-
-    const handleLogout = async () => {
-        setLoading(true);
-        try {
-            const { error } = await supabase.auth.signOut();
-            if (error) throw error;
-            toast.success('Successfully logged out.');
-        } catch (error) {
-            console.error(error);
-            toast.error('Failed to log out.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const packageIcons = { starter: <Zap size={20} />, pro: <Crown size={20} />, unlimited: <Rocket size={20} /> };
-    const packageColors = { starter: '#c9956a', pro: '#a78bfa', unlimited: '#22d3ee' };
+    const credits = balance?.balance ?? 0;
+    const maxCredits = 10000;
 
     return (
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h1 style={{ fontSize: '2rem', marginBottom: '6px' }}>Profile</h1>
-            <p style={{ color: 'var(--muted-foreground)', marginBottom: '28px' }}>Manage your account and tokens.</p>
-
-            <div style={{ display: 'grid', gap: '20px' }}>
-
-                {/* User Card */}
-                <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '28px' }}>
+        <div className="mx-auto w-full max-w-5xl space-y-8 pb-12">
+            {/* ── Profile Header ───────────────────────────────────── */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                <div className="flex items-center gap-6">
                     {avatarUrl ? (
-                        <img src={avatarUrl} alt="Avatar"
-                            style={{ width: '72px', height: '72px', borderRadius: '50%', border: '2px solid var(--border)', objectFit: 'cover' }} />
+                        <img 
+                            src={avatarUrl} 
+                            alt="Avatar" 
+                            className="h-20 w-20 rounded-full border-4 border-primary/20 object-cover shadow-lg"
+                        />
                     ) : (
-                        <div style={{ width: '72px', height: '72px', borderRadius: '50%', backgroundColor: 'var(--muted)', display: 'flex', justifyContent: 'center', alignItems: 'center', border: '2px solid var(--border)' }}>
-                            <User size={28} style={{ color: 'var(--muted-foreground)' }} />
+                        <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-primary/20 bg-gradient-to-br from-primary/80 to-primary text-2xl font-black text-primary-foreground shadow-lg">
+                            {initials}
                         </div>
                     )}
-                    <div style={{ flex: 1 }}>
-                        <h2 style={{ fontSize: '1.4rem', margin: '0 0 4px 0' }}>{name}</h2>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--muted-foreground)', fontSize: '0.85rem' }}>
-                            <Mail size={14} /> <span>{email}</span>
-                        </div>
-                        {isGithubUser && (
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', marginTop: '8px', padding: '3px 10px', borderRadius: '6px', border: '1px solid var(--border)', color: 'var(--muted-foreground)' }}>
-                                <Github size={12} /> GitHub Connected
-                            </span>
-                        )}
+                    <div>
+                        <h1 className="text-3xl font-black tracking-tight text-foreground">{fullName}</h1>
+                        <p className="mt-1 text-sm font-medium text-muted-foreground">
+                            {user?.user_metadata?.user_name ? `@${user.user_metadata.user_name}` : 'Developer'}
+                        </p>
+                        <p className="mt-2 text-xs font-semibold text-primary/80">
+                            Member since {user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : '—'}
+                        </p>
                     </div>
                 </div>
-
-                {/* Token Balance Card */}
-                <div className="glass-card" style={{ padding: '28px' }}>
-                    <h3 style={{ fontSize: '1.1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Coins size={18} style={{ color: '#c9956a' }} /> Token Balance
-                    </h3>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px', borderRadius: '10px', background: 'var(--muted)', border: '1px solid var(--border)' }}>
-                        <div>
-                            <div style={{ fontSize: '2.5rem', fontWeight: 700, lineHeight: 1 }}>{tokenBalance !== null ? tokenBalance : '—'}</div>
-                            <div style={{ fontSize: '0.8rem', color: 'var(--muted-foreground)', marginTop: '4px' }}>tokens remaining</div>
-                        </div>
-                        <div style={{ flex: 1, fontSize: '0.8rem', color: 'var(--muted-foreground)', lineHeight: 1.5 }}>
-                            <div>• Generate README = <strong>2 tokens</strong></div>
-                            <div>• AI Chat edit = <strong>1 token</strong></div>
-                        </div>
-                    </div>
+                <div className="flex gap-3">
+                    <Button variant="outline">Discard</Button>
+                    <Button>Save Changes</Button>
                 </div>
+            </div>
 
-                {/* Buy Tokens */}
-                <div className="glass-card" style={{ padding: '28px' }}>
-                    <h3 style={{ fontSize: '1.1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        Buy Tokens
-                    </h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
-                        {packages.map(pkg => (
-                            <div key={pkg.id} style={{
-                                padding: '20px', borderRadius: '10px', border: `1px solid ${packageColors[pkg.id] || 'var(--border)'}33`,
-                                background: `linear-gradient(160deg, ${packageColors[pkg.id] || '#c9956a'}08, var(--card))`,
-                                textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '10px',
-                            }}>
-                                <div style={{ color: packageColors[pkg.id] || '#c9956a' }}>
-                                    {packageIcons[pkg.id] || <Coins size={20} />}
+            {/* ── Main Grid ────────────────────────────────────────── */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+                
+                {/* Left Column (Wider) */}
+                <div className="md:col-span-3 space-y-8">
+                    
+                    {/* Personal Information */}
+                    <Card className="bg-card/40 backdrop-blur border-muted/50 shadow-sm">
+                        <CardHeader className="border-b border-border/50 bg-muted/20 pb-4 pt-5">
+                            <CardTitle className="flex items-center gap-2 text-base">
+                                <User size={18} className="text-primary" /> Personal Information
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6 pt-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Full Name</label>
+                                    <Input value={name} onChange={e => setName(e.target.value)} />
                                 </div>
-                                <div style={{ fontSize: '1.3rem', fontWeight: 700 }}>{pkg.tokens}</div>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>tokens</div>
-                                <button
-                                    onClick={() => handleBuyTokens(pkg.id)}
-                                    disabled={buying}
-                                    className="btn-primary"
-                                    style={{
-                                        padding: '8px 0', fontSize: '0.82rem', borderRadius: '8px', width: '100%',
-                                        background: packageColors[pkg.id] || '#c9956a', border: 'none', color: '#fff',
-                                        cursor: buying ? 'not-allowed' : 'pointer', opacity: buying ? 0.6 : 1,
-                                    }}
-                                >
-                                    {pkg.priceDisplay}
-                                </button>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email Address</label>
+                                    <Input value={emailVal} onChange={e => setEmailVal(e.target.value)} />
+                                </div>
                             </div>
-                        ))}
-                    </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Bio</label>
+                                <textarea
+                                    className="flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                    value={bio}
+                                    onChange={e => setBio(e.target.value)}
+                                    placeholder="Tell us about yourself..."
+                                />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* System Preferences */}
+                    <Card className="bg-card/40 backdrop-blur border-muted/50 shadow-sm">
+                        <CardHeader className="border-b border-border/50 bg-muted/20 pb-4 pt-5">
+                            <CardTitle className="flex items-center gap-2 text-base">
+                                <Settings size={18} className="text-primary" /> System Preferences
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-8 pt-6">
+                            
+                            {/* Theme */}
+                            <div>
+                                <h4 className="text-sm font-semibold text-foreground mb-1">Theme Appearance</h4>
+                                <p className="text-xs text-muted-foreground mb-4">Choose how GitTool looks on your device</p>
+                                <div className="inline-flex items-center rounded-lg border p-1 bg-muted/20">
+                                    {['Dark', 'Light', 'System'].map(t => {
+                                        const value = t.toLowerCase();
+                                        const isActive = theme === value;
+                                        return (
+                                            <button 
+                                                key={t}
+                                                className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all ${isActive ? 'bg-background text-foreground shadow-sm border border-border/50' : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'}`}
+                                                onClick={() => setTheme(value)}
+                                            >
+                                                {t === 'Dark' && <Moon size={14} />}
+                                                {t === 'Light' && <Sun size={14} />}
+                                                {t === 'System' && <Monitor size={14} />}
+                                                {t}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Notifications */}
+                            <div>
+                                <h4 className="text-sm font-semibold text-foreground mb-4">Notifications</h4>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                                <Bell size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-medium">Email Alerts</p>
+                                                <p className="text-xs text-muted-foreground">Daily summaries and critical notifications</p>
+                                            </div>
+                                        </div>
+                                        <Switch 
+                                            checked={emailAlerts} 
+                                            onCheckedChange={setEmailAlerts} 
+                                        />
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                                                <MessageSquare size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-medium">Slack Direct Messages</p>
+                                                <p className="text-xs text-muted-foreground">Receive DMs from the GitTool Slack bot</p>
+                                            </div>
+                                        </div>
+                                        <Switch 
+                                            checked={slackDMs} 
+                                            onCheckedChange={setSlackDMs} 
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
                 </div>
 
-                {/* Danger Zone */}
-                <div className="glass-card" style={{ padding: '28px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-                    <h3 style={{ fontSize: '1.1rem', color: '#ef4444', marginBottom: '20px' }}>Danger Zone</h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <h4 style={{ margin: '0 0 2px 0', fontSize: '0.9rem' }}>Sign Out</h4>
-                                <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--muted-foreground)' }}>Log out on this device.</p>
-                            </div>
-                            <button onClick={handleLogout} disabled={loading} className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}>
-                                <LogOut size={14} /> {loading ? 'Logging out...' : 'Log Out'}
-                            </button>
+                {/* Right Column (Narrower) */}
+                <div className="md:col-span-2 space-y-8">
+                    
+                    {/* AI Usage */}
+                    <Card className="bg-card/40 backdrop-blur border-primary/20 shadow-sm relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4">
+                            <span className="inline-flex items-center rounded-sm bg-primary px-2 py-0.5 text-[10px] font-black uppercase tracking-widest text-primary-foreground">
+                                Pro Plan
+                            </span>
                         </div>
-                        <div style={{ height: '1px', background: 'var(--border)' }}></div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <h4 style={{ margin: '0 0 2px 0', fontSize: '0.9rem', color: '#ef4444' }}>Delete Account</h4>
-                                <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--muted-foreground)' }}>Permanently erase all data.</p>
+                        <CardHeader className="border-b border-border/50 bg-primary/5 pb-4 pt-5">
+                            <CardTitle className="flex items-center gap-2 text-base">
+                                <Zap size={18} className="text-primary" /> AI Usage
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-6">
+                            {loadingData ? (
+                                <div className="flex justify-center p-8">
+                                    <Loader2 size={24} className="animate-spin text-primary" />
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="flex items-baseline justify-between mb-2">
+                                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Credits Used</span>
+                                        <span className="text-xl font-bold font-mono">
+                                            {credits.toLocaleString()} <span className="text-xs text-muted-foreground">/ {maxCredits.toLocaleString()}</span>
+                                        </span>
+                                    </div>
+                                    <Progress value={(credits / maxCredits) * 100} className="h-2 mb-8" />
+
+                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">Top Tools Used</h4>
+                                    <div className="space-y-4">
+                                        {topTools.length > 0 ? topTools.map(([name, count], i) => (
+                                            <div key={name} className="flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <span className={`h-2.5 w-2.5 rounded-full ${TOOL_COLORS[i] || 'bg-muted-foreground'}`} />
+                                                    <span className="text-sm font-medium">{name}</span>
+                                                </div>
+                                                <span className="text-sm font-bold font-mono text-muted-foreground">{count}</span>
+                                            </div>
+                                        )) : (
+                                            <p className="text-sm text-muted-foreground italic">No tool usage yet</p>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Connected Accounts */}
+                    <Card className="bg-card/40 backdrop-blur border-muted/50 shadow-sm">
+                        <CardHeader className="border-b border-border/50 bg-muted/20 pb-4 pt-5">
+                            <CardTitle className="flex items-center gap-2 text-base">
+                                <Link2 size={18} className="text-primary" /> Connected Accounts
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                            <div className="flex flex-col">
+                                {/* GitHub */}
+                                <div className="flex items-center justify-between p-5">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-2xl">
+                                            🐙
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm">GitHub</p>
+                                            {ghStatus?.connected && (
+                                                <p className="text-xs text-muted-foreground mt-0.5">
+                                                    @{user?.user_metadata?.user_name || 'connected'}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {loadingData ? (
+                                        <Loader2 size={16} className="animate-spin text-muted-foreground" />
+                                    ) : ghStatus?.connected ? (
+                                        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-bold text-emerald-500 uppercase tracking-wider">
+                                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Connected
+                                        </span>
+                                    ) : (
+                                        <Button variant="ghost" size="sm" className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                                            Link Account
+                                        </Button>
+                                    )}
+                                </div>
+
+                                {/* GitLab */}
+                                <div className="flex items-center justify-between border-t border-border/50 p-5">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-2xl">
+                                            🦊
+                                        </div>
+                                        <p className="font-bold text-sm">GitLab</p>
+                                    </div>
+                                    <Button variant="ghost" size="sm" className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                                        Link Account
+                                    </Button>
+                                </div>
+
+                                {/* Bitbucket */}
+                                <div className="flex items-center justify-between border-t border-border/50 p-5">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-2xl">
+                                            🪣
+                                        </div>
+                                        <p className="font-bold text-sm">Bitbucket</p>
+                                    </div>
+                                    <Button variant="ghost" size="sm" className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                                        Link Account
+                                    </Button>
+                                </div>
                             </div>
-                            <button className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: '#ef4444', borderColor: 'rgba(239,68,68,0.3)' }}>
-                                <Trash2 size={14} /> Delete
-                            </button>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
+
                 </div>
             </div>
         </div>

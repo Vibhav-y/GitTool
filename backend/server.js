@@ -2,21 +2,34 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
-import apiRoutes from "./src/routes/index.js";
-import errorHandler from "./src/middleware/errorMiddleware.js";
+import apiRoutes from "./src/routes/routes.js";
+import errorHandler from "./src/shared/errorMiddleware.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-app.use(cors());
+const ALLOWED_ORIGINS = [
+  "http://localhost:5173",  // main frontend
+  "http://localhost:5174",  // admin panel
+  process.env.FRONTEND_URL,
+  process.env.ADMIN_URL,
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    cb(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
-// Global rate limit: 100 requests per 15 minutes per IP
+// Global rate limit: 200 requests per 15 minutes per IP
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 200,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many requests, please try again later." },
