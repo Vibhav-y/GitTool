@@ -49,7 +49,8 @@ export default function Profile() {
     const TOOL_COLORS = ['bg-primary', 'bg-emerald-500', 'bg-amber-500'];
 
     const credits = balance?.balance ?? 0;
-    const maxCredits = 10000;
+    const totalEarned = balance?.totalEarned ?? 40;
+    const totalUsed = balance?.totalUsed ?? 0;
 
     return (
         <div className="mx-auto w-full max-w-5xl space-y-8 pb-12">
@@ -216,12 +217,13 @@ export default function Profile() {
                             ) : (
                                 <>
                                     <div className="flex items-baseline justify-between mb-2">
-                                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Credits Used</span>
+                                        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Credits Remaining</span>
                                         <span className="text-xl font-bold font-mono">
-                                            {credits.toLocaleString()} <span className="text-xs text-muted-foreground">/ {maxCredits.toLocaleString()}</span>
+                                            {credits.toLocaleString()} <span className="text-xs text-muted-foreground">/ {totalEarned.toLocaleString()}</span>
                                         </span>
                                     </div>
-                                    <Progress value={(credits / maxCredits) * 100} className="h-2 mb-8" />
+                                    <Progress value={(credits / totalEarned) * 100} className="h-2 mb-2" />
+                                    <p className="text-[10px] text-muted-foreground">{totalUsed.toLocaleString()} credits used across all tools</p>
 
                                     <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-4">Top Tools Used</h4>
                                     <div className="space-y-4">

@@ -3,7 +3,6 @@ import { useAuth } from '../contexts/AuthContext';
 import Sidebar from './Sidebar';
 import GlobalRepoSelector from './GlobalRepoSelector';
 import { Bell } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import ExpandableSearch from './ExpandableSearch';
 import CustomScrollbar from './CustomScrollbar';
 import { useRef, useState } from 'react';
@@ -26,28 +25,51 @@ export default function AppLayout() {
                 style={{ marginLeft: sidebarCollapsed ? 68 : 256 }}
             >
                 {/* ── Top Header Bar ──────────────────────── */}
-                <header className="flex h-16 items-center justify-between border-b bg-background/95 backdrop-blur z-10 px-6 sm:px-8">
-                    {/* Left: Dynamic Navbar Content */}
-                    <div id="navbar-left" className="flex items-center gap-4 min-w-0 flex-1 overflow-hidden" />
+                <header
+                    className="flex h-14 items-center justify-between z-[100] relative px-5 sm:px-6 shrink-0"
+                    style={{
+                        background: 'rgba(10, 10, 14, 0.75)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        borderBottom: '1px solid rgba(255,255,255,0.05)',
+                    }}
+                >
+                    {/* Left: Dynamic Navbar Content (portal target) */}
+                    <div id="navbar-left" className="flex items-center gap-3 min-w-0 flex-1 overflow-hidden" />
 
                     {/* Right: Actions */}
-                    <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-                        {/* Expandable Search */}
+                    <div className="flex items-center gap-3 shrink-0">
+                        {/* Search */}
                         <ExpandableSearch />
 
-                        {/* Repo Switcher beside search */}
+                        {/* Divider */}
+                        <div className="hidden sm:block w-px h-5 bg-white/[0.08]" />
+
+                        {/* Repo + Branch Selectors */}
                         <GlobalRepoSelector />
-                        
+
+                        {/* Divider */}
+                        <div className="hidden sm:block w-px h-5 bg-white/[0.08]" />
+
                         {/* Notification Bell */}
-                        <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:bg-muted hover:text-foreground shrink-0 rounded-md h-9 w-9">
-                            <Bell size={18} />
-                            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-destructive border-2 border-background"></span>
-                        </Button>
+                        <button
+                            className="relative flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-white/[0.06] hover:text-foreground"
+                            title="Notifications"
+                        >
+                            <Bell size={17} />
+                            <span
+                                className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full"
+                                style={{
+                                    background: '#ef4444',
+                                    boxShadow: '0 0 6px rgba(239,68,68,0.7)',
+                                }}
+                            />
+                        </button>
                     </div>
                 </header>
 
                 {/* ── Scrollable Content Area ─────────────── */}
-                <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 sm:p-8 bg-muted/20 relative">
+                <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 sm:p-6 bg-muted/20 relative">
                     <Outlet />
                 </div>
                 <CustomScrollbar scrollContainerRef={scrollRef} />

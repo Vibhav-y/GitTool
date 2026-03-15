@@ -18,6 +18,7 @@ import Dashboard from './pages/Dashboard';
 
 // Git Core Tools
 import BranchMergeUI from './pages/tools/BranchMergeUI';
+import BranchCompare from './pages/tools/BranchCompare';
 import ReadmeGenerator from './pages/tools/ReadmeGenerator';
 
 // AI Tools
@@ -93,6 +94,7 @@ function App() {
 
                 {/* Git Core */}
                 <Route path="/tools/branch-merge" element={<BranchMergeUI />} />
+                <Route path="/tools/compare" element={<BranchCompare />} />
                 <Route path="/tools/readme-generator" element={<ReadmeGenerator />} />
 
                 {/* AI Tools */}

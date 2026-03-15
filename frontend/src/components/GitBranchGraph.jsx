@@ -5,12 +5,12 @@ import { useCommitGraph } from '../hooks/useQueryHooks';
 /* ═══════════════════════════════════════════════════════════
    CONSTANTS
    ═══════════════════════════════════════════════════════════ */
-const LANE_W   = 40;
-const ROW_H    = 36;
-const MERGE_ROW = 48;
+const LANE_W   = 44;
+const ROW_H    = 38;
+const MERGE_ROW = 50;
 const DOT_R    = 4;
 const HEAD_R   = 6;
-const PAD_L    = 24;
+const PAD_L    = 28;
 const PAD_T    = 16;
 
 const COLORS = [
@@ -25,7 +25,7 @@ const COLORS = [
    names. Lanes are reused when branches merge or terminate.
    This is the GitKraken / Sublime Merge approach.
    ═══════════════════════════════════════════════════════════ */
-function buildGraph(commits, branchHeads) {
+function buildGraph(commits) {
     if (!commits?.length) return { nodes: [], edges: [], laneCount: 0, totalH: 0, branchLanes: {} };
 
     // Index for fast lookup
@@ -165,10 +165,10 @@ export default function GitBranchGraph({ repo }) {
 
     const { nodes, edges, laneCount, laneSpans, totalH, branchLanes } = useMemo(() => {
         if (!data?.commits) return { nodes: [], edges: [], laneCount: 0, laneSpans: {}, totalH: 0, branchLanes: {} };
-        return buildGraph(data.commits, data.branchHeads);
+        return buildGraph(data.commits);
     }, [data]);
 
-    const graphW = PAD_L + Math.max(laneCount, 1) * LANE_W + 12;
+    const graphW = PAD_L + Math.max(laneCount, 1) * LANE_W + 24;
 
     const onRowEnter = useCallback((idx, lane) => {
         setHoveredIdx(idx);
@@ -185,7 +185,7 @@ export default function GitBranchGraph({ repo }) {
                         min-h-[380px] shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
 
             {/* ═══ Header ═════════════════════════════════ */}
-            <div className="flex items-center justify-between px-5 pt-5 pb-1 z-10">
+            <div className="flex items-center justify-between px-4 pt-4 pb-1 z-10">
                 <div className="flex items-center gap-2 font-semibold text-white/90">
                     <GitBranch size={18} className="text-[#58A6FF]" />
                     <span>Commit Graph</span>
