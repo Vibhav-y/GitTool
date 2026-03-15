@@ -57,48 +57,57 @@ export default function GlobalRepoSelector() {
         b.name.toLowerCase().includes(branchSearch.toLowerCase())
     );
 
-    const repoName = selectedRepo?.full_name || selectedRepo?.name || 'Select repository…';
+    const repoDisplayName = selectedRepo?.name || 'Select repo…';
+    const repoOwner = selectedRepo?.full_name?.split('/')[0] || '';
 
     return (
         <div className="flex items-center gap-2">
             {/* --- REPO SELECTOR --- */}
-            <div ref={repoRef} className="relative w-[260px]">
+            <div ref={repoRef} className="relative">
                 <button
                     type="button"
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpenRepoDropdown(!openRepoDropdown); }}
-                    className={`flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-[13px] font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground ${selectedRepo ? 'text-foreground' : 'text-muted-foreground'}`}
+                    className="flex items-center gap-2 rounded-lg h-8 px-2.5 text-[13px] font-medium transition-colors hover:bg-white/[0.06]"
+                    style={{
+                        background: 'rgba(255,255,255,0.03)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                    }}
                 >
-                    <div className="flex items-center gap-2 overflow-hidden">
-                        <FolderOpen size={14} className="shrink-0 text-primary" />
-                        <span className="truncate">
-                            {loadingRepos ? <Loader2 size={12} className="animate-spin" /> : repoName}
-                        </span>
-                    </div>
-                    <ChevronDown size={14} className={`shrink-0 transition-transform duration-200 opacity-50 ${openRepoDropdown ? 'rotate-180' : ''}`} />
+                    <FolderOpen size={13} className="shrink-0 text-primary/70" />
+                    {loadingRepos ? (
+                        <Loader2 size={12} className="animate-spin text-muted-foreground" />
+                    ) : (
+                        <div className="flex items-center gap-1 overflow-hidden">
+                            {repoOwner && <span className="text-muted-foreground/50 text-[12px] truncate">{repoOwner}/</span>}
+                            <span className="truncate max-w-[120px]">{repoDisplayName}</span>
+                        </div>
+                    )}
+                    <ChevronDown size={12} className={`shrink-0 opacity-40 transition-transform duration-200 ${openRepoDropdown ? 'rotate-180' : ''}`} />
                 </button>
 
                 {openRepoDropdown && (
-                    <div className="absolute top-[calc(100%+4px)] left-0 right-0 z-50 flex flex-col overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md max-h-80">
-                        <div className="border-b p-2">
+                    <div className="absolute top-[calc(100%+4px)] right-0 z-[200] flex flex-col overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-xl max-h-80 w-[280px]"
+                         style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div className="border-b border-white/[0.06] p-2">
                             <div className="relative">
-                                <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground opacity-50" />
+                                <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground opacity-50" />
                                 <input
                                     autoFocus
                                     value={repoSearch}
                                     onChange={(e) => setRepoSearch(e.target.value)}
                                     placeholder="Search repositories…"
-                                    className="flex h-8 w-full rounded-md bg-transparent px-3 py-1 text-sm outline-none placeholder:text-muted-foreground pl-8 disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex h-7 w-full rounded-md bg-transparent px-3 py-1 text-[12px] outline-none placeholder:text-muted-foreground/60 pl-8"
                                 />
                             </div>
                         </div>
                         <div className="overflow-y-auto w-full p-1 max-h-64">
                             {repoError && (
-                                <div className="m-1.5 rounded-md bg-destructive/10 p-3 text-center text-xs text-destructive">
+                                <div className="m-1.5 rounded-md bg-destructive/10 p-2.5 text-center text-[11px] text-destructive">
                                     {repoError}
                                 </div>
                             )}
                             {!repoError && filteredRepos.length === 0 && (
-                                <p className="p-3 text-center text-xs text-muted-foreground">
+                                <p className="p-3 text-center text-[11px] text-muted-foreground">
                                     No repositories found
                                 </p>
                             )}
@@ -107,10 +116,10 @@ export default function GlobalRepoSelector() {
                                     type="button"
                                     key={r.id}
                                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedRepo(r); setOpenRepoDropdown(false); setRepoSearch(''); }}
-                                    className={`relative flex w-full cursor-pointer select-none items-center justify-between rounded-sm px-2 py-1.5 text-xs outline-none transition-colors hover:bg-accent hover:text-accent-foreground ${selectedRepo?.id === r.id ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
+                                    className={`relative flex w-full cursor-pointer select-none items-center justify-between rounded-md px-2 py-1.5 text-[12px] outline-none transition-colors hover:bg-accent hover:text-accent-foreground ${selectedRepo?.id === r.id ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
                                 >
                                     <span className="truncate font-medium">{r.full_name}</span>
-                                    <span className={`shrink-0 ml-2 text-[10px] ${r.private ? 'text-destructive/80' : 'text-emerald-500/80'}`}>
+                                    <span className={`shrink-0 ml-2 text-[10px] ${r.private ? 'text-destructive/70' : 'text-emerald-500/70'}`}>
                                         {r.private ? 'Private' : 'Public'}
                                     </span>
                                 </button>
@@ -120,47 +129,52 @@ export default function GlobalRepoSelector() {
                 )}
             </div>
 
-            <span className="text-muted-foreground/50">/</span>
+            {/* Divider */}
+            <div className="w-px h-4 bg-white/[0.08]" />
 
-            {/* --- BRANCH SELECTOR --- */}
-            <div ref={branchRef} className="relative w-[140px]">
+            {/* --- BRANCH SELECTOR (pill style) --- */}
+            <div ref={branchRef} className="relative">
                 <button
                     type="button"
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (selectedRepo) setOpenBranchDropdown(!openBranchDropdown); }}
                     disabled={!selectedRepo}
-                    className={`flex w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-[13px] font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50 ${selectedBranch ? 'text-foreground' : 'text-muted-foreground'}`}
+                    className="flex items-center gap-1.5 rounded-full h-7 px-3 text-[12px] font-medium transition-colors hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-40"
+                    style={{
+                        background: 'rgba(59,130,246,0.12)',
+                        border: '1px solid rgba(59,130,246,0.25)',
+                        color: 'rgba(147,197,253,0.9)',
+                    }}
                 >
-                    <div className="flex items-center gap-2 overflow-hidden">
-                        <GitBranch size={14} className="shrink-0 text-muted-foreground opacity-70" />
-                        <span className="truncate">
-                            {loadingBranches ? <Loader2 size={12} className="animate-spin" /> : (selectedBranch || 'Branch…')}
-                        </span>
-                    </div>
-                    <ChevronDown size={14} className={`shrink-0 transition-transform duration-200 opacity-50 ${openBranchDropdown ? 'rotate-180' : ''}`} />
+                    <GitBranch size={12} className="shrink-0" />
+                    <span className="truncate max-w-[80px]">
+                        {loadingBranches ? <Loader2 size={11} className="animate-spin" /> : (selectedBranch || 'branch…')}
+                    </span>
+                    <ChevronDown size={11} className={`shrink-0 opacity-50 transition-transform duration-200 ${openBranchDropdown ? 'rotate-180' : ''}`} />
                 </button>
 
                 {openBranchDropdown && (
-                    <div className="absolute top-[calc(100%+4px)] left-0 right-0 z-50 flex flex-col overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md max-h-80">
-                        <div className="border-b p-2">
+                    <div className="absolute top-[calc(100%+4px)] right-0 z-[200] flex flex-col overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-xl max-h-80 w-[200px]"
+                         style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div className="border-b border-white/[0.06] p-2">
                             <div className="relative">
-                                <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground opacity-50" />
+                                <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground opacity-50" />
                                 <input
                                     autoFocus
                                     value={branchSearch}
                                     onChange={(e) => setBranchSearch(e.target.value)}
                                     placeholder="Search branches…"
-                                    className="flex h-8 w-full rounded-md bg-transparent px-3 py-1 text-sm outline-none placeholder:text-muted-foreground pl-8 disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex h-7 w-full rounded-md bg-transparent px-3 py-1 text-[12px] outline-none placeholder:text-muted-foreground/60 pl-8"
                                 />
                             </div>
                         </div>
                         <div className="overflow-y-auto w-full p-1 max-h-64">
                             {branchError && (
-                                <div className="m-1.5 rounded-md bg-destructive/10 p-3 text-center text-xs text-destructive">
+                                <div className="m-1.5 rounded-md bg-destructive/10 p-2.5 text-center text-[11px] text-destructive">
                                     {branchError}
                                 </div>
                             )}
                             {!branchError && filteredBranches.length === 0 && (
-                                <p className="p-3 text-center text-xs text-muted-foreground">
+                                <p className="p-3 text-center text-[11px] text-muted-foreground">
                                     No branches found
                                 </p>
                             )}
@@ -169,8 +183,9 @@ export default function GlobalRepoSelector() {
                                     type="button"
                                     key={b.name}
                                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedBranch(b.name); setOpenBranchDropdown(false); setBranchSearch(''); }}
-                                    className={`relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-xs outline-none transition-colors hover:bg-accent hover:text-accent-foreground ${selectedBranch === b.name ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
+                                    className={`relative flex w-full cursor-pointer select-none items-center rounded-md px-2 py-1.5 text-[12px] outline-none transition-colors hover:bg-accent hover:text-accent-foreground ${selectedBranch === b.name ? 'bg-accent text-accent-foreground' : 'text-foreground'}`}
                                 >
+                                    <GitBranch size={11} className="shrink-0 mr-1.5 opacity-40" />
                                     <span className="truncate font-medium">{b.name}</span>
                                 </button>
                             ))}

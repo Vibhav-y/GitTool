@@ -9,64 +9,79 @@ import {
     PanelLeftClose, PanelLeftOpen
 } from 'lucide-react';
 
-const CATEGORIES = [
+const SECTIONS = [
     {
-        name: 'Git Core',
-        icon: <GitBranch size={18} />,
-        tools: [
-            { name: 'Branches', path: '/tools/branch-merge' },
-            { name: 'Command Builder', path: '/tools/command-builder' },
-            { name: 'Version Suggester', path: '/tools/version-suggester' },
+        label: 'GIT',
+        categories: [
+            {
+                name: 'Git Core',
+                icon: <GitBranch size={18} />,
+                tools: [
+                    { name: 'Branches', path: '/tools/branch-merge' },
+                    { name: 'Command Builder', path: '/tools/command-builder' },
+                    { name: 'Version Suggester', path: '/tools/version-suggester' },
+                ]
+            },
         ]
     },
     {
-        name: 'Documentation',
-        icon: <FileText size={18} />,
-        tools: [
-            { name: 'README Generator', path: '/tools/readme-generator' },
-            { name: 'API Docs Generator', path: '/tools/api-docs' },
-            { name: 'Architecture Diagram', path: '/tools/architecture-diagram' },
-            { name: 'Changelog', path: '/tools/release-notes' },
+        label: 'PROJECT',
+        categories: [
+            {
+                name: 'Documentation',
+                icon: <FileText size={18} />,
+                tools: [
+                    { name: 'README Generator', path: '/tools/readme-generator' },
+                    { name: 'API Docs Generator', path: '/tools/api-docs' },
+                    { name: 'Architecture Diagram', path: '/tools/architecture-diagram' },
+                    { name: 'Changelog', path: '/tools/release-notes' },
+                ]
+            },
+            {
+                name: 'Issues',
+                icon: <AlertCircle size={18} />,
+                tools: [
+                    { name: 'Issue Triage', path: '/tools/issue-triage' },
+                ]
+            },
+            {
+                name: 'Collaboration',
+                icon: <Users size={18} />,
+                tools: [
+                    { name: 'Activity Feed', path: '/tools/collaboration' },
+                    { name: 'TODO Converter', path: '/tools/todo-converter' },
+                ]
+            },
         ]
     },
     {
-        name: 'Code Quality',
-        icon: <Shield size={18} />,
-        tools: [
-            { name: 'Dead Code Detector', path: '/tools/dead-code' },
-            { name: 'Dependency Auditor', path: '/tools/dependency-auditor' },
-        ]
-    },
-    {
-        name: 'Collaboration',
-        icon: <Users size={18} />,
-        tools: [
-            { name: 'Activity Feed', path: '/tools/collaboration' },
-            { name: 'TODO Converter', path: '/tools/todo-converter' },
-        ]
-    },
-    {
-        name: 'CI/CD',
-        icon: <Route size={18} />,
-        tools: [
-            { name: 'Workflow Builder', path: '/tools/workflow-builder' },
-            { name: 'Failure Explainer', path: '/tools/failure-explainer' },
-        ]
-    },
-    {
-        name: 'Security',
-        icon: <Lock size={18} />,
-        tools: [
-            { name: 'Security Dashboard', path: '/tools/security' },
-            { name: 'CVE Alerts', path: '/tools/cve-alerts' },
-            { name: 'Secrets Scanner', path: '/tools/secrets-scanner' },
-        ]
-    },
-    {
-        name: 'Issues',
-        icon: <AlertCircle size={18} />,
-        tools: [
-            { name: 'Issue Triage', path: '/tools/issue-triage' },
+        label: 'DEVOPS',
+        categories: [
+            {
+                name: 'CI/CD',
+                icon: <Route size={18} />,
+                tools: [
+                    { name: 'Workflow Builder', path: '/tools/workflow-builder' },
+                    { name: 'Failure Explainer', path: '/tools/failure-explainer' },
+                ]
+            },
+            {
+                name: 'Security',
+                icon: <Lock size={18} />,
+                tools: [
+                    { name: 'Security Dashboard', path: '/tools/security' },
+                    { name: 'CVE Alerts', path: '/tools/cve-alerts' },
+                    { name: 'Secrets Scanner', path: '/tools/secrets-scanner' },
+                ]
+            },
+            {
+                name: 'Code Quality',
+                icon: <Shield size={18} />,
+                tools: [
+                    { name: 'Dead Code Detector', path: '/tools/dead-code' },
+                    { name: 'Dependency Auditor', path: '/tools/dependency-auditor' },
+                ]
+            },
         ]
     },
 ];
@@ -101,9 +116,12 @@ export default function Sidebar({ collapsed, onToggle }) {
     const initials = displayName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
     const scrollRef = useRef(null);
 
+    // Flatten all categories for expand/collapse logic
+    const allCategories = SECTIONS.flatMap(s => s.categories);
+
     const [expanded, setExpanded] = useState(() => {
         const initial = {};
-        CATEGORIES.forEach(cat => {
+        allCategories.forEach(cat => {
             if (cat.tools.some(t => location.pathname === t.path)) {
                 initial[cat.name] = true;
             }
@@ -115,7 +133,7 @@ export default function Sidebar({ collapsed, onToggle }) {
         setExpanded(prev => {
             const next = { ...prev };
             let changed = false;
-            CATEGORIES.forEach(cat => {
+            allCategories.forEach(cat => {
                 if (cat.tools.some(t => location.pathname === t.path)) {
                     if (!next[cat.name]) {
                         next[cat.name] = true;
@@ -196,65 +214,79 @@ export default function Sidebar({ collapsed, onToggle }) {
                         </NavLink>
                     </SidebarTooltip>
 
-                    {/* Separator */}
-                    <div className={`my-2 h-px ${collapsed ? 'mx-2' : 'mx-1'}`} style={{ background: 'var(--border)' }} />
+                    {/* ── Sections with labels ── */}
+                    {SECTIONS.map((section) => (
+                        <div key={section.label}>
+                            {/* Section label */}
+                            {!collapsed && (
+                                <div className="mt-5 mb-2 px-3">
+                                    <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/50">
+                                        {section.label}
+                                    </span>
+                                </div>
+                            )}
+                            {collapsed && (
+                                <div className="my-2 mx-2 h-px" style={{ background: 'var(--border)' }} />
+                            )}
 
-                    {/* Categories */}
-                    {CATEGORIES.map((cat) => {
-                        const isExpanded = expanded[cat.name] && !collapsed;
-                        const hasTools = cat.tools.length > 0;
-                        const isActiveCategory = hasTools && cat.tools.some(t => location.pathname === t.path);
+                            {/* Categories within section */}
+                            {section.categories.map((cat) => {
+                                const isExpanded = expanded[cat.name] && !collapsed;
+                                const hasTools = cat.tools.length > 0;
+                                const isActiveCategory = hasTools && cat.tools.some(t => location.pathname === t.path);
 
-                        return (
-                            <div key={cat.name}>
-                                <SidebarTooltip label={cat.name} collapsed={collapsed}>
-                                    <button
-                                        className={`group relative flex w-full items-center rounded-xl transition-all duration-200
-                                            ${collapsed ? 'justify-center h-10' : 'px-3 py-2.5 justify-between'}
-                                            ${isActiveCategory
-                                                ? 'bg-primary/10 text-primary'
-                                                : isExpanded
-                                                    ? 'bg-muted/60 text-foreground'
-                                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
-                                        onClick={() => hasTools && toggleCategory(cat.name)}
-                                        style={{ cursor: hasTools ? 'pointer' : 'default' }}
-                                    >
-                                        {isActiveCategory && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-full bg-primary" style={{ height: '60%' }} />}
-                                        <div className={`flex items-center ${collapsed ? '' : 'gap-3'}`}>
-                                            <span className="shrink-0">{cat.icon}</span>
-                                            {!collapsed && <span className="text-sm font-semibold whitespace-nowrap">{cat.name}</span>}
-                                        </div>
-                                        {!collapsed && hasTools && (
-                                            <ChevronRight
-                                                size={14}
-                                                className={`text-muted-foreground/60 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
-                                            />
-                                        )}
-                                    </button>
-                                </SidebarTooltip>
-
-                                {/* Expanded tool list */}
-                                {isExpanded && hasTools && (
-                                    <div className="ml-[22px] mt-1 mb-2 flex flex-col gap-0.5 border-l border-border/60 pl-3">
-                                        {cat.tools.map(tool => (
-                                            <NavLink
-                                                key={tool.name}
-                                                to={tool.path}
-                                                className={({ isActive }) =>
-                                                    `relative block rounded-lg px-3 py-1.5 text-xs transition-all duration-150 whitespace-nowrap
-                                                    ${isActive
-                                                        ? 'bg-primary/10 font-semibold text-primary'
-                                                        : 'text-muted-foreground hover:bg-muted/70 hover:text-foreground'}`
-                                                }
+                                return (
+                                    <div key={cat.name}>
+                                        <SidebarTooltip label={cat.name} collapsed={collapsed}>
+                                            <button
+                                                className={`group relative flex w-full items-center rounded-xl transition-all duration-200
+                                                    ${collapsed ? 'justify-center h-10' : 'px-3 py-2.5 justify-between'}
+                                                    ${isActiveCategory
+                                                        ? 'bg-primary/10 text-primary'
+                                                        : isExpanded
+                                                            ? 'bg-muted/60 text-foreground'
+                                                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
+                                                onClick={() => hasTools && toggleCategory(cat.name)}
+                                                style={{ cursor: hasTools ? 'pointer' : 'default' }}
                                             >
-                                                {tool.name}
-                                            </NavLink>
-                                        ))}
+                                                {isActiveCategory && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-full bg-primary" style={{ height: '60%' }} />}
+                                                <div className={`flex items-center ${collapsed ? '' : 'gap-3'}`}>
+                                                    <span className="shrink-0">{cat.icon}</span>
+                                                    {!collapsed && <span className="text-sm font-semibold whitespace-nowrap">{cat.name}</span>}
+                                                </div>
+                                                {!collapsed && hasTools && (
+                                                    <ChevronRight
+                                                        size={14}
+                                                        className={`text-muted-foreground/60 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
+                                                    />
+                                                )}
+                                            </button>
+                                        </SidebarTooltip>
+
+                                        {/* Expanded tool list */}
+                                        {isExpanded && hasTools && (
+                                            <div className="ml-[22px] mt-1 mb-2 flex flex-col gap-0.5 border-l border-border/60 pl-3">
+                                                {cat.tools.map(tool => (
+                                                    <NavLink
+                                                        key={tool.name}
+                                                        to={tool.path}
+                                                        className={({ isActive }) =>
+                                                            `relative block rounded-lg px-3 py-1.5 text-xs transition-all duration-150 whitespace-nowrap
+                                                            ${isActive
+                                                                ? 'bg-primary/10 font-semibold text-primary'
+                                                                : 'text-muted-foreground hover:bg-muted/70 hover:text-foreground'}`
+                                                        }
+                                                    >
+                                                        {tool.name}
+                                                    </NavLink>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                        );
-                    })}
+                                );
+                            })}
+                        </div>
+                    ))}
                 </nav>
                 <CustomScrollbar scrollContainerRef={scrollRef} />
             </div>
