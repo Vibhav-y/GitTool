@@ -28,3 +28,10 @@ dist-ssr
 
 frontend/.env
 backend/.env
+
+
+*node_modules
+
+*dist
+
+admin/*

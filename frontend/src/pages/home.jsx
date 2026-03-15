@@ -1,320 +1,393 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Github, FileText, Zap, Eye, LayoutTemplate, Star, ChevronRight, Bot, Sparkles, LayoutGrid, Code2, Download, Shield } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import {
+    ArrowRight, Github, Zap, Eye, Terminal, GitBranch, GitMerge,
+    Bot, BookOpen, Shield, BarChart3, Keyboard, Lock, FileCode2,
+    Cpu, Gauge, Search, Bell, Layers, FileText, Brain, Code2,
+    LayoutDashboard, Palette, TrendingUp, TrendingDown, AlertTriangle,
+    Layout, CheckCircle2, ChevronDown, Quote, Star, Sparkles, Play,
+    Hexagon, Flame, Box, CircleDot, Orbit
+} from 'lucide-react';
+import heroMockup from '../assets/hero-mockup.png';
 
-function Home() {
-    const [visible, setVisible] = useState(false);
-    const [typedText, setTypedText] = useState('');
-    const fullText = 'Add my Twitter and LinkedIn socials...';
+/* ── Data ──────────────────────────────────────────────────── */
 
-    useEffect(() => { setVisible(true); }, []);
+const FAQS = [
+    { question: "How does GitTalk integrate with my current workflow?", answer: "GitTalk seamlessly connects with your existing GitHub, GitLab, or Bitbucket repositories via OAuth. No complex setup or migration required. Simply sign in and your repositories are instantly analyzed." },
+    { question: "Is my repository data secure?", answer: "Absolutely. We employ bank-grade encryption at rest and in transit. We only request minimum necessary permissions to generate insights and automate your git workflow, never storing your raw source code." },
+    { question: "What AI models power the automation tools?", answer: "GitTalk utilizes an ensemble of state-of-the-art LLMs (like GPT-4 and Claude 3 Opus) specifically fine-tuned on astoundingly large codebases to provide hyper-contextual code reviews, commit messages, and PR summaries." },
+    { question: "Do I need to install anything locally?", answer: "No local installation is required to start benefiting from our dashboard insights and automated PR generators. We do offer a lightweight CLI for advanced users who prefer terminal integration." }
+];
 
-    useEffect(() => {
-        let i = 0;
-        const interval = setInterval(() => {
-            if (i <= fullText.length) {
-                setTypedText(fullText.substring(0, i));
-                i++;
-            } else {
-                clearInterval(interval);
-            }
-        }, 50);
-        return () => clearInterval(interval);
-    }, []);
+const TESTIMONIALS = [
+    { 
+        quote: "GitTalk has fundamentally changed how our engineering team operates. We ship 40% faster and PR anxiety is entirely gone. The AI insights are scary accurate.", 
+        author: "Sarah Jenkins", role: "VP of Engineering, TechNova", icon: Hexagon 
+    },
+    { 
+        quote: "The automated code reviews catch edge cases that our senior engineers miss. It's like having a 10x developer pairing with everyone across all timezones.", 
+        author: "David Chen", role: "Lead Architect, FlowState", icon: Box 
+    },
+    { 
+        quote: "Consolidating 5 different utilities into this single glowing command center saved us thousands. The UI is absolutely breathtaking and functional.", 
+        author: "Elena Rodriguez", role: "CTO, Zenith Startups", icon: Flame 
+    },
+];
 
+const MINI_FEATURES = [
+    { icon: Terminal, title: "Smart Commits", desc: "Automate stage/unstage grouping securely." },
+    { icon: Bot, title: "AI PR Generation", desc: "Instantly draft context-rich pull requests." },
+    { icon: Shield, title: "Code Quality", desc: "Identify tech debt & dead code fast." },
+    { icon: Lock, title: "Secrets Scanner", desc: "Prevent secret leaks before pushing." },
+    { icon: Layout, title: "Command Builder", desc: "Visual git command construction." },
+    { icon: Eye, title: "Dependency Audit", desc: "Stay compliant & up-to-date effortlessly." },
+];
+
+/* ── Components ─────────────────────────────────────────────── */
+
+function AccordionItem({ title, content }) {
+    const [isOpen, setIsOpen] = useState(false);
     return (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-
-            {/* ─── HERO ─── */}
-            <section style={{
-                textAlign: 'center', paddingTop: '80px', paddingBottom: '70px',
-                position: 'relative', overflow: 'hidden',
-            }}>
-                <div style={{
-                    position: 'absolute', top: '-250px', left: '50%', transform: 'translateX(-50%)',
-                    width: '900px', height: '900px', borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(251,191,141,0.04) 0%, rgba(244,164,96,0.02) 40%, transparent 70%)',
-                    pointerEvents: 'none', zIndex: 0
-                }} />
-
-                <div style={{
-                    position: 'relative', zIndex: 1,
-                    opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(24px)',
-                    transition: 'all 0.9s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}>
-
-                    <h1 style={{
-                        fontSize: 'clamp(2.2rem, 5.5vw, 4rem)',
-                        letterSpacing: '-0.04em', lineHeight: 1.08,
-                        maxWidth: '780px', margin: '0 auto 24px', fontWeight: 700,
-                    }}>
-                        Your repos deserve<br />
-                        <span style={{
-                            background: 'linear-gradient(135deg, #e2c4a0, #d4a574, #c9956a)',
-                            WebkitBackgroundClip: 'text', backgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                        }}>better documentation</span>
-                    </h1>
-
-                    <p style={{
-                        margin: '0 auto 44px', fontSize: '1.05rem',
-                        color: 'var(--muted-foreground)', maxWidth: '480px', lineHeight: 1.7,
-                    }}>
-                        Connect your GitHub, choose a template, and generate
-                        production-ready READMEs in seconds — not hours.
-                    </p>
-
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                        <Link to="/auth" className="btn-primary" style={{
-                            height: '2.75rem', padding: '0 24px', fontSize: '0.9rem',
-                            background: '#fff', color: '#0a0a0a', border: 'none',
-                            borderRadius: '8px', fontWeight: 600,
-                        }}>
-                            <Github size={16} /> Get Started Free <ArrowRight size={14} />
-                        </Link>
-                        <Link to="/templates" className="btn-secondary" style={{
-                            height: '2.75rem', padding: '0 20px', fontSize: '0.9rem',
-                            borderRadius: '8px',
-                        }}>
-                            Browse Templates
-                        </Link>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px', flexWrap: 'wrap' }}>
-                        {['AI-Powered', '20+ Widgets', '4 Templates', 'One-Click Export'].map((tag, i) => (
-                            <span key={i} style={{
-                                padding: '5px 14px', borderRadius: '6px', fontSize: '0.72rem', fontWeight: 500,
-                                border: '1px solid var(--border)', color: 'var(--muted-foreground)',
-                                background: 'var(--card)', letterSpacing: '0.02em',
-                            }}>
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── EDITOR PREVIEW (3 Column Mockup) ─── */}
-            <section style={{
-                maxWidth: '1060px', width: '100%', margin: '0 auto 80px', padding: '0 24px',
-                opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(30px)',
-                transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
-            }}>
-                <div style={{
-                    borderRadius: '12px', border: '1px solid var(--border)', backgroundColor: 'var(--card)',
-                    boxShadow: '0 25px 60px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.03)',
-                    overflow: 'hidden',
-                }}>
-                    {/* Title bar */}
-                    <div style={{
-                        display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px',
-                        borderBottom: '1px solid var(--border)', background: 'var(--muted)',
-                    }}>
-                        <div style={{ display: 'flex', gap: '6px' }}>
-                            <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }} />
-                            <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f59e0b' }} />
-                            <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22c55e' }} />
-                        </div>
-                        <div style={{ flex: 1, textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted-foreground)', fontWeight: 500 }}>
-                            GitTool Editor — my-awesome-project
-                        </div>
-                    </div>
-
-                    {/* 3-column mock */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr 1fr', minHeight: '300px' }}>
-                        {/* Sidebar mock */}
-                        <div style={{ borderRight: '1px solid var(--border)', padding: '16px', background: 'var(--card)' }}>
-                            <div style={{ display: 'flex', gap: '4px', marginBottom: '16px' }}>
-                                <div style={{ flex: 1, padding: '5px', borderRadius: '6px', background: 'var(--background)', textAlign: 'center', fontSize: '0.7rem', color: '#22d3ee', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                                    <Bot size={10} /> AI Chat
-                                </div>
-                                <div style={{ flex: 1, padding: '5px', borderRadius: '6px', textAlign: 'center', fontSize: '0.7rem', color: 'var(--muted-foreground)', fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                                    <LayoutGrid size={10} /> Widgets
-                                </div>
-                            </div>
-                            <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '16px' }}>
-                                <div style={{ width: '22px', height: '22px', borderRadius: '6px', background: 'linear-gradient(135deg, #22d3ee, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                    <Sparkles size={10} color="#fff" />
-                                </div>
-                                <p style={{ fontSize: '0.65rem', color: 'var(--muted-foreground)', lineHeight: 1.4, margin: 0 }}>
-                                    Ask me to add sections, badges, or rewrite content!
-                                </p>
-                            </div>
-                            {/* Typing animation mock */}
-                            <div style={{ padding: '8px 10px', borderRadius: '6px', border: '1px solid var(--border)', background: 'var(--background)', fontSize: '0.65rem', color: 'var(--foreground)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <span style={{ opacity: typedText ? 1 : 0.4 }}>{typedText || 'Ask AI...'}<span style={{ animation: 'blink 1s infinite' }}>|</span></span>
-                            </div>
-                        </div>
-
-                        {/* Raw markdown mock */}
-                        <div style={{ padding: '16px', borderRight: '1px solid var(--border)', fontFamily: 'ui-monospace, monospace', fontSize: '0.72rem', color: 'var(--muted-foreground)', lineHeight: 1.8, background: 'var(--background)' }}>
-                            <div style={{ fontSize: '0.65rem', color: 'var(--muted-foreground)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <Code2 size={10} /> README.md
-                            </div>
-                            <span style={{ color: 'var(--foreground)', fontWeight: 600 }}># My Project</span><br />
-                            <span style={{ opacity: 0.5 }}>&gt; Fast, modern toolkit</span><br /><br />
-                            <span style={{ color: '#22d3ee' }}>## 🚀 Features</span><br />
-                            <span>- ⚡ Lightning fast</span><br />
-                            <span>- 🔒 Secure by default</span><br />
-                            <span>- 📦 Zero config</span><br /><br />
-                            <span style={{ color: '#22d3ee' }}>## Installation</span><br />
-                            <span style={{ background: 'var(--muted)', padding: '2px 6px', borderRadius: '3px', fontSize: '0.68rem' }}>npm install my-project</span>
-                        </div>
-
-                        {/* Preview mock */}
-                        <div style={{ padding: '16px', fontSize: '0.78rem', lineHeight: 1.6, background: 'var(--background)' }}>
-                            <div style={{ fontSize: '0.65rem', color: 'var(--muted-foreground)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <FileText size={10} style={{ color: '#22d3ee' }} /> Preview
-                            </div>
-                            <h3 style={{ fontSize: '1.2rem', marginBottom: '2px', fontWeight: 700 }}>My Project</h3>
-                            <p style={{ color: 'var(--muted-foreground)', marginBottom: '12px', fontSize: '0.75rem' }}>Fast, modern toolkit</p>
-                            <h4 style={{ fontSize: '0.85rem', marginBottom: '6px' }}>🚀 Features</h4>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', marginBottom: '12px', fontSize: '0.75rem' }}>
-                                <span>⚡ Lightning fast</span>
-                                <span>🔒 Secure by default</span>
-                                <span>📦 Zero config</span>
-                            </div>
-                            {/* Badge mockups */}
-                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                {[
-                                    { label: 'stars', val: '128', bg: '#22d3ee' },
-                                    { label: 'forks', val: '34', bg: '#818cf8' },
-                                    { label: 'license', val: 'MIT', bg: '#f59e0b' },
-                                ].map((b, i) => (
-                                    <div key={i} style={{ display: 'flex', borderRadius: '4px', overflow: 'hidden', fontSize: '0.6rem', fontWeight: 600 }}>
-                                        <span style={{ background: '#0d1117', padding: '3px 6px', color: '#ccc' }}>{b.label}</span>
-                                        <span style={{ background: b.bg, padding: '3px 6px', color: '#fff' }}>{b.val}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* ─── HOW IT WORKS ─── */}
-            <section style={{ padding: '0 24px 80px', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
-                <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-                    <p style={{ color: '#c9956a', fontSize: '0.8rem', fontWeight: 600, marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>How it works</p>
-                    <h2 style={{ fontSize: '2rem', marginBottom: '12px' }}>Three steps to great docs</h2>
-                    <p style={{ color: 'var(--muted-foreground)', fontSize: '1rem', maxWidth: '460px', margin: '0 auto' }}>
-                        Go from zero to polished in under a minute.
-                    </p>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-                    {[
-                        { step: '01', icon: <Github size={22} />, title: 'Connect GitHub', desc: 'Sign in with GitHub OAuth. We securely access your public and private repos.' },
-                        { step: '02', icon: <LayoutTemplate size={22} />, title: 'Pick a Template', desc: 'Professional, Creative, Minimal, or Detailed — each crafted for a different audience.' },
-                        { step: '03', icon: <Zap size={22} />, title: 'Generate & Edit', desc: 'AI analyzes your codebase and produces a README. Fine-tune with AI chat and drag-n-drop widgets.' },
-                    ].map((item, i) => (
-                        <div key={i} style={{ position: 'relative', padding: '28px', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--card)', transition: 'border-color 0.2s' }}
-                            onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(201,149,106,0.4)'}
-                            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                        >
-                            <span style={{ position: 'absolute', top: '14px', right: '18px', fontSize: '2.5rem', fontWeight: 800, color: 'var(--border)', lineHeight: 1 }}>{item.step}</span>
-                            <div style={{
-                                width: '42px', height: '42px', borderRadius: '9px',
-                                background: 'linear-gradient(135deg, rgba(201,149,106,0.1), rgba(226,196,160,0.08))',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                marginBottom: '16px', color: '#c9956a',
-                            }}>{item.icon}</div>
-                            <h3 style={{ fontSize: '1.05rem', marginBottom: '6px' }}>{item.title}</h3>
-                            <p style={{ color: 'var(--muted-foreground)', lineHeight: 1.5, fontSize: '0.85rem' }}>{item.desc}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* ─── FEATURES ─── */}
-            <section style={{ padding: '60px 24px 80px', maxWidth: '1000px', margin: '0 auto', width: '100%', borderTop: '1px solid var(--border)' }}>
-                <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-                    <p style={{ color: '#c9956a', fontSize: '0.8rem', fontWeight: 600, marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Features</p>
-                    <h2 style={{ fontSize: '2rem', marginBottom: '12px' }}>Everything you need</h2>
-                    <p style={{ color: 'var(--muted-foreground)', fontSize: '1rem', maxWidth: '460px', margin: '0 auto' }}>
-                        Built for developers who care about their open-source presence.
-                    </p>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-                    {[
-                        { icon: <Bot size={20} />, title: 'AI Chat Editor', desc: 'Tell the AI to rewrite, add sections, insert badges — it understands shields.io, stats cards, and socials.' },
-                        { icon: <LayoutGrid size={20} />, title: 'Widget Library', desc: '20+ drag-and-drop widgets: GitHub stats, social badges, contributor grids, and live repo badges.' },
-                        { icon: <LayoutTemplate size={20} />, title: '4 Templates', desc: 'Professional, Creative, Minimalist, Detailed — each produces structurally different documentation.' },
-                        { icon: <Eye size={20} />, title: 'Live Preview', desc: '3-pane editor with raw markdown and rendered preview side by side. See changes instantly.' },
-                        { icon: <Shield size={20} />, title: 'GitHub OAuth', desc: 'Secure sign-in. Access public and private repos without storing tokens.' },
-                        { icon: <Download size={20} />, title: 'Export & Save', desc: 'Download .md files, save to dashboard, and re-edit anytime with full version persistence.' },
-                    ].map((f, i) => (
-                        <div key={i} style={{
-                            padding: '24px', borderRadius: '12px', border: '1px solid var(--border)',
-                            background: 'var(--card)', transition: 'border-color 0.2s',
-                        }}
-                            onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(201,149,106,0.4)'}
-                            onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-                        >
-                            <div style={{
-                                width: '38px', height: '38px', borderRadius: '8px', flexShrink: 0,
-                                background: 'linear-gradient(135deg, rgba(201,149,106,0.1), rgba(226,196,160,0.08))',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c9956a',
-                                marginBottom: '14px',
-                            }}>{f.icon}</div>
-                            <h3 style={{ fontSize: '0.95rem', marginBottom: '6px' }}>{f.title}</h3>
-                            <p style={{ color: 'var(--muted-foreground)', fontSize: '0.82rem', lineHeight: 1.5 }}>{f.desc}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* ─── CTA ─── */}
-            <section style={{ padding: '0 24px 80px', maxWidth: '720px', margin: '0 auto', width: '100%' }}>
-                <div style={{
-                    textAlign: 'center', padding: '52px 40px', borderRadius: '12px',
-                    border: '1px solid rgba(201,149,106,0.15)', position: 'relative', overflow: 'hidden',
-                    background: 'linear-gradient(160deg, rgba(201,149,106,0.04), var(--card) 40%, rgba(226,196,160,0.03))',
-                }}>
-                    <div style={{
-                        position: 'absolute', top: '-100px', right: '-60px',
-                        width: '220px', height: '220px', borderRadius: '50%',
-                        background: 'radial-gradient(circle, rgba(201,149,106,0.06), transparent 70%)',
-                        pointerEvents: 'none',
-                    }} />
-                    <h2 style={{ fontSize: '1.8rem', marginBottom: '12px', position: 'relative', fontWeight: 600 }}>Ready to ship?</h2>
-                    <p style={{ color: 'var(--muted-foreground)', fontSize: '0.95rem', maxWidth: '380px', margin: '0 auto 28px' }}>
-                        Generate your first professional README in under 60 seconds.
-                    </p>
-                    <Link to="/auth" className="btn-primary" style={{
-                        height: '2.75rem', padding: '0 24px', fontSize: '0.9rem',
-                        background: '#fff', color: '#0a0a0a', border: 'none',
-                        borderRadius: '8px', fontWeight: 600, position: 'relative',
-                    }}>
-                        Get Started Free <ArrowRight size={14} />
-                    </Link>
-                </div>
-            </section>
-
-            {/* ─── FOOTER ─── */}
-            <footer style={{
-                borderTop: '1px solid var(--border)', padding: '32px 24px',
-                maxWidth: '1000px', margin: '0 auto', width: '100%',
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px',
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 600, fontSize: '0.9rem' }}>
-                    <FileText size={16} style={{ color: '#22d3ee' }} /> GitTool
-                </div>
-                <span style={{ color: 'var(--muted-foreground)', fontSize: '0.75rem' }}>
-                    © {new Date().getFullYear()} GitTool. Built with ❤️ for open source.
-                </span>
-                <a href="https://github.com" target="_blank" rel="noreferrer" style={{ color: 'var(--muted-foreground)' }}><Github size={16} /></a>
-            </footer>
-
-            <style>{`
-                @keyframes blink {
-                    0%, 50% { opacity: 1; }
-                    51%, 100% { opacity: 0; }
-                }
-            `}</style>
+        <div className="border border-white/10 bg-white/[0.02] backdrop-blur-md rounded-2xl mb-4 overflow-hidden transition-all duration-300">
+            <button 
+                onClick={() => setIsOpen(!isOpen)} 
+                className="w-full flex items-center justify-between p-6 text-left focus:outline-none group"
+            >
+                <span className="font-semibold text-white/90 group-hover:text-white transition-colors">{title}</span>
+                <ChevronDown className={`text-white/50 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} size={20} />
+            </button>
+            <div 
+                className={`px-6 text-white/60 text-sm leading-relaxed transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-48 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
+            >
+                {content}
+            </div>
         </div>
     );
 }
 
-export default Home;
+export default function Home() {
+    const { user } = useAuth();
+    
+    return (
+        <div className="min-h-screen bg-[#060606] text-white selection:bg-cyan-500/30 overflow-hidden font-sans">
+
+            {/* ═══ GLOBAL BACKGROUND GLOWS ══════════════════════════════════════════════ */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                {/* Noise texture overlay */}
+                <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
+                {/* Cyan glow top left */}
+                <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-cyan-500/20 rounded-full blur-[120px] mix-blend-screen"></div>
+                {/* Orange glow top right */}
+                <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-amber-500/10 rounded-full blur-[150px] mix-blend-screen"></div>
+                {/* Center subtle glow */}
+                <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[60%] h-[40%] bg-blue-500/10 rounded-full blur-[120px] mix-blend-screen"></div>
+            </div>
+
+            <div className="relative z-10">
+
+                {/* ═══ HERO SECTION ══════════════════════════════════════════════ */}
+                <section className="max-w-7xl mx-auto px-6 pt-32 pb-20 text-center flex flex-col items-center">
+                    
+                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium mb-8 backdrop-blur-md shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+                        <Sparkles size={14} className="text-cyan-400" />
+                        <span className="text-white/80 tracking-wide uppercase">GitTalk 2.0 Is Here</span>
+                    </div>
+
+                    <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
+                        Simplify Your Workflow.<br />
+                        Supercharge Your Team.
+                    </h1>
+
+                    <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+                        A premium consolidation of 70+ essential Git utilities, AI-driven automation, 
+                        and deep repository analytics designed for the modern developer.
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-24 w-full sm:w-auto">
+                        {user ? (
+                            <Link to="/dashboard" className="group relative h-14 px-8 rounded-full bg-white text-black font-semibold flex items-center gap-2 hover:scale-105 transition-all duration-300 w-full sm:w-auto overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-emerald-400 opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                                <Layout size={20} className="relative z-10" />
+                                <span className="relative z-10">Enter Dashboard</span>
+                                <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        ) : (
+                            <Link to="/auth" className="group relative h-14 px-8 rounded-full bg-white text-black font-semibold flex items-center gap-2 hover:scale-105 transition-all duration-300 w-full sm:w-auto overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-400 opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                                <Github size={20} className="relative z-10" />
+                                <span className="relative z-10">Start Building Free</span>
+                            </Link>
+                        )}
+                        <a href="#features" className="group h-14 px-8 rounded-full border border-white/10 bg-white/5 text-white font-semibold flex items-center gap-2 hover:bg-white/10 transition-all duration-300 w-full sm:w-auto backdrop-blur-md">
+                            <Play size={18} className="text-white/60 group-hover:text-white" />
+                            <span>See How It Works</span>
+                        </a>
+                    </div>
+
+                    {/* Dashboard Mockup Showcase */}
+                    <div className="relative w-full max-w-5xl mx-auto mb-20 group perspective-[2000px]">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/30 to-amber-500/30 rounded-[2rem] blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-1000"></div>
+                        <div className="relative rounded-[2rem] border border-white/15 bg-[#0a0a0a]/80 backdrop-blur-xl p-2 shadow-2xl overflow-hidden transform transition-all duration-700 hover:rotate-x-2">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50"></div>
+                            <img 
+                                src={heroMockup} 
+                                alt="GitTalk Premium Dashboard" 
+                                className="w-full h-auto rounded-[1.5rem] border border-white/5"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Trusted By */}
+                    <div className="flex flex-col items-center gap-6 opacity-60">
+                        <p className="text-xs font-bold uppercase tracking-widest text-white/40">Trusted by innovative teams worldwide</p>
+                        <div className="flex flex-wrap justify-center gap-10 md:gap-16 items-center filter grayscale contrast-200 opacity-70">
+                            {/* Placeholder Logos */}
+                            <div className="flex items-center gap-2 text-xl font-bold font-mono"><Hexagon /> SYNTHESIS</div>
+                            <div className="flex items-center gap-2 text-xl font-bold font-mono"><Box /> OMNICORP</div>
+                            <div className="flex items-center gap-2 text-xl font-bold font-mono"><Orbit /> NEURALNET</div>
+                            <div className="flex items-center gap-2 text-xl font-bold font-mono"><Flame /> VORTEX</div>
+                        </div>
+                    </div>
+                </section>
+
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-10"></div>
+
+                {/* ═══ BENTO 1: BUILD SCALE MANAGE ════════════════════════════════════════ */}
+                <section id="features" className="max-w-6xl mx-auto px-6 py-24">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
+                            Build, Scale And Manage<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Entire AI Workforce</span>
+                        </h2>
+                        <p className="text-white/50 max-w-2xl mx-auto">
+                            Replace disconnected scripts and clunky terminal history with our 
+                            unified, enterprise-grade Git command center.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Large Card Span 2 */}
+                        <div className="md:col-span-2 group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 overflow-hidden hover:border-cyan-500/30 transition-colors">
+                            <div className="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/20 rounded-full blur-[80px] group-hover:bg-cyan-500/30 transition-colors"></div>
+                            
+                            <div className="relative z-10 flex flex-col h-full justify-between">
+                                <div>
+                                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 border border-cyan-500/20">
+                                        <Bot className="text-cyan-400" size={24} />
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-3 text-white">Code Summarization</h3>
+                                    <p className="text-white/60 max-w-md leading-relaxed">
+                                        Generative AI analyzes your diffs to write comprehensive PR descriptions, 
+                                        commit messages, and architectural summaries instantly.
+                                    </p>
+                                </div>
+                                <div className="mt-8 rounded-xl border border-white/10 bg-[#000] p-4 font-mono text-sm text-cyan-300 shadow-inner">
+                                    <span className="text-white/30">$</span> gittalk ai review pr-104<br/>
+                                    <span className="text-emerald-400">✓</span> Analyzed 34 files, 1.2k lines<br/>
+                                    <span className="text-emerald-400">✓</span> Generated summary & reviewer mapping
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Smaller Card 1 */}
+                        <div className="group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 overflow-hidden hover:border-amber-500/30 transition-colors">
+                            <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px]"></div>
+                            <div className="relative z-10">
+                                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-6 border border-amber-500/20">
+                                    <Zap className="text-amber-400" size={24} />
+                                </div>
+                                <h3 className="text-xl font-bold mb-3 text-white">Universal Search (Cmd+K)</h3>
+                                <p className="text-white/60 text-sm leading-relaxed mb-6">
+                                    Instantly jump between repositories, active branches, PRs, and AI tools with lightning-fast fuzzy search.
+                                </p>
+                                <div className="rounded-lg bg-black/50 border border-white/5 p-3 flex justify-between items-center">
+                                    <span className="text-white/40 text-sm border border-white/10 rounded px-2">⌘</span>
+                                    <span className="text-white/40 text-sm">+</span>
+                                    <span className="text-white/40 text-sm border border-white/10 rounded px-2">K</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Smaller Card 2 */}
+                        <div className="group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 overflow-hidden hover:border-emerald-500/30 transition-colors">
+                            <div className="relative z-10 h-full flex flex-col justify-between">
+                                <div>
+                                    <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20">
+                                        <BarChart3 className="text-emerald-400" size={24} />
+                                    </div>
+                                    <h3 className="text-xl font-bold mb-3 text-white">Full Observability</h3>
+                                    <p className="text-white/60 text-sm leading-relaxed">
+                                        Track cycle times, review loads, and tech debt across your entire organization in real-time.
+                                    </p>
+                                </div>
+                                <div className="mt-6 flex items-end gap-2 h-12">
+                                    <div className="w-1/4 bg-white/10 h-[40%] rounded-t-sm"></div>
+                                    <div className="w-1/4 bg-white/20 h-[60%] rounded-t-sm"></div>
+                                    <div className="w-1/4 bg-emerald-500/60 h-[90%] rounded-t-sm"></div>
+                                    <div className="w-1/4 bg-emerald-400 h-full rounded-t-sm"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Large Card Span 2 Bottom */}
+                        <div className="md:col-span-2 group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 overflow-hidden hover:border-purple-500/30 transition-colors">
+                            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[50%] h-[150%] bg-purple-500/10 rounded-full blur-[100px]"></div>
+                            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
+                                <div className="flex-1">
+                                    <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20">
+                                        <GitBranch className="text-purple-400" size={24} />
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-3 text-white">Multi-Branch Maestro</h3>
+                                    <p className="text-white/60 leading-relaxed max-w-md">
+                                        Visually cherry-pick, rebase interactively, and resolve 3-way merge conflicts without leaving your browser. 
+                                        We make advanced git operations foolproof.
+                                    </p>
+                                </div>
+                                <div className="flex-1 w-full bg-[#000]/50 border border-white/10 rounded-2xl p-4 flex flex-col gap-3">
+                                    <div className="flex items-center gap-3 bg-white/5 rounded-lg p-2 border border-white/5">
+                                        <GitBranch size={16} className="text-white/40"/>
+                                        <div className="h-2 w-24 bg-white/20 rounded-full"></div>
+                                        <div className="h-2 w-12 bg-purple-400 rounded-full ml-auto"></div>
+                                    </div>
+                                    <div className="flex items-center gap-3 bg-purple-500/20 rounded-lg p-2 border border-purple-500/30">
+                                        <GitMerge size={16} className="text-purple-400"/>
+                                        <div className="h-2 w-32 bg-white/80 rounded-full"></div>
+                                        <CheckCircle2 size={16} className="text-emerald-400 ml-auto"/>
+                                    </div>
+                                    <div className="flex items-center gap-3 bg-white/5 rounded-lg p-2 border border-white/5">
+                                        <CircleDot size={16} className="text-white/40"/>
+                                        <div className="h-2 w-20 bg-white/20 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                {/* ═══ BENTO 2: MORE FEATURES ════════════════════════════════════════════ */}
+                <section className="bg-[#030303] border-y border-white/5 py-32 relative">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
+                                Few More Things<br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">You're Going To Love</span>
+                            </h2>
+                            <p className="text-white/50 max-w-2xl mx-auto">
+                                We didn't stop at the basics. Our platform is packed with utilities
+                                designed to shave hours off your week.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            {MINI_FEATURES.map((feat, i) => (
+                                <div key={i} className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 hover:bg-white/[0.04] transition-colors group">
+                                    <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-amber-500/10 group-hover:text-amber-400 transition-all text-white/60 border border-white/5">
+                                        <feat.icon size={20} />
+                                    </div>
+                                    <h4 className="text-lg font-bold text-white/90 mb-2">{feat.title}</h4>
+                                    <p className="text-sm text-white/50 leading-relaxed">{feat.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+
+                {/* ═══ TESTIMONIALS ═════════════════════════════════════════════════════ */}
+                <section className="max-w-7xl mx-auto px-6 py-32 relative">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-gradient-to-r from-cyan-500/5 via-blue-500/5 to-purple-500/5 rounded-full blur-[100px] pointer-events-none z-0"></div>
+                    
+                    <div className="relative z-10">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
+                                Elevate Your AI<br />
+                                <span className="text-white/50">Journey Experience</span>
+                            </h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {TESTIMONIALS.map((t, i) => (
+                                <div key={i} className="flex flex-col bg-white/[0.01] border border-white/[0.05] rounded-3xl p-8 hover:border-white/15 transition-colors">
+                                    <div className="flex gap-1 mb-6 text-amber-500">
+                                        {[1,2,3,4,5].map(star => <Star key={star} size={16} fill="currentColor" />)}
+                                    </div>
+                                    <Quote size={32} className="text-white/10 mb-4" />
+                                    <p className="text-white/70 text-lg leading-relaxed mb-8 flex-1">"{t.quote}"</p>
+                                    <div className="flex items-center gap-4 pt-6 border-t border-white/5">
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center border border-white/10">
+                                            <t.icon size={18} className="text-white/60"/>
+                                        </div>
+                                        <div>
+                                            <div className="font-bold text-white/90">{t.author}</div>
+                                            <div className="text-xs text-white/40">{t.role}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+
+                {/* ═══ FAQS ═════════════════════════════════════════════════════════════ */}
+                <section className="max-w-3xl mx-auto px-6 py-20">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold tracking-tight mb-4">
+                            Got Questions?<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">We've Got Answers</span>
+                        </h2>
+                    </div>
+                    
+                    <div className="space-y-2">
+                        {FAQS.map((faq, index) => (
+                            <AccordionItem key={index} title={faq.question} content={faq.answer} />
+                        ))}
+                    </div>
+                </section>
+
+
+                {/* ═══ FOOTER CTA ═══════════════════════════════════════════════════════ */}
+                <section className="border-t border-white/5 py-32 px-6 text-center relative mt-20">
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-t from-cyan-500/10 to-transparent blur-[80px] z-0 pointer-events-none"></div>
+                    
+                    <div className="max-w-2xl mx-auto relative z-10">
+                        <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6">
+                            Ready To Transform Your<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-amber-400">Project Management?</span>
+                        </h2>
+                        <p className="text-lg text-white/50 mb-10 font-light">
+                            Join thousands of elite developers combining the power of Git
+                            with bleeding-edge AI to ship code effortlessly.
+                        </p>
+                        
+                        <div className="flex justify-center">
+                            {user ? (
+                                <Link to="/dashboard" className="h-14 px-10 text-lg rounded-full bg-white text-black font-bold hover:scale-105 transition-all shadow-[0_0_40px_rgba(6,182,212,0.3)] flex items-center gap-2">
+                                    <Layout size={20} />
+                                    Go to Dashboard
+                                </Link>
+                            ) : (
+                                <Link to="/auth" className="h-14 px-10 text-lg rounded-full bg-white text-black font-bold hover:scale-105 transition-all shadow-[0_0_40px_rgba(6,182,212,0.3)] flex items-center gap-2">
+                                    <Github size={20} />
+                                    Get Started Free
+                                </Link>
+                            )}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Footer bare minimal */}
+                <footer className="w-full py-8 border-t border-white/5 text-center flex flex-col items-center">
+                    <div className="flex items-center gap-2 mb-4">
+                        <Terminal className="text-cyan-500" size={24} />
+                        <span className="text-xl font-bold tracking-tight text-white">GitTalk<span className="text-cyan-500 text-sm align-top">©</span></span>
+                    </div>
+                    <div className="text-xs text-white/30">&copy; 2026 GitTalk Premium Tools. All rights reserved.</div>
+                </footer>
+
+            </div>
+        </div>
+    );
+}
