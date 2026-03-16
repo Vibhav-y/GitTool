@@ -9,20 +9,11 @@ import {
 import { useWorkspace } from '../../contexts/WorkspaceContext';
 import { Link } from 'react-router-dom';
 import api from '../../lib/apiClient';
+import GitBranchGraph from '../../components/GitBranchGraph';
 
 /* ── Helpers ──────────────────────────────────────────── */
 
-function timeAgo(date) {
-    if (!date) return '—';
-    const s = Math.floor((Date.now() - new Date(date)) / 1000);
-    if (s < 60) return `${s}s ago`;
-    const m = Math.floor(s / 60);
-    if (m < 60) return `${m}m ago`;
-    const h = Math.floor(m / 60);
-    if (h < 24) return `${h}h ago`;
-    const d = Math.floor(h / 24);
-    return `${d}d ago`;
-}
+
 
 function healthColor(score) {
     if (score >= 80) return { text: '#10b981', bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.2)', label: 'Healthy' };
@@ -221,7 +212,7 @@ export default function BranchMergeUI() {
     );
 
     return (
-        <div className="tool-page max-w-[1400px] mx-auto">
+        <div className="tool-page max-w-[1400px] mx-auto min-w-0">
             {/* ── Navbar ─────────────────────────── */}
             <NavbarPortal>
                 <div className="flex items-center gap-3">
@@ -230,8 +221,7 @@ export default function BranchMergeUI() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Branch Management</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">Manage, analyze, and clean up branches.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>
@@ -352,7 +342,10 @@ export default function BranchMergeUI() {
 
             ) : data?.branches?.length ? (
                 <>
-                    {/* ── Branch Table ──────────────── */}
+                    <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6 items-start min-w-0">
+                        {/* ── Left Column: Branch Table & Smart Suggestions ──────────────── */}
+                        <div className="flex flex-col gap-6 min-w-0">
+                            {/* Branch Table */}
                     <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.01)' }}>
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
@@ -475,7 +468,7 @@ export default function BranchMergeUI() {
 
                                                     {/* Actions */}
                                                     <td className="px-3 py-2 text-right" onClick={e => e.stopPropagation()}>
-                                                        <div className="flex items-center gap-1 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <div className="flex items-center gap-1 justify-end transition-opacity">
                                                             {/* Compare / PR */}
                                                             {!b.isDefault && (
                                                                 <Link to={compareLink(b.name)}
@@ -573,6 +566,13 @@ export default function BranchMergeUI() {
                             </div>
                         </div>
                     )}
+                        </div>
+
+                        {/* ── Right Column: Branch Visualizer Widget ──────────────── */}
+                        <div className="sticky top-6 min-w-0">
+                            <GitBranchGraph repo={repo} />
+                        </div>
+                    </div>
                 </>
             ) : data && data.counts?.total === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20">

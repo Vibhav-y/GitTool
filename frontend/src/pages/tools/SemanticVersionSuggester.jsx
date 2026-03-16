@@ -40,8 +40,7 @@ export default function SemanticVersionSuggester() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Semantic Version Suggester</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">AI analyzes your recent commits to suggest the next semantic version.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

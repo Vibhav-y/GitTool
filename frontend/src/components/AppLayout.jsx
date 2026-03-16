@@ -22,7 +22,7 @@ export default function AppLayout() {
 
             <main
                 className="flex flex-1 flex-col h-full overflow-hidden transition-[margin-left] duration-300 ease-in-out"
-                style={{ marginLeft: sidebarCollapsed ? 68 : 256 }}
+                style={{ marginLeft: sidebarCollapsed ? 68 : 220 }}
             >
                 {/* ── Top Header Bar ──────────────────────── */}
                 <header

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTokenBalance, useGitHubTokenStatus, useTokenTransactions } from '../hooks/useQueryHooks';
@@ -35,7 +35,15 @@ export default function Profile() {
     const transactions = txData?.transactions || [];
     const loadingData = loadingBal || loadingGh || loadingTx;
 
-
+    useEffect(() => {
+        // Dynamically load Razorpay script only on Profile page
+        if (!document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]')) {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.async = true;
+            document.body.appendChild(script);
+        }
+    }, []);
     // Derive top tools from transactions
     const toolCounts = {};
     transactions.forEach(t => {

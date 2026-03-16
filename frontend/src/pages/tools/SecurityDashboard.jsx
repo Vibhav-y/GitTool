@@ -33,8 +33,7 @@ export default function SecurityDashboard() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Code Security Dashboard</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">View GitHub Advanced Security (Code Scanning) alerts for your repository.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

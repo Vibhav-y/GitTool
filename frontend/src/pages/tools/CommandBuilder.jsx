@@ -333,8 +333,7 @@ export default function CommandBuilder() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Command Builder</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">Construct, visualize, and export Git commands interactively.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

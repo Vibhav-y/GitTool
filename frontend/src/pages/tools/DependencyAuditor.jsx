@@ -24,8 +24,7 @@ export default function DependencyAuditor() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Dependency Auditor</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">Analyze your project dependencies from package.json.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

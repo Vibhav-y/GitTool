@@ -1,5 +1,7 @@
 import { fetchDecryptedToken } from "../users/githubTokenController.js";
 import { createOctokitInstance } from "../repo/octokit.js";
+import { callOpenAI } from "../shared/openaiService.js";
+import { deductToken } from "../token/tokenController.js";
 
 /* ─── Get Single Commit ───────────────────────────────── */
 
@@ -159,7 +161,7 @@ export const compareBranches = async (req, res, next) => {
 export const createPullRequest = async (req, res, next) => {
     try {
         const { owner, repo } = req.params;
-        const { title, body, head, base } = req.body;
+        const { title, body, head, base, draft, reviewers, labels } = req.body;
         const userId = req.user.id;
 
         if (!title || !head || !base) {
@@ -173,7 +175,32 @@ export const createPullRequest = async (req, res, next) => {
             owner, repo, title,
             body: body || '',
             head, base,
+            draft: !!draft
         });
+
+        // Add reviewers if specified
+        if (reviewers && reviewers.length > 0) {
+            try {
+                await octokit.pulls.requestReviewers({
+                    owner, repo, pull_number: data.number,
+                    reviewers
+                });
+            } catch (rErr) {
+                console.warn(`Failed to add reviewers: ${rErr.message}`);
+            }
+        }
+
+        // Add labels if specified
+        if (labels && labels.length > 0) {
+            try {
+                await octokit.issues.addLabels({
+                    owner, repo, issue_number: data.number,
+                    labels
+                });
+            } catch (lErr) {
+                console.warn(`Failed to add labels: ${lErr.message}`);
+            }
+        }
 
         res.json({
             number: data.number,
@@ -188,6 +215,59 @@ export const createPullRequest = async (req, res, next) => {
             const msg = error.response?.data?.errors?.[0]?.message || "A pull request already exists for this branch";
             return res.status(422).json({ error: msg });
         }
+        next(error);
+    }
+};
+
+/* ─── AI Generate PR Summary ──────────────────────────── */
+
+export const generatePRSummary = async (req, res, next) => {
+    try {
+        const { owner, repo } = req.params;
+        const { base, head } = req.body;
+        const userId = req.user.id;
+
+        if (!base || !head) {
+            return res.status(400).json({ error: "base and head are required" });
+        }
+
+        const token = await fetchDecryptedToken(userId);
+        const octokit = createOctokitInstance(token);
+
+        // Fetch the branch comparison to get the commits
+        const { data } = await octokit.repos.compareCommits({
+            owner, repo, base, head
+        });
+
+        const commitMsgs = (data.commits || []).map(c => `- ${c.commit.message.split('\n')[0]}`).join('\n');
+        
+        const prompt = `
+        You are an expert lead software engineer reviewing a branch before merging.
+        Write a concise, high-quality GitHub Pull Request summary based on the following commit messages.
+        
+        Repository: ${owner}/${repo}
+        Branches: ${head} into ${base}
+        
+        Commits:
+        ${commitMsgs}
+        
+        Output Requirements:
+        1. The FIRST line MUST be an H1 (#) containing a short, descriptive Pull Request title.
+        2. From the second line onwards, provide the PR description.
+        3. Use Markdown headers starting with H2 (##) such as "## Summary" and "## Key Changes" for the description body.
+        4. Keep it professional, concise, and scannable.
+        5. Do not include a conversational intro like "Here is the summary".
+        6. Focus heavily on formatting: use bullet points and backticks where appropriate for code or module references.
+        7. Return ONLY the raw markdown of the PR description itself, nothing else.
+        `;
+
+        const content = await callOpenAI(prompt, "gpt-4o-mini");
+        
+        await deductToken(userId, 10, "generate", `Generated PR summary for ${head} into ${base}`);
+
+        res.json({ content });
+    } catch (error) {
+        console.error("generatePRSummary ERROR:", error.message);
         next(error);
     }
 };
