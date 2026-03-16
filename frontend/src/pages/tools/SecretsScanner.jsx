@@ -36,8 +36,7 @@ export default function SecretsScanner() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Secrets Scanner</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">Scan your repository for leaked credentials, API keys, and tokens.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

@@ -35,8 +35,7 @@ export default function PipelineFailureExplainer() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Pipeline Failure Explainer</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">Paste your CI/CD logs and let AI explain what went wrong.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

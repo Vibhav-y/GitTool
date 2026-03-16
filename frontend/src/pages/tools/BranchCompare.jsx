@@ -149,14 +149,6 @@ export default function BranchCompare() {
                 const owner = repo.owner?.login || repo.full_name?.split('/')[0];
                 const res = await api.get(`/branches/${owner}/${repo.name}/compare/${base}...${head}`);
                 setData(res);
-                
-                // Auto-expand small diffs (< 100 lines changed and not binary)
-                if (res.files) {
-                    const toExpand = res.files
-                        .filter(f => f.changes <= 100 && f.patch)
-                        .map(f => f.filename);
-                    setExpandedFiles(new Set(toExpand));
-                }
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -213,9 +205,13 @@ export default function BranchCompare() {
 
     const toggleFile = (filename) => {
         setExpandedFiles(prev => {
-            const next = new Set(prev);
-            next.has(filename) ? next.delete(filename) : next.add(filename);
-            return next;
+            if (prev.has(filename)) {
+                const next = new Set(prev);
+                next.delete(filename);
+                return next;
+            } else {
+                return new Set([filename]);
+            }
         });
     };
 
@@ -227,18 +223,10 @@ export default function BranchCompare() {
         
         if (allExpanded) {
             // Collapse all filtered files
-            setExpandedFiles(prev => {
-                const next = new Set(prev);
-                filteredFiles.forEach(f => next.delete(f.filename));
-                return next;
-            });
+            setExpandedFiles(new Set());
         } else {
             // Expand all filtered files
-            setExpandedFiles(prev => {
-                const next = new Set(prev);
-                filteredFiles.forEach(f => next.add(f.filename));
-                return next;
-            });
+            setExpandedFiles(new Set(filteredFiles.map(f => f.filename)));
         }
     };
 
@@ -255,9 +243,6 @@ export default function BranchCompare() {
         try {
             const res = await api.get(`/branches/${owner}/${repo.name}/commits/${sha}`);
             setCommitData(res);
-            if (res.files) {
-                setExpandedFiles(new Set(res.files.map(f => f.filename)));
-            }
         } catch (err) {
             console.error("Failed to fetch commit", err);
         } finally {
@@ -718,12 +703,14 @@ export default function BranchCompare() {
                                                         return (
                                                             <button key={`nav-${f.filename}`} 
                                                                 onClick={() => {
-                                                                    const el = document.getElementById(`file-${f.filename}`);
-                                                                    if (el) {
-                                                                        const y = el.getBoundingClientRect().top + window.scrollY - 80;
-                                                                        window.scrollTo({ top: y, behavior: 'smooth' });
-                                                                        setExpandedFiles(prev => new Set(prev).add(f.filename));
-                                                                    }
+                                                                    setExpandedFiles(new Set([f.filename]));
+                                                                    setTimeout(() => {
+                                                                        const el = document.getElementById(`file-${f.filename}`);
+                                                                        if (el) {
+                                                                            const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                                                                            window.scrollTo({ top: y, behavior: 'smooth' });
+                                                                        }
+                                                                    }, 100);
                                                                 }}
                                                                 className={`flex items-center justify-between px-4 py-1.5 w-full text-left transition-colors group ${isActive ? 'bg-primary/10 border-r-2 border-primary' : 'hover:bg-white/[0.04]'}`}>
                                                                 <div className="flex items-center gap-2 overflow-hidden">
@@ -755,16 +742,21 @@ export default function BranchCompare() {
                                     <Filter size={24} className="mx-auto mb-2 opacity-30" />
                                     No files match the current filters.
                                 </div>
+                            ) : expandedFiles.size === 0 ? (
+                                <div className="py-24 flex flex-col items-center justify-center text-muted-foreground text-[13px] bg-white/[0.01] h-full">
+                                    <FileCode size={32} className="mb-4 opacity-20" />
+                                    <p>Select a file from the sidebar to view its diff</p>
+                                </div>
                             ) : (
                                 <>
-                                    {filteredFiles.slice(0, visibleFilesCount).map((f, i) => {
+                                    {filteredFiles.filter(f => expandedFiles.has(f.filename)).slice(0, visibleFilesCount).map((f, i, arr) => {
                                         const fsc = fileStatusConfig(f.status);
-                                        const isExpanded = expandedFiles.has(f.filename);
+                                        const isExpanded = true;
                                         const iconConfig = getFileIcon(f.filename);
                                         const Icon = iconConfig.icon;
 
                                         return (
-                                            <div key={f.filename} id={`file-${f.filename}`} style={{ borderBottom: i < activeData.files.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
+                                            <div key={f.filename} id={`file-${f.filename}`} style={{ borderBottom: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none' }}>
                                                 {/* File row (Sticky Header) */}
                                                 <div className="sticky top-0 z-10 backdrop-blur-md" style={{ background: 'rgba(13, 13, 20, 0.85)' }}>
                                                     <div className="flex items-center w-full justify-between gap-3 px-4 py-2 hover:bg-white/[0.04] transition-colors border-b border-white/[0.04]">
@@ -919,7 +911,9 @@ export default function BranchCompare() {
                                                                             const highlighted = Prism.highlight(content, Prism.languages[prismLang], prismLang);
                                                                             return React.createElement('span', { dangerouslySetInnerHTML: { __html: prefix + highlighted } });
                                                                         }
-                                                                    } catch {}
+                                                                    } catch {
+                                                                        // Fallback to text if highlighter fails
+                                                                    }
                                                                     return text;
                                                                 };
 
@@ -1141,6 +1135,7 @@ export default function BranchCompare() {
                         totalAdditions: data.totalAdditions,
                         totalDeletions: data.totalDeletions,
                     }}
+                    compareData={activeData}
                     onClose={() => setShowPRModal(false)}
                     onCreated={() => {}}
                 />

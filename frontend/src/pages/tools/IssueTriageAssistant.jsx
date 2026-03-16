@@ -38,8 +38,7 @@ export default function IssueTriageAssistant() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Issue Triage Assistant</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">AI-powered label suggestions for your open issues.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

@@ -38,8 +38,7 @@ export default function DeadCodeDetector() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Dead Code Detector</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">AI-powered analysis to identify potentially unused files in your codebase.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

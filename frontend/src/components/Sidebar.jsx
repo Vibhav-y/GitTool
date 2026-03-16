@@ -163,14 +163,14 @@ export default function Sidebar({ collapsed, onToggle }) {
         <aside
             className="fixed top-0 left-0 z-50 flex h-screen flex-col overflow-hidden"
             style={{
-                width: collapsed ? 68 : 256,
+                width: collapsed ? 68 : 220,
                 transition: 'width 0.3s cubic-bezier(0.4,0,0.2,1)',
                 background: 'var(--sidebar-bg, hsl(var(--muted) / 0.4))',
                 borderRight: '1px solid var(--border)',
             }}
         >
             {/* ── Brand ── */}
-            <div className="flex items-center h-16 px-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+            <div className="flex items-center h-14 px-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
                 {collapsed ? (
                     <div className="flex items-center justify-center w-full">
                         <div className="flex h-9 w-9 items-center justify-center rounded-xl text-primary-foreground shrink-0"

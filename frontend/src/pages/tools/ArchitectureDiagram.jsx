@@ -24,8 +24,7 @@ export default function ArchitectureDiagram() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Architecture Diagram</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">Visualize your repository's file structure, languages, and architecture.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

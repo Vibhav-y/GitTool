@@ -38,8 +38,7 @@ export default function ReleaseNotesGenerator() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">Release Notes Generator</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">Automate your release documentation with AI-powered commit analysis.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>

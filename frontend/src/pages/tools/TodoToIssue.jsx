@@ -37,8 +37,7 @@ export default function TodoToIssue() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">TODO → Issue Converter</h2>
-                        <span className="hidden sm:inline text-border">|</span>
-                        <p className="tool-page-desc">Scan your codebase for TODO/FIXME comments and convert them to trackable issues.</p>
+                        
                     </div>
                 </div>
             </NavbarPortal>
