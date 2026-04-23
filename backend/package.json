@@ -13,6 +13,10 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
   "dependencies": {
     "@octokit/rest": "^22.0.1",
     "@supabase/supabase-js": "^2.98.0",
