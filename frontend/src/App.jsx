@@ -12,6 +12,10 @@ import Home from './pages/home';
 import Auth from './pages/auth';
 import Privacy from './pages/Privacy';
 import Changelog from './pages/Changelog';
+import Blog from './pages/Blog';
+import BlogArticle from './pages/BlogArticle';
+import Learn from './pages/Learn';
+import LearnArticle from './pages/LearnArticle';
 import NotFound from './pages/NotFound';
 
 import AppLayout from './components/AppLayout';
@@ -85,6 +89,10 @@ function App() {
                 <Route path="auth" element={<Auth />} />
                 <Route path="privacy" element={<Privacy />} />
                 <Route path="changelog" element={<Changelog />} />
+                <Route path="blog" element={<Blog />} />
+                <Route path="blog/:slug" element={<BlogArticle />} />
+                <Route path="learn" element={<Learn />} />
+                <Route path="learn/:slug" element={<LearnArticle />} />
               </Route>
 
               {/* Protected App Routes (Shell + Tools) */}
