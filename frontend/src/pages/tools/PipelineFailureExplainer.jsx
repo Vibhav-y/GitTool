@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
 import { Terminal, Loader2, AlertCircle, CheckCircle, Wrench } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -28,6 +29,7 @@ export default function PipelineFailureExplainer() {
 
     return (
         <div className="tool-page">
+            <SEO title="Pipeline Failure Explainer" description="Understand why your GitHub Actions or CI/CD pipeline failed. GitTool's AI explains pipeline errors in plain English." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

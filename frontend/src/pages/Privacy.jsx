@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, ArrowLeft } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Section = ({ title, children }) => (
     <div style={{ marginBottom: '40px' }}>
@@ -31,6 +32,12 @@ export default function PrivacyPolicy() {
 
     return (
         <div style={{ maxWidth: '760px', margin: '0 auto', padding: 'clamp(32px,5vw,60px) 20px' }}>
+            <SEO
+                title="Privacy Policy"
+                description="Read the GitTool privacy policy. Learn how we handle your data, GitHub tokens, and personal information when using our developer tools."
+                keywords={['gittool privacy policy', 'developer tools privacy', 'github oauth data policy']}
+                canonical="/privacy"
+            />
             {/* Back link */}
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--muted-foreground)', fontSize: '0.82rem', textDecoration: 'none', marginBottom: '32px' }}
                 onMouseEnter={e => e.currentTarget.style.color = 'var(--foreground)'}

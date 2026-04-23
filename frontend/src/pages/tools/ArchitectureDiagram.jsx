@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React from 'react';
 import { FolderTree, Loader2, File, Folder } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -17,6 +18,7 @@ export default function ArchitectureDiagram() {
 
     return (
         <div className="tool-page">
+            <SEO title="Architecture Diagram Generator" description="Visualize your GitHub repository architecture with an AI-generated architecture diagram. Understand code structure at a glance." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
 import { ShieldAlert, Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -29,6 +30,20 @@ export default function SecretsScanner() {
 
     return (
         <div className="tool-page">
+            <SEO
+              title="Git Secrets Scanner – Scan GitHub Repo for API Keys & Credentials"
+              description="Free git security scanner. Scan your git repository for exposed secrets, API keys, tokens, hardcoded passwords, and .env files committed to GitHub. Detect API keys in git history before they cause a breach."
+              keywords={[
+                'git security scanner', 'scan git repo for secrets',
+                'detect api keys in git history', 'git repository secret scanner free',
+                'git leaks scanner online', 'github secret detection tool',
+                'scan repository for hardcoded passwords', 'git commit history secrets audit',
+                'detect env files committed to github', 'github security audit tool',
+                'how to find exposed credentials in github', 'remove sensitive data from git',
+                'git repo vulnerability checker', 'git security',
+              ]}
+              noIndex={true}
+            />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

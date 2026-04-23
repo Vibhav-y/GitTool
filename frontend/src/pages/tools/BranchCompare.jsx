@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -317,6 +318,16 @@ export default function BranchCompare() {
     return (
         <div className="tool-page max-w-[1400px] mx-auto">
             {/* ── Navbar ─────────────────────────── */}
+            <SEO
+              title="Git Branch Compare Tool – Compare GitHub Branches Online Free"
+              description="Compare two git branches side-by-side online. See diffs, changed files, and commit history. Free git branch comparison tool – the easiest way to understand differences between git branches."
+              keywords={[
+                'branch compare tool', 'git branch compare', 'compare git branches online',
+                'github branch diff tool', 'git branch comparison', 'git diff viewer online',
+                'git workflow tools', 'git utilities online',
+              ]}
+              noIndex={true}
+            />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <button onClick={() => navigate('/tools/branch-merge')}

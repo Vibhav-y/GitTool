@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
 import { Users, GitPullRequest, AlertCircle, Loader2, ExternalLink } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -23,6 +24,7 @@ export default function CollaborationHub() {
 
     return (
         <div className="tool-page">
+            <SEO title="Collaboration Hub" description="Manage pull requests and team collaboration on GitHub with GitTool's Collaboration Hub. Streamline code review workflows." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

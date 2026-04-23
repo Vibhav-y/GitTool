@@ -1,393 +1,429 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import SEO from '../components/SEO';
 import {
-    ArrowRight, Github, Zap, Eye, Terminal, GitBranch, GitMerge,
-    Bot, BookOpen, Shield, BarChart3, Keyboard, Lock, FileCode2,
-    Cpu, Gauge, Search, Bell, Layers, FileText, Brain, Code2,
-    LayoutDashboard, Palette, TrendingUp, TrendingDown, AlertTriangle,
-    Layout, CheckCircle2, ChevronDown, Quote, Star, Sparkles, Play,
-    Hexagon, Flame, Box, CircleDot, Orbit
+    ArrowRight, Github, Terminal, GitBranch, Shield, Bot,
+    BarChart3, Search, Star, ArrowUpRight, Package, CheckCircle
 } from 'lucide-react';
-import heroMockup from '../assets/hero-mockup.png';
 
-/* ── Data ──────────────────────────────────────────────────── */
-
-const FAQS = [
-    { question: "How does GitTalk integrate with my current workflow?", answer: "GitTalk seamlessly connects with your existing GitHub, GitLab, or Bitbucket repositories via OAuth. No complex setup or migration required. Simply sign in and your repositories are instantly analyzed." },
-    { question: "Is my repository data secure?", answer: "Absolutely. We employ bank-grade encryption at rest and in transit. We only request minimum necessary permissions to generate insights and automate your git workflow, never storing your raw source code." },
-    { question: "What AI models power the automation tools?", answer: "GitTalk utilizes an ensemble of state-of-the-art LLMs (like GPT-4 and Claude 3 Opus) specifically fine-tuned on astoundingly large codebases to provide hyper-contextual code reviews, commit messages, and PR summaries." },
-    { question: "Do I need to install anything locally?", answer: "No local installation is required to start benefiting from our dashboard insights and automated PR generators. We do offer a lightweight CLI for advanced users who prefer terminal integration." }
+const TOOLS = [
+    'README Generator', 'Branch Compare', 'Security Scanner', 'Code Analysis',
+    'Dependency Audit', 'Gitignore Generator', 'Branch Pruner', 'AI Triage',
+    'PR Simulator', 'License Checker', 'Dead Code Finder', 'TODO Scanner',
+    'Commit Analyser', 'Repo Health Score', 'PR Reviewer', 'Changelog Gen',
 ];
-
-const TESTIMONIALS = [
-    { 
-        quote: "GitTalk has fundamentally changed how our engineering team operates. We ship 40% faster and PR anxiety is entirely gone. The AI insights are scary accurate.", 
-        author: "Sarah Jenkins", role: "VP of Engineering, TechNova", icon: Hexagon 
-    },
-    { 
-        quote: "The automated code reviews catch edge cases that our senior engineers miss. It's like having a 10x developer pairing with everyone across all timezones.", 
-        author: "David Chen", role: "Lead Architect, FlowState", icon: Box 
-    },
-    { 
-        quote: "Consolidating 5 different utilities into this single glowing command center saved us thousands. The UI is absolutely breathtaking and functional.", 
-        author: "Elena Rodriguez", role: "CTO, Zenith Startups", icon: Flame 
-    },
-];
-
-const MINI_FEATURES = [
-    { icon: Terminal, title: "Smart Commits", desc: "Automate stage/unstage grouping securely." },
-    { icon: Bot, title: "AI PR Generation", desc: "Instantly draft context-rich pull requests." },
-    { icon: Shield, title: "Code Quality", desc: "Identify tech debt & dead code fast." },
-    { icon: Lock, title: "Secrets Scanner", desc: "Prevent secret leaks before pushing." },
-    { icon: Layout, title: "Command Builder", desc: "Visual git command construction." },
-    { icon: Eye, title: "Dependency Audit", desc: "Stay compliant & up-to-date effortlessly." },
-];
-
-/* ── Components ─────────────────────────────────────────────── */
-
-function AccordionItem({ title, content }) {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-        <div className="border border-white/10 bg-white/[0.02] backdrop-blur-md rounded-2xl mb-4 overflow-hidden transition-all duration-300">
-            <button 
-                onClick={() => setIsOpen(!isOpen)} 
-                className="w-full flex items-center justify-between p-6 text-left focus:outline-none group"
-            >
-                <span className="font-semibold text-white/90 group-hover:text-white transition-colors">{title}</span>
-                <ChevronDown className={`text-white/50 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} size={20} />
-            </button>
-            <div 
-                className={`px-6 text-white/60 text-sm leading-relaxed transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-48 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
-            >
-                {content}
-            </div>
-        </div>
-    );
-}
 
 export default function Home() {
     const { user } = useAuth();
-    
     return (
-        <div className="min-h-screen bg-[#060606] text-white selection:bg-cyan-500/30 overflow-hidden font-sans">
+        <div className="min-h-screen bg-[#080808] text-white">
+            <SEO
+                title="Free Online Git Tools for Developers | Best Git Toolkit 2026"
+                description="GitTool is a free online git toolkit for developers. AI-powered git tools: README generator, security scanner, branch pruner, branch compare, secrets scanner, dependency auditor and 16+ more git utilities. The best git tools in 2026."
+                keywords={[
+                  'git tools', 'online git tools', 'free git tools for developers',
+                  'git productivity tools', 'git utilities online', 'best git tools 2026',
+                  'git developer tools free', 'github helper tools', 'git workflow tools',
+                  'git toolkit online free', 'tools for git beginners',
+                  'learn git', 'git tutorial', 'git commands', 'git for beginners',
+                  'learn git online free', 'interactive git tutorial for beginners',
+                  'git best practices', 'git tips and tricks', 'common git mistakes to avoid',
+                  'how to write better git commit messages', 'how to undo a git commit',
+                  'git workflow for teams best practices', 'best way to learn git for developers',
+                ]}
+                canonical="/"
+            />
+            <style>{`
+                @keyframes marquee {
+                    0%   { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                @keyframes fade-up {
+                    from { opacity: 0; transform: translateY(24px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes gold-shimmer {
+                    0%   { background-position: -200% center; }
+                    100% { background-position:  200% center; }
+                }
+                @keyframes gold-pulse {
+                    0%, 100% { opacity: 0.35; }
+                    50%      { opacity: 1; }
+                }
+                .marquee-track { animation: marquee 40s linear infinite; }
+                .marquee-track:hover { animation-play-state: paused; }
+                .t1 { animation: fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both 0.05s; opacity:0; }
+                .t2 { animation: fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both 0.15s; opacity:0; }
+                .t3 { animation: fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both 0.25s; opacity:0; }
+                .t4 { animation: fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both 0.35s; opacity:0; }
+                .gold-text {
+                    background: linear-gradient(90deg, #B8860B, #F5D78E, #C9A84C, #F5D78E, #B8860B);
+                    background-size: 300% auto;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    animation: gold-shimmer 5s linear infinite;
+                }
+                .gold-dot {
+                    width: 7px; height: 7px; border-radius: 50%;
+                    background: #C9A84C;
+                    animation: gold-pulse 2.5s ease infinite;
+                    flex-shrink: 0;
+                }
+                .bento-card {
+                    background: #0D0D0D;
+                    border: 1px solid rgba(255,255,255,0.07);
+                    transition: border-color 0.35s ease,
+                                transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+                                box-shadow 0.35s ease;
+                }
+                .bento-card:hover {
+                    border-color: rgba(201,168,76,0.4);
+                    transform: translateY(-5px);
+                    box-shadow: 0 14px 48px rgba(201,168,76,0.07);
+                }
+                .gold-border-card {
+                    background: rgba(201,168,76,0.02);
+                    border: 1px solid rgba(201,168,76,0.22);
+                    transition: border-color 0.35s ease, box-shadow 0.35s ease;
+                }
+                .gold-border-card:hover {
+                    border-color: rgba(201,168,76,0.5);
+                    box-shadow: 0 0 48px rgba(201,168,76,0.07);
+                }
+                .nav-link {
+                    position: relative; color: rgba(255,255,255,0.4);
+                    transition: color 0.2s; text-decoration: none;
+                }
+                .nav-link::after {
+                    content: ''; position: absolute;
+                    bottom: -2px; left: 0; height: 1px; width: 0;
+                    background: #C9A84C; transition: width 0.3s ease;
+                }
+                .nav-link:hover { color: white; }
+                .nav-link:hover::after { width: 100%; }
+                .step-num {
+                    font-size: 5rem; font-weight: 800;
+                    color: rgba(255,255,255,0.06); line-height: 1;
+                    transition: color 0.3s ease; user-select: none;
+                }
+                .step-card:hover .step-num { color: rgba(201,168,76,0.18); }
+                .cta-btn {
+                    display: inline-flex; align-items: center; gap: 10px;
+                    padding: 13px 26px; background: #C9A84C; color: #000;
+                    font-weight: 600; font-size: 0.875rem; letter-spacing: 0.01em;
+                    transition: background 0.25s ease; white-space: nowrap;
+                    text-decoration: none;
+                }
+                .cta-btn:hover { background: #F5D78E; }
+                .cta-btn .arrow { transition: transform 0.25s ease; }
+                .cta-btn:hover .arrow { transform: translateX(4px); }
+                .ghost-btn {
+                    display: inline-flex; align-items: center; gap: 10px;
+                    padding: 13px 26px; border: 1px solid rgba(255,255,255,0.11);
+                    color: rgba(255,255,255,0.5); font-size: 0.875rem;
+                    transition: border-color 0.25s, color 0.25s;
+                    text-decoration: none;
+                }
+                .ghost-btn:hover { border-color: rgba(255,255,255,0.28); color: white; }
+                .icon-box {
+                    width: 40px; height: 40px;
+                    border: 1px solid rgba(255,255,255,0.09);
+                    display: flex; align-items: center; justify-content: center;
+                    flex-shrink: 0; transition: border-color 0.3s;
+                }
+                .bento-card:hover .icon-box { border-color: rgba(201,168,76,0.35); }
+                .gold-icon-box {
+                    width: 38px; height: 38px;
+                    border: 1px solid rgba(201,168,76,0.35);
+                    display: flex; align-items: center; justify-content: center;
+                    flex-shrink: 0;
+                }
+                .tag {
+                    padding: 3px 10px; border: 1px solid rgba(255,255,255,0.08);
+                    font-size: 0.68rem; color: rgba(255,255,255,0.35);
+                    letter-spacing: 0.06em;
+                }
+                /* Responsive stat separators */
+                .stat-item { border-bottom: 1px solid rgba(255,255,255,0.07); }
+                .stat-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.07); }
+                @media (min-width: 768px) {
+                    .stat-item { border-bottom: none; border-right: 1px solid rgba(255,255,255,0.07); }
+                    .stat-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.07); }
+                    .stat-item:last-child { border-right: none; }
+                }
+                /* Step card mobile separators */
+                @media (max-width: 767px) {
+                    .step-card:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.07); }
+                }
+                /* Footer CSS variable overrides for dark home page */
+                .dark {
+                    --bg-deep: #060606;
+                    --border: rgba(255,255,255,0.07);
+                    --accent: #C9A84C;
+                    --text-primary: #ffffff;
+                    --text-tertiary: rgba(255,255,255,0.32);
+                    --font-mono: ui-monospace, 'Fira Code', monospace;
+                }
+            `}</style>
 
-            {/* ═══ GLOBAL BACKGROUND GLOWS ══════════════════════════════════════════════ */}
-            <div className="fixed inset-0 z-0 pointer-events-none">
-                {/* Noise texture overlay */}
-                <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
-                {/* Cyan glow top left */}
-                <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-cyan-500/20 rounded-full blur-[120px] mix-blend-screen"></div>
-                {/* Orange glow top right */}
-                <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-amber-500/10 rounded-full blur-[150px] mix-blend-screen"></div>
-                {/* Center subtle glow */}
-                <div className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[60%] h-[40%] bg-blue-500/10 rounded-full blur-[120px] mix-blend-screen"></div>
-            </div>
-
-            <div className="relative z-10">
-
-                {/* ═══ HERO SECTION ══════════════════════════════════════════════ */}
-                <section className="max-w-7xl mx-auto px-6 pt-32 pb-20 text-center flex flex-col items-center">
-                    
-                    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium mb-8 backdrop-blur-md shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-                        <Sparkles size={14} className="text-cyan-400" />
-                        <span className="text-white/80 tracking-wide uppercase">GitTalk 2.0 Is Here</span>
+            {/* Nav */}
+            <nav className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080808]/95 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                        <div className="gold-icon-box">
+                            <Terminal size={15} className="text-[#C9A84C]" />
+                        </div>
+                        <span className="font-semibold tracking-tight">GitTool</span>
                     </div>
-
-                    <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
-                        Simplify Your Workflow.<br />
-                        Supercharge Your Team.
-                    </h1>
-
-                    <p className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
-                        A premium consolidation of 70+ essential Git utilities, AI-driven automation, 
-                        and deep repository analytics designed for the modern developer.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-24 w-full sm:w-auto">
+                    <div className="flex items-center gap-4 sm:gap-8">
+                        <a href="#features" className="nav-link text-sm hidden sm:inline">Features</a>
+                        <a href="#testimonials" className="nav-link text-sm hidden sm:inline">Reviews</a>
                         {user ? (
-                            <Link to="/dashboard" className="group relative h-14 px-8 rounded-full bg-white text-black font-semibold flex items-center gap-2 hover:scale-105 transition-all duration-300 w-full sm:w-auto overflow-hidden">
-                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-emerald-400 opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                                <Layout size={20} className="relative z-10" />
-                                <span className="relative z-10">Enter Dashboard</span>
-                                <ArrowRight size={18} className="relative z-10 group-hover:translate-x-1 transition-transform" />
+                            <Link to="/dashboard" className="flex items-center gap-2 px-4 py-2 border border-white/[0.12] text-sm text-white/55 hover:border-[#C9A84C]/45 hover:text-[#C9A84C] transition-all duration-300">
+                                Dashboard <ArrowUpRight size={13} />
                             </Link>
                         ) : (
-                            <Link to="/auth" className="group relative h-14 px-8 rounded-full bg-white text-black font-semibold flex items-center gap-2 hover:scale-105 transition-all duration-300 w-full sm:w-auto overflow-hidden shadow-[0_0_40px_rgba(255,255,255,0.2)]">
-                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-400 opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                                <Github size={20} className="relative z-10" />
-                                <span className="relative z-10">Start Building Free</span>
+                            <Link to="/auth" className="flex items-center gap-2 px-4 py-2 border border-white/[0.12] text-sm text-white/55 hover:border-[#C9A84C]/45 hover:text-[#C9A84C] transition-all duration-300">
+                                Sign in <Github size={13} />
                             </Link>
                         )}
-                        <a href="#features" className="group h-14 px-8 rounded-full border border-white/10 bg-white/5 text-white font-semibold flex items-center gap-2 hover:bg-white/10 transition-all duration-300 w-full sm:w-auto backdrop-blur-md">
-                            <Play size={18} className="text-white/60 group-hover:text-white" />
-                            <span>See How It Works</span>
-                        </a>
                     </div>
+                </div>
+            </nav>
 
-                    {/* Dashboard Mockup Showcase */}
-                    <div className="relative w-full max-w-5xl mx-auto mb-20 group perspective-[2000px]">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/30 to-amber-500/30 rounded-[2rem] blur-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-1000"></div>
-                        <div className="relative rounded-[2rem] border border-white/15 bg-[#0a0a0a]/80 backdrop-blur-xl p-2 shadow-2xl overflow-hidden transform transition-all duration-700 hover:rotate-x-2">
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50"></div>
-                            <img 
-                                src={heroMockup} 
-                                alt="GitTalk Premium Dashboard" 
-                                className="w-full h-auto rounded-[1.5rem] border border-white/5"
-                            />
+            {/* Hero */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-14 sm:pt-24 pb-12 sm:pb-20">
+                <div className="max-w-5xl">
+                    <div className="flex items-center gap-3 mb-10 t1">
+                        <div className="gold-dot" />
+                        <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                            Git automation platform — 30+ tools
+                        </span>
+                    </div>
+                    <h1 style={{ fontSize: 'clamp(2.8rem,10vw,8.5rem)', fontWeight: 900, letterSpacing: '-0.045em', lineHeight: 0.92, marginBottom: 32 }} className="t2">
+                        Git work,<br />
+                        <span className="gold-text">automated.</span>
+                    </h1>
+                    <p className="t3" style={{ fontSize: '1.125rem', color: 'rgba(255,255,255,0.45)', maxWidth: 480, lineHeight: 1.7, marginBottom: 48 }}>
+                        README generation, security scanning, branch analysis — all from your browser. No installation required.
+                    </p>
+                    <div className="flex flex-wrap items-center gap-4 t4">
+                        {user ? (
+                            <Link to="/dashboard" className="cta-btn">
+                                Open Dashboard <ArrowRight size={16} className="arrow" />
+                            </Link>
+                        ) : (
+                            <Link to="/auth" className="cta-btn">
+                                <Github size={15} /> Start for free <ArrowRight size={16} className="arrow" />
+                            </Link>
+                        )}
+                        <a href="#features" className="ghost-btn">Explore tools</a>
+                        <div className="flex items-center gap-2">
+                            <CheckCircle size={13} className="text-[#C9A84C]" />
+                            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>40 free tokens</span>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    {/* Trusted By */}
-                    <div className="flex flex-col items-center gap-6 opacity-60">
-                        <p className="text-xs font-bold uppercase tracking-widest text-white/40">Trusted by innovative teams worldwide</p>
-                        <div className="flex flex-wrap justify-center gap-10 md:gap-16 items-center filter grayscale contrast-200 opacity-70">
-                            {/* Placeholder Logos */}
-                            <div className="flex items-center gap-2 text-xl font-bold font-mono"><Hexagon /> SYNTHESIS</div>
-                            <div className="flex items-center gap-2 text-xl font-bold font-mono"><Box /> OMNICORP</div>
-                            <div className="flex items-center gap-2 text-xl font-bold font-mono"><Orbit /> NEURALNET</div>
-                            <div className="flex items-center gap-2 text-xl font-bold font-mono"><Flame /> VORTEX</div>
-                        </div>
-                    </div>
-                </section>
-
-                <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-10"></div>
-
-                {/* ═══ BENTO 1: BUILD SCALE MANAGE ════════════════════════════════════════ */}
-                <section id="features" className="max-w-6xl mx-auto px-6 py-24">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-                            Build, Scale And Manage<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Entire AI Workforce</span>
-                        </h2>
-                        <p className="text-white/50 max-w-2xl mx-auto">
-                            Replace disconnected scripts and clunky terminal history with our 
-                            unified, enterprise-grade Git command center.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Large Card Span 2 */}
-                        <div className="md:col-span-2 group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 overflow-hidden hover:border-cyan-500/30 transition-colors">
-                            <div className="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/20 rounded-full blur-[80px] group-hover:bg-cyan-500/30 transition-colors"></div>
-                            
-                            <div className="relative z-10 flex flex-col h-full justify-between">
-                                <div>
-                                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-6 border border-cyan-500/20">
-                                        <Bot className="text-cyan-400" size={24} />
-                                    </div>
-                                    <h3 className="text-2xl font-bold mb-3 text-white">Code Summarization</h3>
-                                    <p className="text-white/60 max-w-md leading-relaxed">
-                                        Generative AI analyzes your diffs to write comprehensive PR descriptions, 
-                                        commit messages, and architectural summaries instantly.
-                                    </p>
-                                </div>
-                                <div className="mt-8 rounded-xl border border-white/10 bg-[#000] p-4 font-mono text-sm text-cyan-300 shadow-inner">
-                                    <span className="text-white/30">$</span> gittalk ai review pr-104<br/>
-                                    <span className="text-emerald-400">✓</span> Analyzed 34 files, 1.2k lines<br/>
-                                    <span className="text-emerald-400">✓</span> Generated summary & reviewer mapping
-                                </div>
+            {/* Marquee */}
+            <div className="border-y border-white/[0.06] py-3.5 overflow-hidden select-none">
+                <div className="flex">
+                    <div className="marquee-track flex gap-10 flex-shrink-0">
+                        {[...TOOLS, ...TOOLS].map((tool, i) => (
+                            <div key={i} className="flex items-center gap-3 flex-shrink-0">
+                                <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#C9A84C', flexShrink: 0 }} />
+                                <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.18em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+                                    {tool}
+                                </span>
                             </div>
-                        </div>
-
-                        {/* Smaller Card 1 */}
-                        <div className="group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 overflow-hidden hover:border-amber-500/30 transition-colors">
-                            <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px]"></div>
-                            <div className="relative z-10">
-                                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-6 border border-amber-500/20">
-                                    <Zap className="text-amber-400" size={24} />
-                                </div>
-                                <h3 className="text-xl font-bold mb-3 text-white">Universal Search (Cmd+K)</h3>
-                                <p className="text-white/60 text-sm leading-relaxed mb-6">
-                                    Instantly jump between repositories, active branches, PRs, and AI tools with lightning-fast fuzzy search.
-                                </p>
-                                <div className="rounded-lg bg-black/50 border border-white/5 p-3 flex justify-between items-center">
-                                    <span className="text-white/40 text-sm border border-white/10 rounded px-2">⌘</span>
-                                    <span className="text-white/40 text-sm">+</span>
-                                    <span className="text-white/40 text-sm border border-white/10 rounded px-2">K</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Smaller Card 2 */}
-                        <div className="group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 overflow-hidden hover:border-emerald-500/30 transition-colors">
-                            <div className="relative z-10 h-full flex flex-col justify-between">
-                                <div>
-                                    <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20">
-                                        <BarChart3 className="text-emerald-400" size={24} />
-                                    </div>
-                                    <h3 className="text-xl font-bold mb-3 text-white">Full Observability</h3>
-                                    <p className="text-white/60 text-sm leading-relaxed">
-                                        Track cycle times, review loads, and tech debt across your entire organization in real-time.
-                                    </p>
-                                </div>
-                                <div className="mt-6 flex items-end gap-2 h-12">
-                                    <div className="w-1/4 bg-white/10 h-[40%] rounded-t-sm"></div>
-                                    <div className="w-1/4 bg-white/20 h-[60%] rounded-t-sm"></div>
-                                    <div className="w-1/4 bg-emerald-500/60 h-[90%] rounded-t-sm"></div>
-                                    <div className="w-1/4 bg-emerald-400 h-full rounded-t-sm"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Large Card Span 2 Bottom */}
-                        <div className="md:col-span-2 group relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 overflow-hidden hover:border-purple-500/30 transition-colors">
-                            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[50%] h-[150%] bg-purple-500/10 rounded-full blur-[100px]"></div>
-                            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
-                                <div className="flex-1">
-                                    <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20">
-                                        <GitBranch className="text-purple-400" size={24} />
-                                    </div>
-                                    <h3 className="text-2xl font-bold mb-3 text-white">Multi-Branch Maestro</h3>
-                                    <p className="text-white/60 leading-relaxed max-w-md">
-                                        Visually cherry-pick, rebase interactively, and resolve 3-way merge conflicts without leaving your browser. 
-                                        We make advanced git operations foolproof.
-                                    </p>
-                                </div>
-                                <div className="flex-1 w-full bg-[#000]/50 border border-white/10 rounded-2xl p-4 flex flex-col gap-3">
-                                    <div className="flex items-center gap-3 bg-white/5 rounded-lg p-2 border border-white/5">
-                                        <GitBranch size={16} className="text-white/40"/>
-                                        <div className="h-2 w-24 bg-white/20 rounded-full"></div>
-                                        <div className="h-2 w-12 bg-purple-400 rounded-full ml-auto"></div>
-                                    </div>
-                                    <div className="flex items-center gap-3 bg-purple-500/20 rounded-lg p-2 border border-purple-500/30">
-                                        <GitMerge size={16} className="text-purple-400"/>
-                                        <div className="h-2 w-32 bg-white/80 rounded-full"></div>
-                                        <CheckCircle2 size={16} className="text-emerald-400 ml-auto"/>
-                                    </div>
-                                    <div className="flex items-center gap-3 bg-white/5 rounded-lg p-2 border border-white/5">
-                                        <CircleDot size={16} className="text-white/40"/>
-                                        <div className="h-2 w-20 bg-white/20 rounded-full"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-
-                {/* ═══ BENTO 2: MORE FEATURES ════════════════════════════════════════════ */}
-                <section className="bg-[#030303] border-y border-white/5 py-32 relative">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-                                Few More Things<br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">You're Going To Love</span>
-                            </h2>
-                            <p className="text-white/50 max-w-2xl mx-auto">
-                                We didn't stop at the basics. Our platform is packed with utilities
-                                designed to shave hours off your week.
-                            </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                            {MINI_FEATURES.map((feat, i) => (
-                                <div key={i} className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 hover:bg-white/[0.04] transition-colors group">
-                                    <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-amber-500/10 group-hover:text-amber-400 transition-all text-white/60 border border-white/5">
-                                        <feat.icon size={20} />
-                                    </div>
-                                    <h4 className="text-lg font-bold text-white/90 mb-2">{feat.title}</h4>
-                                    <p className="text-sm text-white/50 leading-relaxed">{feat.desc}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-
-                {/* ═══ TESTIMONIALS ═════════════════════════════════════════════════════ */}
-                <section className="max-w-7xl mx-auto px-6 py-32 relative">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-gradient-to-r from-cyan-500/5 via-blue-500/5 to-purple-500/5 rounded-full blur-[100px] pointer-events-none z-0"></div>
-                    
-                    <div className="relative z-10">
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-                                Elevate Your AI<br />
-                                <span className="text-white/50">Journey Experience</span>
-                            </h2>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {TESTIMONIALS.map((t, i) => (
-                                <div key={i} className="flex flex-col bg-white/[0.01] border border-white/[0.05] rounded-3xl p-8 hover:border-white/15 transition-colors">
-                                    <div className="flex gap-1 mb-6 text-amber-500">
-                                        {[1,2,3,4,5].map(star => <Star key={star} size={16} fill="currentColor" />)}
-                                    </div>
-                                    <Quote size={32} className="text-white/10 mb-4" />
-                                    <p className="text-white/70 text-lg leading-relaxed mb-8 flex-1">"{t.quote}"</p>
-                                    <div className="flex items-center gap-4 pt-6 border-t border-white/5">
-                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center border border-white/10">
-                                            <t.icon size={18} className="text-white/60"/>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold text-white/90">{t.author}</div>
-                                            <div className="text-xs text-white/40">{t.role}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-
-                {/* ═══ FAQS ═════════════════════════════════════════════════════════════ */}
-                <section className="max-w-3xl mx-auto px-6 py-20">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold tracking-tight mb-4">
-                            Got Questions?<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">We've Got Answers</span>
-                        </h2>
-                    </div>
-                    
-                    <div className="space-y-2">
-                        {FAQS.map((faq, index) => (
-                            <AccordionItem key={index} title={faq.question} content={faq.answer} />
                         ))}
                     </div>
-                </section>
+                </div>
+            </div>
 
+            {/* Stats */}
+            <section className="max-w-7xl mx-auto px-6 py-16">
+                <div className="grid grid-cols-2 md:grid-cols-4 border border-white/[0.07]">
+                    {[
+                        { value: '50K+',  label: 'Repositories scanned' },
+                        { value: '99.9%', label: 'Uptime SLA' },
+                        { value: '2.4s',  label: 'Avg response time' },
+                        { value: '500K+', label: 'Developer hours saved' },
+                    ].map(({ value, label }) => (
+                        <div key={label} className="stat-item px-6 sm:px-8 py-6 sm:py-7">
+                            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: '#C9A84C', lineHeight: 1.1, marginBottom: 4 }}>{value}</div>
+                            <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.32)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>{label}</div>
+                        </div>
+                    ))}
+                </div>
+            </section>
 
-                {/* ═══ FOOTER CTA ═══════════════════════════════════════════════════════ */}
-                <section className="border-t border-white/5 py-32 px-6 text-center relative mt-20">
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-[300px] bg-gradient-to-t from-cyan-500/10 to-transparent blur-[80px] z-0 pointer-events-none"></div>
-                    
-                    <div className="max-w-2xl mx-auto relative z-10">
-                        <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6">
-                            Ready To Transform Your<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-amber-400">Project Management?</span>
+            {/* Bento Grid */}
+            <section id="features" className="max-w-7xl mx-auto px-6 py-16">
+                <div className="flex items-end justify-between mb-12">
+                    <div>
+                        <div style={{ fontSize: '0.68rem', color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: 12 }}>Tools & Features</div>
+                        <h2 style={{ fontSize: 'clamp(2.2rem,4.5vw,3.8rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05 }}>
+                            Built for serious<br />developers.
                         </h2>
-                        <p className="text-lg text-white/50 mb-10 font-light">
-                            Join thousands of elite developers combining the power of Git
-                            with bleeding-edge AI to ship code effortlessly.
-                        </p>
-                        
-                        <div className="flex justify-center">
-                            {user ? (
-                                <Link to="/dashboard" className="h-14 px-10 text-lg rounded-full bg-white text-black font-bold hover:scale-105 transition-all shadow-[0_0_40px_rgba(6,182,212,0.3)] flex items-center gap-2">
-                                    <Layout size={20} />
-                                    Go to Dashboard
-                                </Link>
-                            ) : (
-                                <Link to="/auth" className="h-14 px-10 text-lg rounded-full bg-white text-black font-bold hover:scale-105 transition-all shadow-[0_0_40px_rgba(6,182,212,0.3)] flex items-center gap-2">
-                                    <Github size={20} />
-                                    Get Started Free
-                                </Link>
-                            )}
+                    </div>
+                    <div className="hidden md:flex flex-col items-end gap-1">
+                        <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>30+ tools</span>
+                        <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>no install</span>
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="col-span-1 md:col-span-2 lg:col-span-2 bento-card p-6 sm:p-8 flex flex-col" style={{ minHeight: 300 }}>
+                        <div className="gold-icon-box mb-auto"><Bot size={17} className="text-[#C9A84C]" /></div>
+                        <div style={{ marginTop: 52 }}>
+                            <div style={{ fontSize: '0.65rem', color: '#C9A84C', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 10 }}>AI-Powered</div>
+                            <h3 style={{ fontSize: '1.65rem', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 12 }}>README Generator</h3>
+                            <p style={{ color: 'rgba(255,255,255,0.45)', lineHeight: 1.65, fontSize: '0.9rem', maxWidth: 400, marginBottom: 20 }}>
+                                Professional docs in under 60 seconds. Four templates, AI chat refinement, live preview, one-click export.
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {['Professional', 'Minimal', 'Creative', 'Detailed'].map(t => (
+                                    <span key={t} className="tag">{t}</span>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </section>
-
-                {/* Footer bare minimal */}
-                <footer className="w-full py-8 border-t border-white/5 text-center flex flex-col items-center">
-                    <div className="flex items-center gap-2 mb-4">
-                        <Terminal className="text-cyan-500" size={24} />
-                        <span className="text-xl font-bold tracking-tight text-white">GitTalk<span className="text-cyan-500 text-sm align-top">©</span></span>
+                    <div className="bento-card p-6">
+                        <div className="icon-box mb-7"><Shield size={17} className="text-white/45" /></div>
+                        <h3 style={{ fontWeight: 700, marginBottom: 8, fontSize: '0.95rem' }}>Security Scanner</h3>
+                        <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>50+ patterns. Secrets flagged before they hit production.</p>
                     </div>
-                    <div className="text-xs text-white/30">&copy; 2026 GitTalk Premium Tools. All rights reserved.</div>
-                </footer>
+                    <div className="bento-card p-6">
+                        <div className="icon-box mb-7"><GitBranch size={17} className="text-white/45" /></div>
+                        <h3 style={{ fontWeight: 700, marginBottom: 8, fontSize: '0.95rem' }}>Branch Compare</h3>
+                        <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>Visual diff, commit timeline, direct PR creation.</p>
+                    </div>
+                    <div className="col-span-1 md:col-span-2 lg:col-span-2 bento-card p-6 sm:p-8">
+                        <div className="flex flex-col sm:flex-row sm:items-start gap-8">
+                            <div className="flex-1">
+                                <div className="icon-box mb-6"><BarChart3 size={17} className="text-white/45" /></div>
+                                <h3 style={{ fontSize: '1.35rem', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 8 }}>Repository Analytics</h3>
+                                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.87rem', lineHeight: 1.65 }}>Commit patterns, contributor velocity, code growth — visualized.</p>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, flexShrink: 0 }}>
+                                {[{ n: '1.2K', l: 'commits' }, { n: '87%', l: 'health' }, { n: '24', l: 'contributors' }, { n: '+34%', l: 'growth' }].map(({ n, l }) => (
+                                    <div key={l} style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)', padding: '10px 14px', textAlign: 'center' }}>
+                                        <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#C9A84C' }}>{n}</div>
+                                        <div style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{l}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bento-card p-6">
+                        <div className="icon-box mb-7"><Search size={17} className="text-white/45" /></div>
+                        <h3 style={{ fontWeight: 700, marginBottom: 8, fontSize: '0.95rem' }}>Code Analysis</h3>
+                        <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>TODOs, dead code, tech debt. Auto-convert to issues.</p>
+                    </div>
+                    <div className="bento-card p-6">
+                        <div className="icon-box mb-7"><Package size={17} className="text-white/45" /></div>
+                        <h3 style={{ fontWeight: 700, marginBottom: 8, fontSize: '0.95rem' }}>Dependency Audit</h3>
+                        <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>Outdated packages and vulnerabilities surfaced instantly.</p>
+                    </div>
+                    <div className="gold-border-card p-6 flex flex-col justify-between">
+                        <div style={{ fontSize: '3.2rem', fontWeight: 800, color: '#C9A84C', lineHeight: 1 }}>+24</div>
+                        <div>
+                            <h3 style={{ fontWeight: 700, marginBottom: 8, fontSize: '0.95rem' }}>More Tools</h3>
+                            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>Gitignore gen, PR simulator, AI triage, branch pruner…</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-            </div>
+            {/* How it works */}
+            <section className="max-w-7xl mx-auto px-6 py-20 border-t border-white/[0.06]">
+                <div style={{ fontSize: '0.68rem', color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: 12 }}>How it works</div>
+                <h2 style={{ fontSize: 'clamp(2rem,4vw,3.25rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: 48 }}>
+                    Three steps.<br />
+                    <span style={{ color: 'rgba(255,255,255,0.22)' }}>Zero friction.</span>
+                </h2>
+                <div className="grid md:grid-cols-3 border border-white/[0.07]">
+                    {[
+                        { n: '01', title: 'Connect GitHub',    body: 'OAuth in seconds. AES-256 encrypted tokens. Your code never leaves GitHub servers.' },
+                        { n: '02', title: 'Select Repository', body: 'Works with any public or private repo you have access to. No extra permissions needed.' },
+                        { n: '03', title: 'Run Any Tool',      body: 'No CLI, no config, no installation. Pick a tool and results appear in seconds.' },
+                    ].map(({ n, title, body }, i) => (
+                        <div key={n} className="step-card px-6 sm:px-8 py-8 sm:py-10 transition-colors duration-300 hover:bg-white/[0.018] md:border-r md:last:border-r-0 border-white/[0.07]">
+                            <div className="step-num mb-6">{n}</div>
+                            <h3 style={{ fontWeight: 700, fontSize: '1.05rem', marginBottom: 10 }}>{title}</h3>
+                            <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.42)', lineHeight: 1.65 }}>{body}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Testimonials */}
+            <section id="testimonials" className="max-w-7xl mx-auto px-6 py-20 border-t border-white/[0.06]">
+                <div className="flex items-center gap-4 mb-14">
+                    <div style={{ fontSize: '0.68rem', color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '0.2em', whiteSpace: 'nowrap' }}>Developer reviews</div>
+                    <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+                    <div className="flex gap-0.5">
+                        {[...Array(5)].map((_, i) => <Star key={i} size={13} fill="#C9A84C" className="text-[#C9A84C]" />)}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.32)' }}>4.9 / 5</div>
+                </div>
+                <div className="grid md:grid-cols-3 gap-3">
+                    {[
+                        { quote: 'The README generator alone is worth switching. Went from an hour of docs to 60 seconds. Pushed it to my entire org.', name: 'Marcus Chen',  role: 'Full-stack Developer' },
+                        { quote: 'Security scanner caught an API key before it hit main. We would have had a serious incident. Non-negotiable for us now.', name: 'Jordan Lee',   role: 'Lead Security Engineer' },
+                        { quote: 'Branch comparison with visual diff changed how we do code review. The PR creation integration is seamless.',              name: 'Anjali Patel', role: 'DevOps Lead' },
+                    ].map(({ quote, name, role }) => (
+                        <div key={name} className="bento-card p-8">
+                            <div className="flex gap-0.5 mb-6">
+                                {[...Array(5)].map((_, i) => <Star key={i} size={13} fill="#C9A84C" className="text-[#C9A84C]" />)}
+                            </div>
+                            <p style={{ color: 'rgba(255,255,255,0.62)', lineHeight: 1.7, fontSize: '0.875rem', marginBottom: 28 }}>"{quote}"</p>
+                            <div className="flex items-center gap-3">
+                                <div style={{ width: 36, height: 36, background: 'rgba(201,168,76,0.07)', border: '1px solid rgba(201,168,76,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.68rem', fontWeight: 700, color: '#C9A84C', flexShrink: 0 }}>
+                                    {name.split(' ').map(w => w[0]).join('')}
+                                </div>
+                                <div>
+                                    <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{name}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.32)' }}>{role}</div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* CTA */}
+            <section className="max-w-7xl mx-auto px-6 py-20 border-t border-white/[0.06]">
+                <div className="gold-border-card p-7 sm:p-12 md:p-20">
+                    <div style={{ maxWidth: 560 }}>
+                        <div style={{ fontSize: '0.68rem', color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: 16 }}>Get started — free</div>
+                        <h2 style={{ fontSize: 'clamp(2.6rem,6vw,5.25rem)', fontWeight: 900, letterSpacing: '-0.045em', lineHeight: 0.93, marginBottom: 20 }}>
+                            Your repo,<br /><span className="gold-text">supercharged.</span>
+                        </h2>
+                        <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: '1rem', lineHeight: 1.7, marginBottom: 36 }}>
+                            40 free tokens on signup. No credit card. Works instantly with any GitHub repository.
+                        </p>
+                        <div className="flex flex-wrap items-center gap-4">
+                            {user ? (
+                                <Link to="/dashboard" className="cta-btn">Open Dashboard <ArrowRight size={16} className="arrow" /></Link>
+                            ) : (
+                                <Link to="/auth" className="cta-btn"><Github size={15} /> Start for free <ArrowRight size={16} className="arrow" /></Link>
+                            )}
+                            <div className="hidden sm:flex items-center gap-5">
+                                {['No credit card', '40 free tokens', 'Cancel anytime'].map(t => (
+                                    <div key={t} className="flex items-center gap-1.5">
+                                        <CheckCircle size={13} className="text-[#C9A84C]" />
+                                        <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.3)' }}>{t}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }

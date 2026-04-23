@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
     GitBranch, History, Copy, RotateCcw, Star, Lightbulb, Loader2,
@@ -326,6 +327,7 @@ export default function CommandBuilder() {
     return (
         <div className="tool-page">
             {/* ── HEADER ── */}
+            <SEO title="Git Command Builder" description="Build complex Git commands visually without memorizing syntax. GitTool's AI command builder generates safe, ready-to-run Git commands." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

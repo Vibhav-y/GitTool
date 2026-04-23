@@ -1,6 +1,7 @@
 import express from "express";
 import { verifyToken } from "../shared/authMiddleware.js";
 import {
+    createIssue,
     scanTodos, analyzeDependencies, triageIssues, scanSecrets,
     analyzeDeadCode, explainFailure, getArchitecture, getCollaboration,
     suggestVersion, listCommits, generateApiDocs,
@@ -8,6 +9,9 @@ import {
 } from "./toolsController.js";
 
 const router = express.Router();
+
+// Issue creation
+router.post("/:owner/:repo/create-issue", verifyToken, createIssue);
 
 // Existing
 router.post("/:owner/:repo/todo-scan", verifyToken, scanTodos);

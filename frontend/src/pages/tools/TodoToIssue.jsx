@@ -1,6 +1,7 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
-import { FileSearch, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
+import { FileSearch, Loader2, CheckCircle, AlertTriangle, GitBranch, ExternalLink } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
 import api from '../../lib/apiClient';
 
@@ -12,10 +13,13 @@ export default function TodoToIssue() {
     const [meta, setMeta] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    // Track which todos have been created as issues: { index -> { number, url } }
+    const [createdIssues, setCreatedIssues] = useState({});
+    const [creating, setCreating] = useState({}); // index -> bool
 
     const handleScan = async () => {
         if (!repo) { setError('Select a repository first'); return; }
-        setLoading(true); setError(null);
+        setLoading(true); setError(null); setCreatedIssues({});
         try {
             const o = repo.owner?.login || repo.full_name?.split('/')[0];
             const res = await api.post(`/tools/${o}/${repo.name}/todo-scan`);
@@ -25,11 +29,28 @@ export default function TodoToIssue() {
         finally { setLoading(false); }
     };
 
+    const handleCreateIssue = async (todo, index) => {
+        const o = repo.owner?.login || repo.full_name?.split('/')[0];
+        setCreating(prev => ({ ...prev, [index]: true }));
+        try {
+            const title = `${todo.type}: ${todo.text.slice(0, 80)}`;
+            const body = `**Found in:** \`${todo.file}\` at line ${todo.line}\n\n**Comment:**\n\`\`\`\n${todo.type}: ${todo.text}\n\`\`\`\n\n*Created by [GitTool](https://gittool.dev) TODO → Issue converter.*`;
+            const labels = todo.type === 'BUG' || todo.type === 'FIXME' ? ['bug'] : ['enhancement'];
+            const result = await api.post(`/tools/${o}/${repo.name}/create-issue`, { title, body, labels });
+            setCreatedIssues(prev => ({ ...prev, [index]: result }));
+        } catch (err) {
+            setError(`Failed to create issue: ${err.message}`);
+        } finally {
+            setCreating(prev => ({ ...prev, [index]: false }));
+        }
+    };
+
     const grouped = {};
     todos.forEach(t => { grouped[t.type] = (grouped[t.type] || 0) + 1; });
 
     return (
         <div className="tool-page">
+            <SEO title="TODO to GitHub Issue Converter" description="Scan your codebase for TODO comments and automatically convert them into GitHub issues with GitTool's TODO converter." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -37,7 +58,6 @@ export default function TodoToIssue() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                         <h2 className="tool-page-title">TODO → Issue Converter</h2>
-                        
                     </div>
                 </div>
             </NavbarPortal>
@@ -72,16 +92,48 @@ export default function TodoToIssue() {
                 <div className="panel">
                     <div className="panel-body" style={{ padding: 0 }}>
                         <table className="data-table">
-                            <thead><tr><th>Type</th><th>File</th><th>Line</th><th>Comment</th></tr></thead>
+                            <thead><tr><th>Type</th><th>File</th><th>Line</th><th>Comment</th><th>Action</th></tr></thead>
                             <tbody>
-                                {todos.map((t, i) => (
-                                    <tr key={i}>
-                                        <td><span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.6875rem', fontWeight: 800, background: `${TYPE_COLORS[t.type]}20`, color: TYPE_COLORS[t.type] }}>{t.type}</span></td>
-                                        <td style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem' }}>{t.file}</td>
-                                        <td style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem' }}>:{t.line}</td>
-                                        <td style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>{t.text}</td>
-                                    </tr>
-                                ))}
+                                {todos.map((t, i) => {
+                                    const created = createdIssues[i];
+                                    return (
+                                        <tr key={i}>
+                                            <td><span style={{ padding: '2px 8px', borderRadius: 4, fontSize: '0.6875rem', fontWeight: 800, background: `${TYPE_COLORS[t.type]}20`, color: TYPE_COLORS[t.type] }}>{t.type}</span></td>
+                                            <td style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem' }}>{t.file}</td>
+                                            <td style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem' }}>:{t.line}</td>
+                                            <td style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>{t.text}</td>
+                                            <td>
+                                                {created ? (
+                                                    <a
+                                                        href={created.url}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: '0.75rem', fontWeight: 700, color: 'var(--success)', textDecoration: 'none' }}
+                                                    >
+                                                        <CheckCircle size={13} /> #{created.number} <ExternalLink size={11} />
+                                                    </a>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => handleCreateIssue(t, i)}
+                                                        disabled={creating[i]}
+                                                        style={{
+                                                            display: 'inline-flex', alignItems: 'center', gap: 5,
+                                                            padding: '3px 10px', borderRadius: 6, fontSize: '0.6875rem', fontWeight: 700,
+                                                            background: 'var(--bg-surface)', border: '1px solid var(--border)',
+                                                            color: 'var(--text-secondary)', cursor: 'pointer',
+                                                            opacity: creating[i] ? 0.6 : 1,
+                                                        }}
+                                                    >
+                                                        {creating[i]
+                                                            ? <Loader2 size={12} style={{ animation: 'spin 1s linear infinite' }} />
+                                                            : <GitBranch size={12} />}
+                                                        {creating[i] ? 'Creating…' : 'Create Issue'}
+                                                    </button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

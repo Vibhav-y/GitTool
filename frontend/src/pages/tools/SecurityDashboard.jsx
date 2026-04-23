@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React from 'react';
 import { ShieldCheck, ShieldAlert, Loader2, AlertTriangle, Info, ExternalLink } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -26,6 +27,17 @@ export default function SecurityDashboard() {
 
     return (
         <div className="tool-page">
+            <SEO
+              title="GitHub Security Dashboard – Audit Your Repository Security"
+              description="Complete git security audit tool. Check your GitHub repository for vulnerabilities, exposed secrets, dependency CVEs, and insecure configurations. Free github security audit tool."
+              keywords={[
+                'github security audit tool', 'git security', 'git security scanner',
+                'git repo vulnerability checker', 'how to secure git repository',
+                'github secret detection tool', 'scan repository for hardcoded passwords',
+                'git repository secret scanner free',
+              ]}
+              noIndex={true}
+            />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

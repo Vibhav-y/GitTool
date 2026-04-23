@@ -23,7 +23,7 @@ export default function Layout() {
     return (
         <div className={`flex min-h-screen flex-col bg-background text-foreground ${isHome ? 'dark' : ''}`}>
             {/* ── Top Navbar ──────────────────────────────────── */}
-            <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-center border-b bg-background/80 px-6 backdrop-blur-md">
+            {!isHome && <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-center border-b bg-background/80 px-6 backdrop-blur-md">
                 <div className="flex w-full max-w-7xl items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 text-lg font-bold tracking-tight text-foreground">
                         <FileText className="text-primary" size={20} />
@@ -55,7 +55,7 @@ export default function Layout() {
                         </div>
                     )}
                 </div>
-            </nav>
+            </nav>}
 
             {/* ── Main Content Area ─────────────────────────── */}
             <div className="flex flex-1 flex-col relative">

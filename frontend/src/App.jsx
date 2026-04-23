@@ -12,6 +12,7 @@ import Home from './pages/home';
 import Auth from './pages/auth';
 import Privacy from './pages/Privacy';
 import Changelog from './pages/Changelog';
+import NotFound from './pages/NotFound';
 
 import AppLayout from './components/AppLayout';
 import Dashboard from './pages/Dashboard';
@@ -43,7 +44,7 @@ import TodoToIssue from './pages/tools/TodoToIssue';
 
 // Phase 4 Tools
 import DependencyAuditor from './pages/tools/DependencyAuditor';
-import CommandBuilder from './pages/tools/CommandBuilder';
+import CommandBuilderPage from './pages/tools/command-builder/CommandBuilderPage';
 import ArchitectureDiagram from './pages/tools/ArchitectureDiagram';
 import PipelineFailureExplainer from './pages/tools/PipelineFailureExplainer';
 import SecretsScanner from './pages/tools/SecretsScanner';
@@ -119,13 +120,16 @@ function App() {
 
                 {/* Phase 4 Tools */}
                 <Route path="/tools/dependency-auditor" element={<DependencyAuditor />} />
-                <Route path="/tools/command-builder" element={<CommandBuilder />} />
+                <Route path="/tools/command-builder" element={<CommandBuilderPage />} />
                 <Route path="/tools/architecture-diagram" element={<ArchitectureDiagram />} />
                 <Route path="/tools/failure-explainer" element={<PipelineFailureExplainer />} />
                 <Route path="/tools/secrets-scanner" element={<SecretsScanner />} />
                 <Route path="/tools/version-suggester" element={<SemanticVersionSuggester />} />
                 <Route path="/tools/issue-triage" element={<IssueTriageAssistant />} />
               </Route>
+
+              {/* Catch-all 404 */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Router>
         </WorkspaceProvider>

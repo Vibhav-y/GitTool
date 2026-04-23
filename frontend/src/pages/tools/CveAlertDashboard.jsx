@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React from 'react';
 import { ShieldAlert, Loader2, AlertTriangle, Info, ExternalLink, Package } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -23,6 +24,7 @@ export default function CveAlertDashboard() {
 
     return (
         <div className="tool-page">
+            <SEO title="CVE Alert Dashboard" description="Monitor GitHub repositories for known CVE vulnerabilities in dependencies. Stay ahead of security threats with GitTool." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

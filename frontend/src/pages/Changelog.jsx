@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Zap, Shield, Bug, Sparkles, Wrench, Package } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const TYPE_META = {
     feature: { label: 'New Feature', color: '#22c55e', bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.2)', icon: <Sparkles size={11} /> },
@@ -47,6 +48,12 @@ export default function Changelog() {
 
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'clamp(32px,5vw,60px) 20px' }}>
+            <SEO
+                title="Changelog – New Features & Updates"
+                description="See the latest GitTool updates, new AI developer tools, bug fixes, and improvements. Stay up to date with the newest features in the git toolbox."
+                keywords={['gittool changelog', 'gittool updates', 'new developer tools', 'github tools release notes']}
+                canonical="/changelog"
+            />
             {/* Back */}
             <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'var(--muted-foreground)', fontSize: '0.82rem', textDecoration: 'none', marginBottom: '32px' }}
                 onMouseEnter={e => e.currentTarget.style.color = 'var(--foreground)'}
