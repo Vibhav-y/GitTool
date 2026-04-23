@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
 import { Sparkles, Copy, Upload, Loader2 } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -31,6 +32,7 @@ export default function ReleaseNotesGenerator() {
 
     return (
         <div className="tool-page">
+            <SEO title="AI Release Notes Generator" description="Generate polished release notes from GitHub commits and pull requests automatically using GitTool's AI release notes generator." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

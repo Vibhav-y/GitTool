@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SEO from '../components/SEO';
 import {
     Code, Globe, Star, Sparkles,
     AlertTriangle, Loader2, GitBranch, Zap,
@@ -96,6 +97,13 @@ export default function Dashboard() {
 
     return (
         <div className="relative w-full max-w-[1400px] mx-auto pb-8">
+            <SEO
+                title="Dashboard – Your GitHub Repositories"
+                description="Manage your GitHub repositories and run AI-powered developer tools from the GitTool dashboard."
+                keywords={['gittool dashboard', 'github repo dashboard', 'developer tools dashboard']}
+                canonical="/dashboard"
+                noIndex={true}
+            />
 
             {/* ⑬ Subtle background gradient */}
             <div className="pointer-events-none fixed inset-0 z-0"

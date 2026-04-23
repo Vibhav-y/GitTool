@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     GitBranch, GitMerge, CheckCircle, Loader2, AlertTriangle,
@@ -214,6 +215,19 @@ export default function BranchMergeUI() {
     return (
         <div className="tool-page max-w-[1400px] mx-auto min-w-0">
             {/* ── Navbar ─────────────────────────── */}
+            <SEO
+              title="Git Branch Pruner & Manager – Clean Up Stale Git Branches"
+              description="Free git branch pruner and branch cleanup tool. Find stale branches, bulk delete merged branches, and prune remote git branches online. The best git branch manager for keeping your repo clean."
+              keywords={[
+                'git branch pruner', 'git branch cleanup tool',
+                'delete merged branches git', 'prune remote git branches online',
+                'git stale branch cleaner', 'how to clean up old git branches',
+                'automatically delete merged branches github', 'git branch manager online free',
+                'bulk delete git branches tool', 'find unused branches in github repo',
+                'git branch pruning best practices', 'remove old branches from remote repository',
+              ]}
+              noIndex={true}
+            />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

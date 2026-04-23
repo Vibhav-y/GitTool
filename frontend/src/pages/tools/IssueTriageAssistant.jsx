@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
 import { Tags, Loader2, Sparkles } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -31,6 +32,7 @@ export default function IssueTriageAssistant() {
 
     return (
         <div className="tool-page">
+            <SEO title="AI Issue Triage Assistant" description="Automatically triage and label GitHub issues using AI. Save time managing issue queues with GitTool's issue triage assistant." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
 import { Tag, Loader2, Sparkles, ArrowUp, ArrowRight, ArrowDown } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -33,6 +34,7 @@ export default function SemanticVersionSuggester() {
 
     return (
         <div className="tool-page">
+            <SEO title="Semantic Version Suggester" description="Automatically suggest the next semantic version (semver) for your npm package based on commits and changes with GitTool." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

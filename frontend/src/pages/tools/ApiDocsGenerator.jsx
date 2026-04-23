@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
 import { FileText, Loader2, Sparkles, Copy } from 'lucide-react';
 import { useWorkspace } from '../../contexts/WorkspaceContext';
@@ -25,6 +26,7 @@ export default function ApiDocsGenerator() {
 
     return (
         <div className="tool-page">
+            <SEO title="API Docs Generator" description="Automatically generate API documentation from your GitHub repository code using GitTool's AI API Docs Generator tool." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

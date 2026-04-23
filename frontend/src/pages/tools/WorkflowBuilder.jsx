@@ -1,4 +1,5 @@
 import NavbarPortal from '../../components/NavbarPortal';
+import SEO from '../../components/SEO';
 import React, { useState } from 'react';
 import {
     Zap, Download, Copy, Loader2, Sparkles
@@ -53,6 +54,7 @@ export default function WorkflowBuilder() {
 
     return (
         <div className="tool-page">
+            <SEO title="GitHub Actions Workflow Builder" description="Build GitHub Actions CI/CD workflow YAML files visually using GitTool's AI workflow builder. No YAML expertise needed." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">

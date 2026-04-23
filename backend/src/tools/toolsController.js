@@ -4,6 +4,34 @@ import { callOpenAI } from "../shared/openaiService.js";
 import { deductToken } from "../token/tokenController.js";
 
 /**
+ * Create a GitHub issue from a TODO comment.
+ * POST /api/tools/:owner/:repo/create-issue
+ */
+export const createIssue = async (req, res, next) => {
+    try {
+        const { owner, repo } = req.params;
+        const { title, body, labels } = req.body;
+        const userId = req.user.id;
+
+        if (!title?.trim()) return res.status(400).json({ error: 'Issue title is required' });
+
+        const token = await fetchDecryptedToken(userId);
+        const octokit = createOctokitInstance(token);
+
+        const { data: issue } = await octokit.issues.create({
+            owner, repo,
+            title: title.trim(),
+            body: body || '',
+            labels: labels || [],
+        });
+
+        res.json({ number: issue.number, url: issue.html_url, title: issue.title });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
  * Scan TODO/FIXME/HACK comments from repo source.
  * POST /api/tools/:owner/:repo/todo-scan
  */
@@ -74,18 +102,54 @@ export const analyzeDependencies = async (req, res, next) => {
             return res.json({ dependencies: [], devDependencies: [], message: 'No package.json found' });
         }
 
-        const deps = Object.entries(pkgJson.dependencies || {}).map(([name, version]) => ({
-            name, currentVersion: version.replace(/[^0-9.]/g, ''), type: 'production',
-        }));
+        const allEntries = [
+            ...Object.entries(pkgJson.dependencies || {}).map(([name, version]) => ({ name, version, type: 'production' })),
+            ...Object.entries(pkgJson.devDependencies || {}).map(([name, version]) => ({ name, version, type: 'development' })),
+        ];
 
-        const devDeps = Object.entries(pkgJson.devDependencies || {}).map(([name, version]) => ({
-            name, currentVersion: version.replace(/[^0-9.]/g, ''), type: 'development',
-        }));
+        // Check npm registry for latest versions (batched, max 60 packages)
+        const toCheck = allEntries.slice(0, 60);
+        const latestVersions = await Promise.all(
+            toCheck.map(async ({ name }) => {
+                try {
+                    const r = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}/latest`, { signal: AbortSignal.timeout(4000) });
+                    if (!r.ok) return { name, latest: null };
+                    const d = await r.json();
+                    return { name, latest: d.version || null };
+                } catch {
+                    return { name, latest: null };
+                }
+            })
+        );
+
+        const latestMap = Object.fromEntries(latestVersions.map(({ name, latest }) => [name, latest]));
+
+        function parseVersion(v) { return v ? v.replace(/[^0-9.]/g, '').split('.').map(Number) : []; }
+        function isOutdated(current, latest) {
+            if (!latest || !current) return false;
+            const c = parseVersion(current), l = parseVersion(latest);
+            for (let i = 0; i < Math.max(c.length, l.length); i++) {
+                const cv = c[i] || 0, lv = l[i] || 0;
+                if (lv > cv) return true;
+                if (lv < cv) return false;
+            }
+            return false;
+        }
+
+        const mapEntry = ({ name, version, type }) => {
+            const current = version.replace(/[^0-9.]/g, '');
+            const latest = latestMap[name] || null;
+            return { name, currentVersion: current, latestVersion: latest, outdated: isOutdated(current, latest), type };
+        };
+
+        const deps    = allEntries.filter(e => e.type === 'production').map(mapEntry);
+        const devDeps = allEntries.filter(e => e.type === 'development').map(mapEntry);
 
         res.json({
             dependencies: deps,
             devDependencies: devDeps,
             total: deps.length + devDeps.length,
+            outdatedCount: [...deps, ...devDeps].filter(d => d.outdated).length,
         });
     } catch (error) {
         next(error);
@@ -125,7 +189,7 @@ ${issueList}
 Return a JSON array with objects: { "number": <issue-number>, "labels": ["label1", "label2"], "reason": "brief explanation" }
 Return ONLY valid JSON, no markdown.`;
 
-        const raw = await callOpenAI(prompt, "gpt-5-nano-2025-08-07");
+        const raw = await callOpenAI(prompt);
         let suggestions;
         try {
             suggestions = JSON.parse(raw.replace(/```json?\n?/g, '').replace(/```/g, '').trim());
@@ -244,7 +308,7 @@ ${fileList}
 Return a JSON array of objects: { "file": "path", "reason": "why it might be dead code", "confidence": "high"|"medium"|"low" }
 Return ONLY valid JSON, no markdown.`;
 
-        const raw = await callOpenAI(prompt, "gpt-5-nano-2025-08-07");
+        const raw = await callOpenAI(prompt);
         let results;
         try {
             results = JSON.parse(raw.replace(/```json?\n?/g, '').replace(/```/g, '').trim());
@@ -279,7 +343,7 @@ ${truncated}
 Return JSON: { "summary": "one-line summary", "rootCause": "detailed root cause", "suggestion": "how to fix it", "errorType": "build|test|deploy|config|dependency|unknown" }
 Return ONLY valid JSON.`;
 
-        const raw = await callOpenAI(prompt, "gpt-5-nano-2025-08-07");
+        const raw = await callOpenAI(prompt);
         let result;
         try {
             result = JSON.parse(raw.replace(/```json?\n?/g, '').replace(/```/g, '').trim());
@@ -392,7 +456,7 @@ Analyze: does it contain breaking changes (MAJOR bump), new features (MINOR bump
 Return JSON: { "currentVersion": "${currentTag}", "suggestedVersion": "vX.Y.Z", "bumpType": "major|minor|patch", "reason": "explanation", "commits": [{ "message": "commit msg", "type": "feat|fix|chore|etc" }] }
 Return ONLY valid JSON.`;
 
-        const raw = await callOpenAI(prompt, "gpt-5-nano-2025-08-07");
+        const raw = await callOpenAI(prompt);
         let result;
         try {
             result = JSON.parse(raw.replace(/```json?\n?/g, '').replace(/```/g, '').trim());
@@ -478,7 +542,7 @@ ${codeSnippets.slice(0, 10000)}
 
 Generate complete, production-quality API documentation in Markdown.`;
 
-        const content = await callOpenAI(prompt, "gpt-5-nano-2025-08-07");
+        const content = await callOpenAI(prompt);
         await deductToken(userId, 10, "generate", `API docs for ${owner}/${repo}`);
         res.json({ content });
     } catch (error) { next(error); }

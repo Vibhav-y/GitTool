@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import SEO from '../components/SEO';
 import { Github, ArrowRight, Shield, Zap, GitBranch } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
@@ -45,6 +46,14 @@ function Auth() {
     };
 
     return (
+        <>
+        <SEO
+            title="Sign In – Login to GitTool"
+            description="Sign in to GitTool with GitHub to access all AI-powered developer tools: README generator, branch compare, secrets scanner and more."
+            keywords={['gittool login', 'sign in with github', 'github oauth developer tools', 'gittool sign up']}
+            canonical="/auth"
+            noIndex={true}
+        />
         <div style={{
             display: 'flex', justifyContent: 'center', alignItems: 'center',
             minHeight: 'calc(100vh - var(--topbar-height) - 100px)',
@@ -155,6 +164,7 @@ function Auth() {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 

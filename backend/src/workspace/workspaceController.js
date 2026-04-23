@@ -28,7 +28,7 @@ export const generateContributing = async (req, res, next) => {
         Format as beautiful markdown. No explanations, just the raw markdown.
         `;
 
-        const content = await callOpenAI(prompt, "gpt-5-nano-2025-08-07");
+        const content = await callOpenAI(prompt);
         
         await deductToken(userId, 5, "generate", `Generated CONTRIBUTING.md for ${owner}/${repo}`);
         
@@ -100,7 +100,7 @@ export const generateChangelog = async (req, res, next) => {
         Format as strict markdown.
         `;
 
-        const content = await callOpenAI(prompt, "gpt-5-nano-2025-08-07");
+        const content = await callOpenAI(prompt);
         
         await deductToken(userId, 10, "generate", `Generated CHANGELOG.md for ${owner}/${repo}`);
 
@@ -133,7 +133,7 @@ export const generateResumeBullets = async (req, res, next) => {
         Return ONLY a markdown list of the bullet points.
         `;
 
-        const content = await callOpenAI(prompt, "gpt-5-nano-2025-08-07");
+        const content = await callOpenAI(prompt);
 
         await deductToken(userId, 5, "generate", `Generated Resume Bullets for ${owner}/${repo}`);
 
