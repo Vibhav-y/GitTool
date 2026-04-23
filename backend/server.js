@@ -11,8 +11,12 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 const ALLOWED_ORIGINS = [
-  "http://localhost:5173",  // main frontend
-  "http://localhost:5174",  // admin panel
+  "http://localhost:5173",  // main frontend dev
+  "http://localhost:5174",  // admin panel dev
+  // Production — hardcoded as safe fallback when env vars are absent
+  "https://gittool.dev",
+  "https://www.gittool.dev",
+  // Allow env-var overrides for staging / preview deployments
   process.env.FRONTEND_URL,
   process.env.ADMIN_URL,
 ].filter(Boolean);
