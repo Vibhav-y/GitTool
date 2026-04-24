@@ -107,12 +107,29 @@ export const getUserDetail = async (req, res, next) => {
 
 export const suspendUser = async (req, res, next) => {
   const { userId } = req.params;
-  const { reason } = req.body;
+  const { reason, durationHours, permanent = false } = req.body;
+
+  if (!reason || !reason.trim()) {
+    return res.status(400).json({ error: "reason is required." });
+  }
+
+  // permanent=true → use Supabase's special "none"-inverse sentinel value (876600h ≈ 100 y)
+  // timed → default 24 h, max 2 160 h (90 days)
+  const MAX_HOURS = 2160;
+  const isPermanent = permanent === true || permanent === "true";
+  const hours = isPermanent
+    ? null
+    : Math.min(Math.max(parseInt(durationHours, 10) || 24, 1), MAX_HOURS);
+
   try {
-    await supabase.auth.admin.updateUserById(userId, { ban_duration: "876600h" }); // ~100 years
-    await auditLog(req, "suspend_user", "user", userId, { reason });
+    const banDuration = isPermanent ? "876600h" : `${hours}h`;
+    await supabase.auth.admin.updateUserById(userId, { ban_duration: banDuration });
+    await auditLog(req, "suspend_user", "user", userId, { reason, permanent: isPermanent, durationHours: hours }, { critical: true });
     globalEvents.emit("user_suspended", userId);
-    res.json({ success: true, message: "User suspended." });
+    const message = isPermanent
+      ? "User permanently banned."
+      : `User suspended for ${hours} hour(s).`;
+    res.json({ success: true, message, permanent: isPermanent, durationHours: hours });
   } catch (err) { next(err); }
 };
 
@@ -120,7 +137,7 @@ export const reactivateUser = async (req, res, next) => {
   const { userId } = req.params;
   try {
     await supabase.auth.admin.updateUserById(userId, { ban_duration: "none" });
-    await auditLog(req, "reactivate_user", "user", userId);
+    await auditLog(req, "reactivate_user", "user", userId, {}, { critical: true });
     res.json({ success: true, message: "User reactivated." });
   } catch (err) { next(err); }
 };
@@ -144,7 +161,7 @@ export const adjustUserTokens = async (req, res, next) => {
       user_id: userId, amount, type: "admin_adjustment",
       description: reason || `Admin adjustment: ${amount > 0 ? "+" : ""}${amount} tokens`,
     });
-    await auditLog(req, "adjust_tokens", "user", userId, { amount, reason, prevBalance: currentBalance, newBalance });
+    await auditLog(req, "adjust_tokens", "user", userId, { amount, reason, prevBalance: currentBalance, newBalance }, { critical: true });
     res.json({ success: true, newBalance });
   } catch (err) {
     console.error("adjustUserTokens ERROR:", err.message);
@@ -164,7 +181,7 @@ export const resetQuota = async (req, res, next) => {
       user_id: userId, amount: tokens, type: "admin_adjustment",
       description: `Admin quota reset to ${tokens} tokens`,
     });
-    await auditLog(req, "reset_quota", "user", userId, { tokens });
+    await auditLog(req, "reset_quota", "user", userId, { tokens }, { critical: true });
     res.json({ success: true, balance: tokens });
   } catch (err) { next(err); }
 };
@@ -172,7 +189,7 @@ export const resetQuota = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
   const { userId } = req.params;
   try {
-    await auditLog(req, "delete_user", "user", userId);
+    await auditLog(req, "delete_user", "user", userId, {}, { critical: true });
     const { error } = await supabase.auth.admin.deleteUser(userId);
     if (error) throw error;
     res.json({ success: true });

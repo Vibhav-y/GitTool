@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 import { WorkspaceProvider } from './contexts/WorkspaceContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { FeatureFlagsProvider } from './contexts/FeatureFlagsContext';
 import Layout from './components/Layout';
 
 import Home from './pages/home';
@@ -71,6 +72,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
     <ThemeProvider>
+      <FeatureFlagsProvider>
       <AuthProvider>
         <WorkspaceProvider>
           <Toaster position="top-right" toastOptions={{
@@ -142,6 +144,7 @@ function App() {
           </Router>
         </WorkspaceProvider>
       </AuthProvider>
+      </FeatureFlagsProvider>
     </ThemeProvider>
     </QueryClientProvider>
   );

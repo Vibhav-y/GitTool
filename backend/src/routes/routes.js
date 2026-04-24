@@ -13,6 +13,7 @@ import branchPrunerRoutes from "../branchPruner/branchPrunerRoutes.js";
 
 import gitignoreRoutes from "../gitignore/gitignoreRoutes.js";
 import toolsRoutes from "../tools/toolsRoutes.js";
+import flagsRoutes from "../flags/flagsRoutes.js";
 
 router.use("/auth",      authRoutes);
 router.use("/repos",     repoRoutes);
@@ -25,5 +26,6 @@ router.use("/workspace", workspaceRoutes);
 router.use("/branches",  branchPrunerRoutes); // Mounted at /api/branches
 router.use("/gitignore", gitignoreRoutes);
 router.use("/tools",     toolsRoutes);
+router.use("/flags",     flagsRoutes);
 
 export default router;

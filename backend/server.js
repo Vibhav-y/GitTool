@@ -40,6 +40,27 @@ const globalLimiter = rateLimit({
 });
 app.use(globalLimiter);
 
+// Auth endpoints: 20 attempts per 15 min (brute-force protection)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many authentication attempts, please try again later." },
+});
+app.use("/api/auth", authLimiter);
+
+// Payment endpoints: 30 requests per 15 min per IP
+const paymentLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many payment requests, please try again later." },
+});
+app.use("/api/tokens/order", paymentLimiter);
+app.use("/api/tokens/verify", paymentLimiter);
+
 // Strict rate limit for AI-heavy endpoints: 10 per 15 min
 const aiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

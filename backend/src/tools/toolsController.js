@@ -53,7 +53,8 @@ export const scanTodos = async (req, res, next) => {
 
         const codeFiles = tree.tree
             .filter(t => t.type === 'blob' && /\.(js|jsx|ts|tsx|py|go|rs|rb|java|c|cpp|cs|php|swift)$/i.test(t.path))
-            .slice(0, 30);
+            .filter(t => !/node_modules|dist\/|build\/|\.min\./i.test(t.path))
+            .slice(0, 200);
 
         const todos = [];
         for (const file of codeFiles) {
@@ -240,7 +241,7 @@ export const scanSecrets = async (req, res, next) => {
         const scannable = tree.tree
             .filter(t => t.type === 'blob' && !/node_modules|\.min\.|dist\/|build\//i.test(t.path))
             .filter(t => /\.(js|jsx|ts|tsx|py|env|yml|yaml|json|cfg|ini|conf|rb|go|toml)$/i.test(t.path))
-            .slice(0, 40);
+            .slice(0, 200);
 
         const patterns = [
             { name: 'API Key', regex: /(?:api[_-]?key|apikey)\s*[:=]\s*['"]?([a-zA-Z0-9_\-]{20,})['"]?/gi },
@@ -298,7 +299,7 @@ export const analyzeDeadCode = async (req, res, next) => {
             .filter(t => !/node_modules|dist\/|build\/|\.min\./i.test(t.path))
             .map(t => t.path);
 
-        const fileList = codeFiles.slice(0, 80).join('\n');
+        const fileList = codeFiles.slice(0, 500).join('\n');
 
         const prompt = `You are a senior code reviewer. Analyze this file tree and identify files that are likely dead code, unused utilities, or orphaned test files.
 
@@ -518,7 +519,7 @@ export const generateApiDocs = async (req, res, next) => {
         const routeFiles = tree.tree
             .filter(t => t.type === 'blob' && /route|controller|endpoint|api/i.test(t.path))
             .filter(t => /\.(js|ts|py|go|rb)$/i.test(t.path))
-            .slice(0, 8);
+            .slice(0, 20);
 
         let codeSnippets = '';
         for (const file of routeFiles) {
