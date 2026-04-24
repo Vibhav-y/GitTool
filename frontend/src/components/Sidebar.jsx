@@ -173,15 +173,15 @@ export default function Sidebar({ collapsed, onToggle }) {
             <div className="flex items-center h-14 px-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
                 {collapsed ? (
                     <div className="flex items-center justify-center w-full">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-xl text-primary-foreground shrink-0"
-                            style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8))' }}>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-xl shrink-0"
+                            style={{ background: 'linear-gradient(135deg, #F59E0B, #D97706)', color: '#fff' }}>
                             <FolderGit2 size={18} />
                         </div>
                     </div>
                 ) : (
                     <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-xl text-primary-foreground shrink-0"
-                            style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.8))' }}>
+                        <div className="flex h-9 w-9 items-center justify-center rounded-xl shrink-0"
+                            style={{ background: 'linear-gradient(135deg, #F59E0B, #D97706)', color: '#fff' }}>
                             <FolderGit2 size={18} />
                         </div>
                         <h1 className="text-lg font-bold tracking-tight text-foreground whitespace-nowrap">
