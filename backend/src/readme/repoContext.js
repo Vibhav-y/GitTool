@@ -38,7 +38,7 @@ export async function fetchRepoContext(octokit, owner, repo, repoData = null) {
     context.fileTree = tree.tree
       .filter(item => item.type === 'blob')
       .map(item => item.path)
-      .slice(0, 150);
+      .slice(0, 500);
     console.log(`[repoContext] Fetched ${context.fileTree.length} files for ${owner}/${repo}`);
   } catch (e) {
     console.warn("Could not fetch file tree:", e.message);
