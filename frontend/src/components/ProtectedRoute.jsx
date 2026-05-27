@@ -1,17 +1,23 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
-import { Navigate, useLocation } from 'react-router-dom';
 
 export default function ProtectedRoute({ children }) {
     const { user, isSuspended } = useAuth();
-    const location = useLocation();
+    const router = useRouter();
+    const pathname = usePathname();
 
-    if (!user) {
-        return <Navigate to={{ pathname: "/auth", hash: location.hash, search: location.search }} state={{ from: location }} replace />;
-    }
+    useEffect(() => {
+        if (!user) {
+            router.replace(`/auth?from=${encodeURIComponent(pathname)}`);
+        } else if (isSuspended) {
+            router.replace('/suspended');
+        }
+    }, [user, isSuspended, pathname, router]);
 
-    if (isSuspended) {
-        return <Navigate to="/suspended" replace />;
-    }
-
+    if (!user || isSuspended) return null;
     return children;
 }
+

@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { FileText, Github, Twitter, Mail } from 'lucide-react';
 
 export default function Footer() {
@@ -55,12 +57,12 @@ export default function Footer() {
                         }}>Product</h4>
                         <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             {[
-                                { label: 'Features', to: '/#tools' },
-                                { label: 'Analytics', to: '/#insights' },
-                                { label: 'Blog', to: '/blog' },
-                                { label: 'Changelog', to: '/changelog' },
-                            ].map(({ label, to }) => (
-                                <Link key={to} to={to} style={{
+                                { label: 'Features', href: '/#tools' },
+                                { label: 'Analytics', href: '/#insights' },
+                                { label: 'Blog', href: '/blog' },
+                                { label: 'Changelog', href: '/changelog' },
+                            ].map(({ label, href }) => (
+                                <Link key={href} href={href} style={{
                                     color: 'var(--text-tertiary)', fontSize: '0.85rem',
                                     textDecoration: 'none', transition: 'color 0.2s',
                                 }}
@@ -82,11 +84,11 @@ export default function Footer() {
                         }}>Legal</h4>
                         <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             {[
-                                { label: 'Privacy Policy', to: '/privacy' },
-                                { label: 'Terms of Service', to: '/terms' },
-                                { label: 'Changelog', to: '/changelog' },
-                            ].map(({ label, to }) => (
-                                <Link key={to} to={to} style={{
+                                { label: 'Privacy Policy', href: '/privacy' },
+                                { label: 'Terms of Service', href: '/terms' },
+                                { label: 'Changelog', href: '/changelog' },
+                            ].map(({ label, href }) => (
+                                <Link key={href} href={href} style={{
                                     color: 'var(--text-tertiary)', fontSize: '0.85rem',
                                     textDecoration: 'none', transition: 'color 0.2s',
                                 }}
@@ -154,3 +156,4 @@ export default function Footer() {
         </footer>
     );
 }
+

@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useRef } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import CustomScrollbar from './CustomScrollbar';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -110,7 +113,8 @@ function SidebarTooltip({ children, label, collapsed }) {
 
 export default function Sidebar({ collapsed, onToggle }) {
     const { user } = useAuth();
-    const location = useLocation();
+    const pathname = usePathname();
+    const router = useRouter();
     const avatarUrl = user?.user_metadata?.avatar_url || null;
     const displayName = user?.user_metadata?.full_name || user?.email || 'Developer';
     const initials = displayName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
@@ -134,7 +138,7 @@ export default function Sidebar({ collapsed, onToggle }) {
             const next = { ...prev };
             let changed = false;
             allCategories.forEach(cat => {
-                if (cat.tools.some(t => location.pathname === t.path)) {
+                if (cat.tools.some(t => pathname === t.path)) {
                     if (!next[cat.name]) {
                         next[cat.name] = true;
                         changed = true;
@@ -156,7 +160,7 @@ export default function Sidebar({ collapsed, onToggle }) {
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-        window.location.href = '/';
+        router.push('/');
     };
 
     return (
@@ -197,21 +201,17 @@ export default function Sidebar({ collapsed, onToggle }) {
 
                     {/* Dashboard */}
                     <SidebarTooltip label="Dashboard" collapsed={collapsed}>
-                        <NavLink
-                            to="/dashboard"
-                            className={({ isActive }) =>
-                                `group relative flex items-center rounded-xl transition-all duration-200 ${collapsed ? 'justify-center h-10 w-full' : 'px-3 py-2.5 gap-3'}
-                                ${isActive
+                        <Link
+                            href="/dashboard"
+                            className={`group relative flex items-center rounded-xl transition-all duration-200 ${collapsed ? 'justify-center h-10 w-full' : 'px-3 py-2.5 gap-3'}
+                                ${pathname === '/dashboard'
                                     ? 'bg-primary/10 text-primary font-semibold'
-                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`
-                            }
+                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
                         >
-                            {({ isActive }) => (<>
-                                {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-full bg-primary" style={{ height: '60%' }} />}
-                                <span className="shrink-0"><LayoutDashboard size={18} /></span>
-                                {!collapsed && <span className="text-sm whitespace-nowrap">Dashboard</span>}
-                            </>)}
-                        </NavLink>
+                            {pathname === '/dashboard' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-full bg-primary" style={{ height: '60%' }} />}
+                            <span className="shrink-0"><LayoutDashboard size={18} /></span>
+                            {!collapsed && <span className="text-sm whitespace-nowrap">Dashboard</span>}
+                        </Link>
                     </SidebarTooltip>
 
                     {/* ── Sections with labels ── */}
@@ -233,7 +233,7 @@ export default function Sidebar({ collapsed, onToggle }) {
                             {section.categories.map((cat) => {
                                 const isExpanded = expanded[cat.name] && !collapsed;
                                 const hasTools = cat.tools.length > 0;
-                                const isActiveCategory = hasTools && cat.tools.some(t => location.pathname === t.path);
+                                const isActiveCategory = hasTools && cat.tools.some(t => pathname === t.path);
 
                                 return (
                                     <div key={cat.name}>
@@ -267,18 +267,16 @@ export default function Sidebar({ collapsed, onToggle }) {
                                         {isExpanded && hasTools && (
                                             <div className="ml-[22px] mt-1 mb-2 flex flex-col gap-0.5 border-l border-border/60 pl-3">
                                                 {cat.tools.map(tool => (
-                                                    <NavLink
+                                                    <Link
                                                         key={tool.name}
-                                                        to={tool.path}
-                                                        className={({ isActive }) =>
-                                                            `relative block rounded-lg px-3 py-1.5 text-xs transition-all duration-150 whitespace-nowrap
-                                                            ${isActive
+                                                        href={tool.path}
+                                                        className={`relative block rounded-lg px-3 py-1.5 text-xs transition-all duration-150 whitespace-nowrap
+                                                            ${pathname === tool.path
                                                                 ? 'bg-primary/10 font-semibold text-primary'
-                                                                : 'text-muted-foreground hover:bg-muted/70 hover:text-foreground'}`
-                                                        }
+                                                                : 'text-muted-foreground hover:bg-muted/70 hover:text-foreground'}`}
                                                     >
                                                         {tool.name}
-                                                    </NavLink>
+                                                    </Link>
                                                 ))}
                                             </div>
                                         )}
@@ -309,7 +307,7 @@ export default function Sidebar({ collapsed, onToggle }) {
             <div className={`shrink-0 ${collapsed ? 'px-2 pb-3 pt-1' : 'px-3 pb-4 pt-1'}`}>
                 {collapsed ? (
                     <SidebarTooltip label={displayName} collapsed={collapsed}>
-                        <NavLink to="/profile" className="flex items-center justify-center w-full rounded-xl py-2 hover:bg-muted transition-colors">
+                        <Link href="/profile" className="flex items-center justify-center w-full rounded-xl py-2 hover:bg-muted transition-colors">
                             {avatarUrl ? (
                                 <img src={avatarUrl} alt="Avatar" className="h-8 w-8 rounded-full object-cover ring-2 ring-border" />
                             ) : (
@@ -318,12 +316,12 @@ export default function Sidebar({ collapsed, onToggle }) {
                                     {initials}
                                 </div>
                             )}
-                        </NavLink>
+                        </Link>
                     </SidebarTooltip>
                 ) : (
                     <div className="flex items-center gap-3 rounded-xl p-2.5"
                         style={{ background: 'hsl(var(--muted) / 0.5)' }}>
-                        <NavLink to="/profile" className="flex min-w-0 flex-1 items-center gap-3 text-inherit hover:opacity-80 transition-opacity">
+                        <Link href="/profile" className="flex min-w-0 flex-1 items-center gap-3 text-inherit hover:opacity-80 transition-opacity">
                             {avatarUrl ? (
                                 <img src={avatarUrl} alt="Avatar" className="h-8 w-8 rounded-full object-cover ring-2 ring-border" />
                             ) : (
@@ -336,7 +334,7 @@ export default function Sidebar({ collapsed, onToggle }) {
                                 <p className="truncate text-xs font-semibold m-0">{displayName}</p>
                                 <p className="m-0 text-[10px] text-muted-foreground">Pro Account</p>
                             </div>
-                        </NavLink>
+                        </Link>
                         <button onClick={handleLogout} className="p-1.5 rounded-lg text-muted-foreground transition-colors hover:text-foreground hover:bg-muted" title="Log out">
                             <LogOut size={14} />
                         </button>
@@ -346,3 +344,4 @@ export default function Sidebar({ collapsed, onToggle }) {
         </aside>
     );
 }
+

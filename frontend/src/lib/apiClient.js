@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
 
 /**
  * Centralised API client — auto‑attaches the Supabase JWT.
@@ -31,16 +31,20 @@ async function request(method, path, body, isRetry = false) {
 
   const res = await fetch(`${API_BASE}${path}`, opts);
 
-  // On 401, attempt a single token refresh then retry
-  if (res.status === 401 && !isRetry) {
-    const { error } = await supabase.auth.refreshSession();
-    if (!error) return request(method, path, body, true);
-    throw new Error('Session expired. Please sign in again.');
-  }
-
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err.error || `API ${res.status}`);
+
+    // A 401 from GitHub-token problems (code GITHUB_AUTH) is NOT a Supabase
+    // session expiry — surface its message directly instead of refreshing/retrying.
+    if (res.status === 401 && err.code !== 'GITHUB_AUTH' && !isRetry) {
+      const { error } = await supabase.auth.refreshSession();
+      if (!error) return request(method, path, body, true);
+      throw new Error('Session expired. Please sign in again.');
+    }
+
+    const e = new Error(err.error || `API ${res.status}`);
+    e.code = err.code;
+    throw e;
   }
   return res.json();
 }
