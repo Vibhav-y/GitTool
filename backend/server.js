@@ -11,8 +11,10 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 const ALLOWED_ORIGINS = [
-  "http://localhost:5173",  // main frontend dev
-  "http://localhost:5174",  // admin panel dev
+  "http://localhost:5173",  // main frontend dev (Vite)
+  "http://localhost:5174",  // admin panel dev (Vite)
+  "http://localhost:3001",  // Next.js frontend dev
+  "http://localhost:3002",  // Next.js frontend dev (alt port)
   // Production — hardcoded as safe fallback when env vars are absent
   "https://gittool.dev",
   "https://www.gittool.dev",

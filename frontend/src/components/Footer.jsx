@@ -57,6 +57,7 @@ export default function Footer() {
                             {[
                                 { label: 'Features', to: '/#tools' },
                                 { label: 'Analytics', to: '/#insights' },
+                                { label: 'Blog', to: '/blog' },
                                 { label: 'Changelog', to: '/changelog' },
                             ].map(({ label, to }) => (
                                 <Link key={to} to={to} style={{
