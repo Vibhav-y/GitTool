@@ -8,7 +8,7 @@ import { useWorkspace } from '@/contexts/WorkspaceContext';
 import api from '@/lib/apiClient';
 
 const TYPE_COLORS : Record<string, any> = { build: 'var(--danger)', test: 'var(--warning)', deploy: 'var(--accent)', config: '#8b5cf6', dependency: '#f59e0b', unknown: 'var(--text-tertiary)' };
-const TYPE_ICONS : Record<string, any> = { build: 'ðŸ"¨', test: 'ðŸ§ª', deploy: 'ðŸš€', config: 'âš™ï¸', dependency: 'ðŸ"¦', unknown: 'â"' };
+const TYPE_ICONS : Record<string, any> = { build: '🔨', test: '🧪', deploy: '🚀', config: '⚙️', dependency: '📦', unknown: '❓"' };
 
 export default function PipelineFailureExplainer() {
     const { selectedRepo: repo } = useWorkspace();
@@ -60,7 +60,7 @@ export default function PipelineFailureExplainer() {
                     />
                     {error && <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '8px 16px', fontSize: '0.8125rem', color: '#f87171', marginTop: 12 }}>{error}</div>}
                     <button className="btn-primary" onClick={handleExplain} disabled={loading} style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                        {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzingâ€¦</> : <><AlertCircle size={16} /> Explain Failure</>}
+                        {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing…</> : <><AlertCircle size={16} /> Explain Failure</>}
                     </button>
                 </div>
             </div>
@@ -69,7 +69,7 @@ export default function PipelineFailureExplainer() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                     {/* Error Type Badge */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <span style={{ fontSize: 28 }}>{TYPE_ICONS[result.errorType] || 'â"'}</span>
+                        <span style={{ fontSize: 28 }}>{TYPE_ICONS[result.errorType] || '❓"'}</span>
                         <span style={{ padding: '4px 16px', borderRadius: 999, fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', background: `${TYPE_COLORS[result.errorType] || 'var(--text-tertiary)'}20`, color: TYPE_COLORS[result.errorType] || 'var(--text-tertiary)' }}>{result.errorType} Error</span>
                     </div>
 

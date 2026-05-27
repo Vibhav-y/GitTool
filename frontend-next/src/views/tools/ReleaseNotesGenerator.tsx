@@ -52,7 +52,7 @@ export default function ReleaseNotesGenerator() {
                 <div className="panel-body">
                     <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: 16 }}>Generate Release Notes</h3>
                     <p style={{ fontSize: '0.875rem', color: 'var(--text-tertiary)', marginBottom: 24, lineHeight: 1.6 }}>
-                        This will analyze the last 30 commits in <b style={{ color: 'var(--text-primary)' }}>{repo?.full_name || 'â€¦'}</b> and organize them into a structured changelog using AI.
+                        This will analyze the last 30 commits in <b style={{ color: 'var(--text-primary)' }}>{repo?.full_name || '…'}</b> and organize them into a structured changelog using AI.
                     </p>
                     {error && (
                         <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '8px 16px', fontSize: '0.8125rem', color: '#f87171', marginBottom: 16 }}>
@@ -61,7 +61,7 @@ export default function ReleaseNotesGenerator() {
                     )}
                     <button className="btn-primary" onClick={handleGenerate} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         {loading
-                            ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing commitsâ€¦</>
+                            ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing commits…</>
                             : <><Sparkles size={16} /> Generate Release Notes</>
                         }
                     </button>

@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import api from '../lib/apiClient';
 
 export default function CreatePRModal({ owner, repo, head, base, stats, compareData, onClose, onCreated }: any) {
-    const [title, setTitle] = useState(`${head} â"" ${base}`);
+    const [title, setTitle] = useState(`${head} — ${base}`);
     const [body, setBody] = useState('');
     const [isDraft, setIsDraft] = useState(false);
     
@@ -163,7 +163,7 @@ export default function CreatePRModal({ owner, repo, head, base, stats, compareD
                             <GitPullRequest size={14} className="text-primary" />
                             <span className="font-mono text-[12px] font-semibold text-foreground">{head}</span>
                         </div>
-                        <span className="text-muted-foreground/40 font-mono">â""</span>
+                        <span className="text-muted-foreground/40 font-mono">—</span>
                         <div className="flex items-center gap-2 px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.08]">
                             <span className="font-mono text-[12px] font-semibold text-foreground/80">{base}</span>
                         </div>
@@ -180,7 +180,7 @@ export default function CreatePRModal({ owner, repo, head, base, stats, compareD
                 </div>
 
                 {result ? (
-                    /* â"€â"€ Success â"€â"€ */
+                    /* ── Success ── */
                     <div className="px-6 py-12 text-center flex-1 overflow-auto">
                         <CheckCircle size={48} className="text-emerald-400 mx-auto mb-4" />
                         <h3 className="text-[18px] font-bold mb-2">PR #{result.number} Created</h3>
@@ -191,7 +191,7 @@ export default function CreatePRModal({ owner, repo, head, base, stats, compareD
                         </a>
                     </div>
                 ) : (
-                    /* â"€â"€ Form Body â"€â"€ */
+                    /* ── Form Body ── */
                     <div className="flex-1 overflow-hidden flex flex-col custom-scrollbar">
                         <div className={`flex flex-1 overflow-hidden ${showAnalysis ? 'grid grid-cols-[340px_1fr]' : 'flex flex-col'}`}>
                             
@@ -330,7 +330,7 @@ export default function CreatePRModal({ owner, repo, head, base, stats, compareD
                                                                 <div className="text-[12px] font-medium font-mono text-foreground/90 truncate">{c.message}</div>
                                                                 <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                                                                     <span>{c.author}</span>
-                                                                    <span className="opacity-50">â€¢</span>
+                                                                    <span className="opacity-50">•</span>
                                                                     <span className="font-mono">{c.shortSha}</span>
                                                                 </div>
                                                             </div>
@@ -425,7 +425,7 @@ export default function CreatePRModal({ owner, repo, head, base, stats, compareD
                                 style={{ boxShadow: '0 0 20px rgba(120,160,255,0.15)' }}
                                 className="px-6 py-2 text-[13px] font-bold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all disabled:opacity-40 flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98]">
                                 {creating
-                                    ? <><Loader2 size={14} className="animate-spin" /> Creatingâ€¦</>
+                                    ? <><Loader2 size={14} className="animate-spin" /> Creating…</>
                                     : <>{isDraft ? 'Save Draft PR' : 'Create Pull Request'}</>
                                 }
                             </button>

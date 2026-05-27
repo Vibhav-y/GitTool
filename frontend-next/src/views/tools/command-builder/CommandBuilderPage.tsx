@@ -56,7 +56,7 @@ export default function CommandBuilderPage() {
   const exportShellScript = () => {
     const cmd = buildCommand();
     const cmds = chain.length ? [...chain, cmd] : [cmd];
-    const script = `#!/bin/bash\n# ${new Date().toISOString()}\nset -e\n\n${cmds.join('\n')}\n\necho "âœ" Done!"`;
+    const script = `#!/bin/bash\n# ${new Date().toISOString()}\nset -e\n\n${cmds.join('\n')}\n\necho "✓ Done!"`;
     const blob = new Blob([script], { type: 'text/x-shellscript' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = 'git-commands.sh'; a.click(); URL.revokeObjectURL(url);
@@ -90,7 +90,7 @@ export default function CommandBuilderPage() {
         </div>
       </NavbarPortal>
 
-      {/* â"€â"€ Zone 1: Context bar â"€â"€ */}
+      {/* ── Zone 1: Context bar ── */}
       <div className="flex items-center gap-5 flex-wrap text-[11px] text-muted-foreground/50 font-mono border-b border-border/40 pb-4">
         {repo && (
           <span className="flex items-center gap-1.5">
@@ -116,7 +116,7 @@ export default function CommandBuilderPage() {
         </div>
       </div>
 
-      {/* â"€â"€ Zone 2: Quick Actions row â"€â"€ */}
+      {/* ── Zone 2: Quick Actions row ── */}
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground/30 shrink-0 mr-1">
           Quick Git Actions
@@ -125,10 +125,10 @@ export default function CommandBuilderPage() {
       </div>
 
 
-      {/* â"€â"€ Main 2-pane layout â"€â"€ */}
+      {/* ── Main 2-pane layout ── */}
       <div className="grid gap-5 grid-cols-1 lg:grid-cols-[340px_1fr] items-start">
 
-        {/* â"€â"€ LEFT: Builder â"€â"€ */}
+        {/* ── LEFT: Builder ── */}
         <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
 
           {/* Operation header */}
@@ -157,7 +157,7 @@ export default function CommandBuilderPage() {
             />
           </div>
 
-          {/* Command Chain â€" always visible at the bottom of the builder */}
+          {/* Command Chain — always visible at the bottom of the builder */}
           <div className="border-t border-border/40 px-4 py-4">
             <CommandChain
               chain={chain}
@@ -169,10 +169,10 @@ export default function CommandBuilderPage() {
           </div>
         </div>
 
-        {/* â"€â"€ RIGHT: Terminal + Explanation + (optional) Visualization â"€â"€ */}
+        {/* ── RIGHT: Terminal + Explanation + (optional) Visualization ── */}
         <div className="flex flex-col gap-4">
 
-          {/* Terminal Preview â€" hero element */}
+          {/* Terminal Preview — hero element */}
           <div className="min-h-[280px]">
             <CommandPreview
               branch={branch}
@@ -189,7 +189,7 @@ export default function CommandBuilderPage() {
           {/* Explanation */}
           <CommandExplanation action={action} state={state} />
 
-          {/* Visualization â€" only when relevant */}
+          {/* Visualization — only when relevant */}
           {showViz && <CommandVisualization action={action} state={state} />}
         </div>
       </div>

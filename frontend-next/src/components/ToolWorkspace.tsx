@@ -16,7 +16,7 @@ export default function ToolWorkspace({
 
     return (
         <div className="flex h-full flex-col">
-            {/* â”€â”€ Workspace Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* ── Workspace Header ──────────────────────────── */}
             <header className="mb-6 flex items-center justify-between border-b pb-6">
                 <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl border bg-muted text-primary">
@@ -46,12 +46,12 @@ export default function ToolWorkspace({
                 </div>
             </header>
 
-            {/* â”€â”€ Main Tool Area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* ── Main Tool Area ────────────────────────────── */}
             <div className="flex flex-1 flex-col gap-6 overflow-y-auto">
                 {children}
             </div>
 
-            {/* â”€â”€ Terminal Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* ── Terminal Drawer ───────────────────────────── */}
             {terminalOpen && (
                 <div className="mt-6 flex h-60 flex-col overflow-hidden rounded-xl border bg-muted/30 font-mono text-[13px]">
                     <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-2 text-muted-foreground">

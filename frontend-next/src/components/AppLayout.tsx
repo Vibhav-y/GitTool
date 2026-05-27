@@ -33,7 +33,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 className="flex flex-1 flex-col h-full overflow-hidden transition-[margin-left] duration-300 ease-in-out"
                 style={{ marginLeft: sidebarCollapsed ? 68 : 220 }}
             >
-                {/* â”€â”€ Top Header Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                {/* ── Top Header Bar ──────────────────────── */}
                 <header
                     className="flex h-14 items-center justify-between z-[100] relative px-5 sm:px-6 shrink-0"
                     style={{
@@ -77,7 +77,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     </div>
                 </header>
 
-                {/* â”€â”€ Scrollable Content Area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                {/* ── Scrollable Content Area ─────────────── */}
                 <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 sm:p-6 bg-muted/20 relative">
                     {children}
                 </div>

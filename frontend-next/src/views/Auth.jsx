@@ -48,7 +48,7 @@ function Auth() {
     return (
         <>
         <SEO
-            title="Sign In â€" Login to GitTool"
+            title="Sign In — Login to GitTool"
             description="Sign in to GitTool with GitHub to access all AI-powered developer tools: README generator, branch compare, secrets scanner and more."
             keywords={['gittool login', 'sign in with github', 'github oauth developer tools', 'gittool sign up']}
             canonical="/auth"

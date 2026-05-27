@@ -4,9 +4,9 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { GitBranch, MoreHorizontal, Loader2, AlertCircle } from 'lucide-react';
 import { useCommitGraph } from '../hooks/useQueryHooks';
 
-/* â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"
+/* ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
    CONSTANTS
-   â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â" */
+   ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
 const LANE_W   = 44;
 const ROW_H    = 38;
 const MERGE_ROW = 50;
@@ -20,13 +20,13 @@ const COLORS = [
     '#FFA657', '#FF7B72', '#79C0FF', '#E3B341',
 ];
 
-/* â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"
+/* ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
    DAG-BASED LANE ASSIGNMENT ALGORITHM
-   â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"
+   ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
    Key: lanes are assigned by commit RELATIONSHIPS, not branch
    names. Lanes are reused when branches merge or terminate.
    This is the GitKraken / Sublime Merge approach.
-   â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â" */
+   ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
 function buildGraph(commits: any) {
     if (!commits?.length) return { nodes: [], edges: [], laneCount: 0, totalH: 0, branchLanes: {} as Record<string, any> };
 
@@ -35,8 +35,8 @@ function buildGraph(commits: any) {
     commits.forEach((c: any, i: any) => shaIdx.set(c.hash, i));
 
     /*
-     * lanes[]   â€" array of active lane slots. null = free, sha = occupied
-     * laneMap{} â€" hash â"" lane index assignment
+     * lanes[]   — array of active lane slots. null = free, sha = occupied
+     * laneMap{} — hash — lane index assignment
      */
     const lanes: any[] = [];
     const laneMap: Record<string, any> = {};
@@ -49,11 +49,11 @@ function buildGraph(commits: any) {
         return lanes.length - 1;
     }
 
-    /* â"€â"€ Pass 1: assign lanes topâ""bottom â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+    /* ── Pass 1: assign lanes top—bottom ──────────────────── */
     const nodeData: any[] = []; // intermediate node info
 
     commits.forEach((commit: any, rowIdx: any) => {
-        // 1ï¸âƒ£ Find or assign lane for this commit
+        // 1️⃣ Find or assign lane for this commit
         let lane;
         if ((laneMap as Record<string,any>)[commit.hash] !== undefined) {
             lane = (laneMap as Record<string,any>)[commit.hash];
@@ -72,7 +72,7 @@ function buildGraph(commits: any) {
             color: COLORS[lane % COLORS.length],
         });
 
-        // 2ï¸âƒ£ Handle parents
+        // 2️⃣ Handle parents
         const parents = commit.parents || [];
 
         parents.forEach((parentHash: any, pi: any) => {
@@ -92,7 +92,7 @@ function buildGraph(commits: any) {
             }
         });
 
-        // 3ï¸âƒ£ If this commit's lane is not continued by any child's first-parent,
+        // 3️⃣ If this commit's lane is not continued by any child's first-parent,
         //    and no parent continues it, free the lane.
         //    We check: does any parent use this lane? If not, free it.
         const laneUsedByParent = parents.some((ph: any) => (laneMap as Record<string,any>)[ph] === lane);
@@ -105,7 +105,7 @@ function buildGraph(commits: any) {
         }
     });
 
-    /* â"€â"€ Pass 2: compute positions â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+    /* ── Pass 2: compute positions ────────────────────────── */
     let cumY = PAD_T;
     const nodes = nodeData.map((n: any) => {
         const y = cumY;
@@ -117,7 +117,7 @@ function buildGraph(commits: any) {
         };
     });
 
-    /* â"€â"€ Edges â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+    /* ── Edges ────────────────────────────────────────────── */
     const edges: any[] = [];
     nodes.forEach((node: any) => {
         (node.parents || []).forEach((pHash: any) => {
@@ -133,7 +133,7 @@ function buildGraph(commits: any) {
         });
     });
 
-    /* â"€â"€ Lane spans (for vertical continuation lines) â"€â"€â"€â"€â"€â"€â"€ */
+    /* ── Lane spans (for vertical continuation lines) ─────── */
     const laneSpans: Record<string, any> = {};
     nodes.forEach((n: any) => {
         if (!laneSpans[n.lane]) laneSpans[n.lane] = { minY: n.y, maxY: n.y, color: n.color };
@@ -141,7 +141,7 @@ function buildGraph(commits: any) {
         laneSpans[n.lane].maxY = Math.max(laneSpans[n.lane].maxY, n.y);
     });
 
-    /* â"€â"€ Map branch names â"" lanes (for legend) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+    /* ── Map branch names — lanes (for legend) ────────────── */
     const branchLanes: Record<string, any> = {};
     nodes.forEach((n: any) => {
         if (n.branches) {
@@ -157,9 +157,9 @@ function buildGraph(commits: any) {
     return { nodes, edges, laneCount, laneSpans, totalH, branchLanes };
 }
 
-/* â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"
+/* ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
    COMPONENT
-   â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â" */
+   ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
 export default function GitBranchGraph({ repo }: any) {
     const { data, isLoading, error } = useCommitGraph(repo);
     const [hoveredIdx, setHoveredIdx] = useState<any>(null);
@@ -186,7 +186,7 @@ export default function GitBranchGraph({ repo }: any) {
                         bg-[#0c1319]/90 backdrop-blur-md overflow-hidden h-full
                         min-h-[380px] shadow-[0_8px_30px_rgb(0,0,0,0.3)]">
 
-            {/* â"â"â" Header â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â" */}
+            {/* ────── Header ────────────────────────────────────────────────────────────────── */}
             <div className="flex items-center justify-between px-4 pt-4 pb-1 z-10">
                 <div className="flex items-center gap-2 font-semibold text-white/90">
                     <GitBranch size={18} className="text-[#58A6FF]" />
@@ -198,7 +198,7 @@ export default function GitBranchGraph({ repo }: any) {
                 </button>
             </div>
 
-            {/* â"â"â" Legend â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â" */}
+            {/* ────── Legend ────────────────────────────────────────────────────────────────── */}
             {(data as any)?.branches?.length > 0 && (
                 <div className="flex items-center gap-4 px-5 py-2 border-b border-white/5 flex-wrap">
                     {(data as any).branches.map((b: any) => {
@@ -219,11 +219,11 @@ export default function GitBranchGraph({ repo }: any) {
                 </div>
             )}
 
-            {/* â"â"â" Body â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â" */}
+            {/* ────── Body ──────────────────────────────────────────────────────────────────── */}
             <div className="flex-1 overflow-y-auto overflow-x-hidden pb-16">
                 {isLoading ? (
                     <div className="flex items-center justify-center h-64 text-white/50 text-sm">
-                        <Loader2 className="animate-spin mr-2" size={18} /> Loading commit graphâ€¦
+                        <Loader2 className="animate-spin mr-2" size={18} /> Loading commit graph…
                     </div>
                 ) : error ? (
                     <div className="flex items-center justify-center h-64 text-white/50 text-sm">
@@ -234,7 +234,7 @@ export default function GitBranchGraph({ repo }: any) {
                 ) : (
                     <div className="relative" style={{ height: totalH }}>
 
-                        {/* â"€â"€ SVG â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                        {/* ── SVG ────────────────────────── */}
                         <svg className="absolute top-0 left-0 pointer-events-none"
                              width={graphW} height={totalH} fill="none">
                             <defs>
@@ -348,7 +348,7 @@ export default function GitBranchGraph({ repo }: any) {
                             })}
                         </svg>
 
-                        {/* â"€â"€ Row labels â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                        {/* ── Row labels ─────────────────── */}
                         {nodes.map((n: any, i: any) => {
                             const isHead = (data as any)?.branchHeads
                                 && n.branches?.some((b: any) => (data as any).branchHeads[b] === n.hash);
@@ -416,11 +416,11 @@ export default function GitBranchGraph({ repo }: any) {
                                                         min-w-[200px] max-w-[300px] pointer-events-none">
                                             <div className="font-bold text-white/90 mb-1 break-words">{n.message}</div>
                                             <div className="text-white/40 font-mono text-[10px] mb-1">
-                                                {n.shortHash} â€¢ {n.author}
+                                                {n.shortHash} • {n.author}
                                             </div>
                                             <div className="text-white/30 text-[10px]">
                                                 {n.branches?.join(', ')}
-                                                {n.isMerge && <span className="ml-1 text-[#D2A8FF]">â"" merge</span>}
+                                                {n.isMerge && <span className="ml-1 text-[#D2A8FF]">— merge</span>}
                                             </div>
                                         </div>
                                     )}

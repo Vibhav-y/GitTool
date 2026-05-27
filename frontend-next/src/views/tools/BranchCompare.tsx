@@ -30,10 +30,10 @@ import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-csharp';
 
-/* â"€â"€ Helpers â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+/* ── Helpers ───────────────────────────────────────────── */
 
 function timeAgo(date: any) {
-    if (!date) return 'â€"';
+    if (!date) return '—';
     const s = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
     if (s < 60) return `${s}s ago`;
     const m = Math.floor(s / 60);
@@ -81,7 +81,7 @@ function getFileIcon(filename: any) {
     }
 }
 
-/* â"€â"€ Diff Proportion Bar â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+/* ── Diff Proportion Bar ───────────────────────────────── */
 function DiffBar({ additions, deletions, total }: any) {
     if (!total) return null;
     const addPct = Math.max(0, (additions / total) * 100);
@@ -95,7 +95,7 @@ function DiffBar({ additions, deletions, total }: any) {
     );
 }
 
-/* â"€â"€ Copy button â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+/* ── Copy button ───────────────────────────────────────── */
 function CopySha({ text }: any) {
     const [copied, setCopied] = useState(false);
     return (
@@ -108,7 +108,7 @@ function CopySha({ text }: any) {
     );
 }
 
-/* â"€â"€ Component â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+/* ── Component ─────────────────────────────────────────── */
 
 export default function BranchCompare() {
     const searchParams = useSearchParams();
@@ -320,7 +320,7 @@ export default function BranchCompare() {
 
     return (
         <div className="tool-page max-w-[1400px] mx-auto">
-            {/* â"€â"€ Navbar â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Navbar ─────────────────────────── */}
             <SEO
                             title="Git Branch Compare Tool - Compare GitHub Branches Online Free"
                             description="Compare two git branches side-by-side online. See diffs, changed files, and commit history. Free git branch comparison tool - the easiest way to understand differences between git branches."
@@ -346,7 +346,7 @@ export default function BranchCompare() {
                 </div>
             </NavbarPortal>
 
-            {/* â"€â"€ Branch Header â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Branch Header ───────────────────── */}
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                 <div className="flex items-center gap-3">
                     <span className="font-mono text-[13px] px-3 py-1.5 rounded-lg font-semibold"
@@ -365,7 +365,7 @@ export default function BranchCompare() {
                 </div>
             </div>
 
-            {/* â"€â"€ Merge Status & Actions â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Merge Status & Actions ───────────────────── */}
             {data && (
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 mb-6">
                     <div className="flex-1">
@@ -407,15 +407,15 @@ export default function BranchCompare() {
                 </div>
             )}
 
-            {/* â"€â"€ Loading â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Loading ─────────────────────────── */}
             {loading && (
                 <div className="flex flex-col items-center justify-center py-20">
                     <Loader2 size={32} className="text-primary animate-spin mb-3" />
-                    <p className="text-sm text-muted-foreground">Comparing branchesâ€¦</p>
+                    <p className="text-sm text-muted-foreground">Comparing branches…</p>
                 </div>
             )}
 
-            {/* â"€â"€ Error â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Error ───────────────────────────── */}
             {error && (
                 <div className="flex items-center gap-2 rounded-lg px-4 py-3 mb-4 text-[13px] text-red-400"
                     style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)' }}>
@@ -425,7 +425,7 @@ export default function BranchCompare() {
 
             {data && (
                 <>
-                    {/* â"€â"€ PR Readiness Insights â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── PR Readiness Insights ──────────────── */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         {/* Summary Panel */}
                         <div className="rounded-xl p-4 bg-white/[0.02] border border-white/[0.06]">
@@ -485,7 +485,7 @@ export default function BranchCompare() {
                         </div>
                     </div>
 
-                    {/* â"€â"€ Stats Row â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── Stats Row ────────────────── */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                         {[
                             { label: 'Commits', value: (data as any).totalCommits, color: '#3b82f6' },
@@ -501,7 +501,7 @@ export default function BranchCompare() {
                         ))}
                     </div>
 
-                    {/* â"€â"€ Commits â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── Commits ──────────────────── */}
                     <div className="mb-6">
                         <h3 className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
                             <GitBranch size={13} /> Commits ({(data as any).totalCommits})
@@ -543,7 +543,7 @@ export default function BranchCompare() {
                         </div>
                     </div>
 
-                    {/* â"€â"€ Files Changed Header & Controls â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── Files Changed Header & Controls ────── */}
                     <div className="mb-4">
                         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
                             {selectedCommit ? (
@@ -589,7 +589,7 @@ export default function BranchCompare() {
                                         type="text" 
                                         value={searchQuery}
                                         onChange={e => setSearchQuery(e.target.value)}
-                                        placeholder="Search filesâ€¦ (Press 'f')" 
+                                        placeholder="Search files… (Press 'f')" 
                                         className="h-8 pl-8 pr-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-foreground text-[12px] placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 w-48"
                                     />
                                 </div>
@@ -664,7 +664,7 @@ export default function BranchCompare() {
                     </div>
                     
                     <div className="flex gap-4 items-start relative">
-                        {/* â"€â"€ File Navigation Sidebar â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                        {/* ── File Navigation Sidebar ─────────────────── */}
                         <aside className="hidden lg:block w-64 shrink-0 sticky top-20">
                             <div className="max-h-[calc(100vh-120px)] overflow-y-auto rounded-xl border border-white/[0.06] bg-white/[0.01] flex flex-col custom-scrollbar">
                                 <h4 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground p-4 pb-2 border-b border-white/[0.06] sticky top-0 bg-[#0d0d14]/90 backdrop-blur-md z-10">
@@ -749,7 +749,7 @@ export default function BranchCompare() {
                             </div>
                         </aside>
 
-                        {/* â"€â"€ Main Diff Area â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                        {/* ── Main Diff Area ──────────────────────────── */}
                         <div className="flex-1 min-w-0 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
                             {filteredFiles.length === 0 ? (
                                 <div className="py-12 text-center text-muted-foreground text-[13px] bg-white/[0.01]">
@@ -1116,7 +1116,7 @@ export default function BranchCompare() {
                                         {!isExpanded && f.changes > 100 && (
                                             <div className="mx-4 mb-3 text-center py-2 text-[11px] font-medium text-muted-foreground/60 rounded-lg border border-white/[0.04] bg-white/[0.01] hover:bg-white/[0.03] hover:text-foreground transition-colors cursor-pointer"
                                                 onClick={() => toggleFile(f.filename)}>
-                                                Large diff collapsed ({f.changes} changes) â€¢ Click to Expand
+                                                Large diff collapsed ({f.changes} changes) • Click to Expand
                                             </div>
                                         )}
                                         {isExpanded && !f.patch && (
@@ -1136,7 +1136,7 @@ export default function BranchCompare() {
         </>
     )}
 
-            {/* â"€â"€ PR Modal â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── PR Modal ────────────────────────── */}
             {showPRModal && data && (
                 <CreatePRModal
                     owner={owner}

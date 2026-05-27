@@ -89,7 +89,7 @@ const SECTIONS = [
     },
 ];
 
-/* â”€â”€ Tooltip that appears on hover when sidebar is collapsed â”€â”€ */
+/* ── Tooltip that appears on hover when sidebar is collapsed ── */
 function SidebarTooltip({ children, label, collapsed }: { children: React.ReactNode; label: string; collapsed: boolean }) {
     const [show, setShow] = useState(false);
     if (!collapsed) return children;
@@ -173,7 +173,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
                 borderRight: '1px solid var(--border)',
             }}
         >
-            {/* â”€â”€ Brand â”€â”€ */}
+            {/* ── Brand ── */}
             <div className="flex items-center h-14 px-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
                 {collapsed ? (
                     <div className="flex items-center justify-center w-full">
@@ -195,7 +195,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
                 )}
             </div>
 
-            {/* â”€â”€ Navigation â”€â”€ */}
+            {/* ── Navigation ── */}
             <div className="relative flex flex-1 flex-col overflow-hidden">
                 <nav ref={scrollRef} className={`flex flex-1 flex-col gap-1 overflow-y-auto py-3 ${collapsed ? 'px-2' : 'px-3'}`}>
 
@@ -214,7 +214,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
                         </Link>
                     </SidebarTooltip>
 
-                    {/* â”€â”€ Sections with labels â”€â”€ */}
+                    {/* ── Sections with labels ── */}
                     {SECTIONS.map((section: any) => (
                         <div key={section.label}>
                             {/* Section label */}
@@ -289,7 +289,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
                 <CustomScrollbar scrollContainerRef={scrollRef} />
             </div>
 
-            {/* â”€â”€ Collapse Toggle â”€â”€ */}
+            {/* ── Collapse Toggle ── */}
             <div className={`shrink-0 ${collapsed ? 'px-2 py-2' : 'px-3 py-2'}`} style={{ borderTop: '1px solid var(--border)' }}>
                 <SidebarTooltip label={collapsed ? 'Expand' : 'Collapse'} collapsed={collapsed}>
                     <button
@@ -303,7 +303,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
                 </SidebarTooltip>
             </div>
 
-            {/* â”€â”€ User Footer â”€â”€ */}
+            {/* ── User Footer ── */}
             <div className={`shrink-0 ${collapsed ? 'px-2 pb-3 pt-1' : 'px-3 pb-4 pt-1'}`}>
                 {collapsed ? (
                     <SidebarTooltip label={displayName} collapsed={collapsed}>

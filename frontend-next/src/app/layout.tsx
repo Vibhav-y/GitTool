@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import '@fontsource-variable/geist';
 import './globals.css';
 import { Providers } from './providers';
+
+const GA_ID = 'G-9BCPHHW5JP';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://gittool.dev'),
@@ -62,6 +65,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>{children}</Providers>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );

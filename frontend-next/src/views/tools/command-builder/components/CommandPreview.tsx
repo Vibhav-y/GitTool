@@ -24,7 +24,7 @@ export default function CommandPreview({ branch, cmdString, chainMode, chainComm
 
   return (
     <div className="rounded-2xl overflow-hidden flex flex-col shadow-lg h-full" style={{ background: '#080c18', border: '1px solid rgba(255,255,255,0.07)' }}>
-      {/* â”€â”€ Mac chrome â”€â”€ */}
+      {/* ── Mac chrome ── */}
       <div
         className="flex justify-between items-center px-5 py-3 shrink-0"
         style={{ background: 'linear-gradient(180deg, rgba(25,33,52,0.8), rgba(12,18,34,0.6))', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
@@ -48,7 +48,7 @@ export default function CommandPreview({ branch, cmdString, chainMode, chainComm
         </div>
       </div>
 
-      {/* â”€â”€ Context bar (Warp-style) â”€â”€ */}
+      {/* ── Context bar (Warp-style) ── */}
       <div className="flex items-center gap-4 px-5 py-2 border-b" style={{ borderColor: 'rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.02)' }}>
         <div className="flex items-center gap-1.5 text-[10px] font-mono" style={{ color: '#475569' }}>
           <FolderGit2 size={11} />
@@ -67,10 +67,10 @@ export default function CommandPreview({ branch, cmdString, chainMode, chainComm
         <span className="text-[10px] font-mono" style={{ color: '#334155' }}>Local Repository</span>
       </div>
 
-      {/* â”€â”€ Terminal body â”€â”€ */}
+      {/* ── Terminal body ── */}
       <div className="flex-1 px-6 py-5 font-mono text-[13px] overflow-y-auto" style={{ lineHeight: 2 }}>
         <div className="flex gap-2 items-center">
-          <span style={{ color: '#34d399' }}>âžœ</span>
+          <span style={{ color: '#34d399' }}>➜</span>
           <span style={{ color: '#818cf8', fontStyle: 'italic' }}>git({branch || 'main'})</span>
         </div>
         <div className="mt-3" style={{ wordBreak: 'break-all' }}>
@@ -82,7 +82,7 @@ export default function CommandPreview({ branch, cmdString, chainMode, chainComm
         </div>
       </div>
 
-      {/* â”€â”€ Footer â”€â”€ */}
+      {/* ── Footer ── */}
       <div className="px-5 py-3 flex flex-wrap justify-between items-center gap-2 shrink-0" style={{ background: 'rgba(4,8,16,0.7)', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
         <div className="flex gap-1.5">
           <button onClick={onExportAlias} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-colors cursor-pointer hover:bg-white/5" style={{ color: '#475569' }}>

@@ -51,7 +51,7 @@ export default function SemanticVersionSuggester() {
 
             <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
                 <button className="btn-primary" onClick={handleSuggest} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzingâ€¦</> : <><Sparkles size={16} /> Suggest Version</>}
+                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing…</> : <><Sparkles size={16} /> Suggest Version</>}
                 </button>
             </div>
 

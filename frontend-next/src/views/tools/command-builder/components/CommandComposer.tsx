@@ -6,7 +6,7 @@ import { FlagCard } from './form/CommandOptions';
 
 export default function CommandComposer({ action, schema, state, updateState, repoContext }: any) {
 
-  // â”€â”€ Section divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Section divider ─────────────────────────────────────────────
   const SectionLabel = ({ children }: any) => (
     <h4 className="text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground/40 mb-3 mt-5 flex items-center gap-2 first:mt-0">
       {children}
@@ -14,7 +14,7 @@ export default function CommandComposer({ action, schema, state, updateState, re
     </h4>
   );
 
-  // â”€â”€ Classify steps into groups â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Classify steps into groups ───────────────────────────────────
   const INPUT_STEPS   = ['branchName', 'baseBranch', 'targetBranch', 'targetCommit', 'commits', 'stashMessage', 'resetMode', 'strategy'];
   const OPTION_STEPS  = ['options', 'cleanOptions'];
 
@@ -22,7 +22,7 @@ export default function CommandComposer({ action, schema, state, updateState, re
   const optionSteps = schema?.steps?.filter((s: any) => OPTION_STEPS.includes(s)) || [];
   const hasAny      = inputSteps.length > 0 || optionSteps.length > 0;
 
-  // â”€â”€ Individual step renderers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Individual step renderers ────────────────────────────────────
   const renderOptions = () => (
     <div className="flex flex-col gap-1">
       <FlagCard label="Force (--force)" desc="Override safety checks" checked={state.force}   onChange={(v: any) => updateState('force', v)} />
@@ -77,7 +77,7 @@ export default function CommandComposer({ action, schema, state, updateState, re
           </button>
         ))}
       </div>
-      {state.resetMode === '--hard' && <p className="text-[10px] text-red-400 mt-1.5">âš  Discards all uncommitted changes</p>}
+      {state.resetMode === '--hard' && <p className="text-[10px] text-red-400 mt-1.5">⚠ Discards all uncommitted changes</p>}
     </div>
   );
 

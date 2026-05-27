@@ -26,7 +26,7 @@ export default function Footer() {
                             GitTool
                         </div>
                         <p style={{ color: 'var(--text-tertiary)', fontSize: '0.82rem', lineHeight: 1.7, maxWidth: '260px', margin: '0 0 16px' }}>
-                            70+ Git utilities, AI automation, and deep repository analytics â€" unified in one premium interface.
+                            70+ Git utilities, AI automation, and deep repository analytics — unified in one premium interface.
                         </p>
                         <div style={{ display: 'flex', gap: '12px' }}>
                             {[
@@ -126,10 +126,10 @@ export default function Footer() {
                     flexWrap: 'wrap', gap: '12px',
                 }}>
                     <span style={{ color: 'var(--text-tertiary)', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>
-                        Â© {year} GitTool. All rights reserved.
+                        © {year} GitTool. All rights reserved.
                     </span>
                     <span style={{ color: 'var(--text-tertiary)', fontSize: '0.75rem' }}>
-                        Made with â¤ï¸ for developers.
+                        Made with ❤️ for developers.
                     </span>
                 </div>
             </div>
