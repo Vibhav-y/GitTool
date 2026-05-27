@@ -60,9 +60,9 @@ export default function SecretsScanner() {
 
             <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
                 <button className="btn-primary" onClick={handleScan} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Scanningâ€¦</> : <><ShieldAlert size={16} /> Run Scan</>}
+                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Scanning…</> : <><ShieldAlert size={16} /> Run Scan</>}
                 </button>
-                {scanned && <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center' }}>Scanned {scannedFiles} files Â· Found {findings.length} potential secrets</span>}
+                {scanned && <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center' }}>Scanned {scannedFiles} files · Found {findings.length} potential secrets</span>}
             </div>
 
             {error && <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '8px 16px', fontSize: '0.8125rem', color: '#f87171', marginBottom: 16 }}>{error}</div>}

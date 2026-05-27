@@ -63,7 +63,7 @@ export default function AICommandInput({ onIntentParsed }: any) {
         className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground/60 hover:text-primary transition-colors cursor-pointer"
       >
         <Sparkles size={12} className="text-primary" />
-        Try AI command â†’
+        Try AI command →
       </button>
     );
   }

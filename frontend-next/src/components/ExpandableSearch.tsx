@@ -17,7 +17,7 @@ export default function ExpandableSearch() {
         }
     }, [isExpanded]);
 
-    // Handle escape key + âŒ˜K shortcut
+    // Handle escape key + ⌘K shortcut
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -57,9 +57,9 @@ export default function ExpandableSearch() {
                         aria-label="Open search"
                     >
                         <Search size={14} className="shrink-0 opacity-60" />
-                        <span className="hidden sm:inline text-muted-foreground/60">Searchâ€¦</span>
+                        <span className="hidden sm:inline text-muted-foreground/60">Search…</span>
                         <kbd className="hidden sm:inline-flex ml-3 h-5 items-center rounded border border-white/10 bg-white/[0.04] px-1.5 font-mono text-[10px] text-muted-foreground/50">
-                            {isMac ? 'âŒ˜K' : 'Ctrl K'}
+                            {isMac ? '⌘K' : 'Ctrl K'}
                         </kbd>
                     </button>
                 ) : (
@@ -68,7 +68,7 @@ export default function ExpandableSearch() {
                         <Input
                             ref={inputRef}
                             type="text"
-                            placeholder="Search repos, commits, branchesâ€¦"
+                            placeholder="Search repos, commits, branches…"
                             className="pl-9 pr-4 w-full bg-background shadow-md border-primary/20 focus-visible:ring-primary/30 h-9 text-sm"
                             onBlur={() => setIsExpanded(false)}
                         />

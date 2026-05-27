@@ -14,7 +14,7 @@ import Link from 'next/link';
 import api from '@/lib/apiClient';
 import GitBranchGraph from '@/components/GitBranchGraph';
 
-/* â"€â"€ Helpers â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+/* ── Helpers ──────────────────────────────────────────── */
 
 
 
@@ -61,7 +61,7 @@ const SORT_OPTIONS = [
     { key: 'name',    label: 'Name' },
 ];
 
-/* â"€â"€ Copyable Command Pill â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+/* ── Copyable Command Pill ────────────────────────────── */
 function CopyCmd({ cmd }: any) {
     const [copied, setCopied] = useState(false);
     const copy = () => {
@@ -79,7 +79,7 @@ function CopyCmd({ cmd }: any) {
     );
 }
 
-/* â"€â"€ Component â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */
+/* ── Component ────────────────────────────────────────── */
 
 export default function BranchMergeUI() {
     const { selectedRepo: repo } = useWorkspace();
@@ -117,7 +117,7 @@ export default function BranchMergeUI() {
         if (repo) fetchBranches();
     }, [repo, fetchBranches]);
 
-    /* â"€â"€ Filtered + Sorted Branches â"€â"€â"€â"€ */
+    /* ── Filtered + Sorted Branches ──── */
     const filteredBranches = useMemo(() => {
         if (!(data as any)?.branches) return [];
         let list = (data as any).branches;
@@ -184,7 +184,7 @@ export default function BranchMergeUI() {
 
     const compareLink = (branchName: any) => `/tools/compare?base=${encodeURIComponent((data as any)?.defaultBranch || 'main')}&head=${encodeURIComponent(branchName)}`;
 
-    /* â"€â"€ Health Overview Stats â"€â"€â"€â"€â"€â"€â"€â"€ */
+    /* ── Health Overview Stats ──────── */
     const healthOverview = useMemo(() => {
         if (!(data as any)?.branches) return null;
         const nonDefault = (data as any).branches.filter((b: any) => !b.isDefault);
@@ -199,7 +199,7 @@ export default function BranchMergeUI() {
         };
     }, [data]);
 
-    /* â"€â"€ Sortable Header Cell â"€â"€â"€â"€â"€â"€â"€â"€ */
+    /* ── Sortable Header Cell ──────── */
     const SortHeader = ({ sortKey, children, className = '' }: any) => (
         <th className={`px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors ${className}`}
             onClick={() => toggleSort(sortKey)}>
@@ -216,7 +216,7 @@ export default function BranchMergeUI() {
 
     return (
         <div className="tool-page max-w-[1400px] mx-auto min-w-0">
-            {/* â"€â"€ Navbar â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Navbar ─────────────────────────── */}
             <SEO
                             title="Git Branch Pruner & Manager - Clean Up Stale Git Branches"
               description="Free git branch pruner and branch cleanup tool. Find stale branches, bulk delete merged branches, and prune remote git branches online. The best git branch manager for keeping your repo clean."
@@ -242,7 +242,7 @@ export default function BranchMergeUI() {
                 </div>
             </NavbarPortal>
 
-            {/* â"€â"€ Health Overview + Stats â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Health Overview + Stats ─────────── */}
             {data && healthOverview && (
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4 mb-6">
                     {/* Stats Cards */}
@@ -282,7 +282,7 @@ export default function BranchMergeUI() {
                 </div>
             )}
 
-            {/* â"€â"€ Controls Row â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Controls Row ───────────────────── */}
             <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
                 <div className="flex items-center gap-3 flex-wrap">
                     {/* Filters */}
@@ -306,7 +306,7 @@ export default function BranchMergeUI() {
                         <input
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            placeholder="Search branchesâ€¦"
+                            placeholder="Search branches…"
                             className="h-8 pl-8 pr-3 rounded-lg text-[12px] bg-white/[0.02] border border-white/[0.06] outline-none focus:border-primary/30 focus:ring-1 focus:ring-primary/10 w-48 text-foreground placeholder:text-muted-foreground/40 transition-all"
                         />
                     </div>
@@ -320,7 +320,7 @@ export default function BranchMergeUI() {
                             onClick={() => handlePrune()}
                         >
                             {pruning
-                                ? <><Loader2 size={13} className="animate-spin" /> Deletingâ€¦</>
+                                ? <><Loader2 size={13} className="animate-spin" /> Deleting…</>
                                 : <><Trash2 size={13} /> Delete ({selected.length})</>
                             }
                         </button>
@@ -335,7 +335,7 @@ export default function BranchMergeUI() {
                 </div>
             </div>
 
-            {/* â"€â"€ Alerts â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Alerts ──────────────────────────── */}
             {pruneResult && (
                 <div className="flex items-center gap-2 rounded-lg px-4 py-2.5 mb-4 text-[13px]"
                     style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.15)' }}>
@@ -349,17 +349,17 @@ export default function BranchMergeUI() {
                 </div>
             )}
 
-            {/* â"€â"€ Loading â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Loading ─────────────────────────── */}
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-20">
                     <Loader2 size={32} className="text-primary animate-spin mb-3" />
-                    <p className="text-sm text-muted-foreground">Analyzing branchesâ€¦</p>
+                    <p className="text-sm text-muted-foreground">Analyzing branches…</p>
                 </div>
 
             ) : (data as any)?.branches?.length ? (
                 <>
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6 items-start min-w-0">
-                        {/* â"€â"€ Left Column: Branch Table & Smart Suggestions â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                        {/* ── Left Column: Branch Table & Smart Suggestions ──────────────── */}
                         <div className="flex flex-col gap-6 min-w-0">
                             {/* Branch Table */}
                     <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.01)' }}>
@@ -427,7 +427,7 @@ export default function BranchMergeUI() {
 
                                                     {/* Commits (Ahead) */}
                                                     <td className="px-3 py-2 text-center">
-                                                        {b.isDefault ? <span className="text-muted-foreground/30 text-[11px]">â€"</span> :
+                                                        {b.isDefault ? <span className="text-muted-foreground/30 text-[11px]">—</span> :
                                                             b.ahead > 0 ? (
                                                                 <span className={`inline-flex items-center gap-0.5 text-[11px] font-mono font-semibold ${b.ahead > 30 ? 'text-amber-400' : 'text-emerald-400'}`}>
                                                                     {b.ahead}
@@ -439,7 +439,7 @@ export default function BranchMergeUI() {
 
                                                     {/* Behind */}
                                                     <td className="px-3 py-2 text-center">
-                                                        {b.isDefault ? <span className="text-muted-foreground/30 text-[11px]">â€"</span> :
+                                                        {b.isDefault ? <span className="text-muted-foreground/30 text-[11px]">—</span> :
                                                             b.behind > 0 ? (
                                                                 <span className={`inline-flex items-center gap-0.5 text-[11px] font-mono font-semibold ${b.behind > 20 ? 'text-red-400' : b.behind > 5 ? 'text-amber-400' : 'text-orange-300/60'}`}>
                                                                     <ArrowDown size={10} />{b.behind}
@@ -451,7 +451,7 @@ export default function BranchMergeUI() {
                                                     {/* Last Commit */}
                                                     <td className="px-3 py-2">
                                                         <span className="text-[11px] text-foreground/60 truncate block max-w-[180px]">
-                                                            {b.lastCommitMessage || 'â€"'}
+                                                            {b.lastCommitMessage || '—'}
                                                         </span>
                                                     </td>
 
@@ -505,7 +505,7 @@ export default function BranchMergeUI() {
                                                     </td>
                                                 </tr>
 
-                                                {/* â"€â"€ Expanded Detail Row â"€â"€â"€â"€ */}
+                                                {/* ── Expanded Detail Row ──── */}
                                                 {isExpanded && !b.isDefault && (
                                                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                                                         <td colSpan={9} className="px-4 py-3" style={{ background: 'rgba(255,255,255,0.015)' }}>
@@ -553,7 +553,7 @@ export default function BranchMergeUI() {
                         )}
                     </div>
 
-                    {/* â"€â"€ Smart Suggestions â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── Smart Suggestions ─────────── */}
                     {(data as any).suggestions?.length > 0 && showSuggestions && (
                         <div className="mt-6">
                             <div className="flex items-center justify-between mb-3">
@@ -584,7 +584,7 @@ export default function BranchMergeUI() {
                     )}
                         </div>
 
-                        {/* â"€â"€ Right Column: Branch Visualizer Widget â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                        {/* ── Right Column: Branch Visualizer Widget ──────────────── */}
                         <div className="sticky top-6 min-w-0">
                             <GitBranchGraph repo={repo} />
                         </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Terminal, GitBranch, ArrowLeft } from 'lucide-react';
 import SEO from '@/components/SEO';
 
-// â"€â"€ Layout â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// ── Layout ────────────────────────────────────────────────────────────────────
 const W = 620, H = 215;
 const MY = 78;           // main branch Y
 const FY = 162;          // feature branch Y
@@ -130,7 +130,7 @@ export default function NotFound() {
                 .replay-btn:hover::before { color: rgba(255,255,255,0.18); }
             `}</style>
 
-            {/* â"€â"€ 404 heading â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── 404 heading ───────────────────────────────────────────── */}
             <div className="fade-up" style={{ animationDelay: '0s', textAlign: 'center', marginBottom: 2 }}>
                 <span className="gold-text" style={{
                     fontSize: 'clamp(4.5rem, 16vw, 9rem)',
@@ -149,7 +149,7 @@ export default function NotFound() {
                 }}>branch not found</div>
             </div>
 
-            {/* â"€â"€ Git branch SVG â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Git branch SVG ──────────────────────────────────────────── */}
             <div className="fade-up" style={{ animationDelay: '0.1s', width: '100%', maxWidth: 660, margin: '24px 0 2px' }}>
                 <svg viewBox={`0 0 ${W} ${H}`}
                     style={{ width: '100%', height: 'auto', overflow: 'visible' }}
@@ -169,7 +169,7 @@ export default function NotFound() {
                         </linearGradient>
                     </defs>
 
-                    {/* â"€â"€ MAIN BRANCH â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── MAIN BRANCH ─────────────────────────────────────── */}
                     <line x1="20" y1={MY} x2="444" y2={MY}
                         stroke="#C9A84C" strokeWidth="2.5" filter="url(#glow-gold)"
                         style={{
@@ -204,7 +204,7 @@ export default function NotFound() {
                         </g>
                     ))}
 
-                    {/* â"€â"€ FEATURE BRANCH â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── FEATURE BRANCH ──────────────────────────────────── */}
                     {/* elbow */}
                     <path d={`M ${SX} ${MY} C ${SX} ${MY + 46}, ${SX + 46} ${FY}, ${SX + 76} ${FY}`}
                         fill="none" stroke="rgba(255,255,255,0.42)" strokeWidth="2"
@@ -241,7 +241,7 @@ export default function NotFound() {
                         </g>
                     ))}
 
-                    {/* â"€â"€ BREAK POINT â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── BREAK POINT ─────────────────────────────────────── */}
                     {ph3 && (
                         <g>
                             {/* pulse ring (SVG-native animation for reliable scale) */}
@@ -287,7 +287,7 @@ export default function NotFound() {
                                 fill="rgba(255,90,90,0.95)" fontSize="9.5" fontWeight="bold"
                                 fontFamily="system-ui"
                                 style={{ animation: 'blink-red 1.2s ease-in-out infinite' }}>
-                                âœ"
+                                ✓
                             </text>
 
                         </g>
@@ -337,7 +337,7 @@ export default function NotFound() {
                 fontFamily: 'ui-monospace, monospace',
             }}>
                 <GitBranch size={11} />
-                git checkout HEAD~âˆž
+                git checkout HEAD~∞
             </div>
         </div>
     );

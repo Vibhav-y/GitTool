@@ -9,7 +9,7 @@ import api from '../lib/apiClient';
  *
  * Props:
  *  - value   { owner, repo } | null
- *  - onChange (repo) => void   â€" fires with the raw GitHub repo object
+ *  - onChange (repo) => void   — fires with the raw GitHub repo object
  */
 export default function RepoSelector({ value, onChange }: { value: any; onChange: (repo: any) => void }) {
     const [repos, setRepos] = useState<any[]>([]);
@@ -48,7 +48,7 @@ export default function RepoSelector({ value, onChange }: { value: any; onChange
         r.full_name.toLowerCase().includes(search.toLowerCase())
     );
 
-    const selectedName = value?.full_name || value?.name || 'Select repositoryâ€¦';
+    const selectedName = value?.full_name || value?.name || 'Select repository…';
 
     return (
         <div ref={ref} style={{ position: 'relative', minWidth: 240 }}>
@@ -82,7 +82,7 @@ export default function RepoSelector({ value, onChange }: { value: any; onChange
                                 autoFocus
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Filter reposâ€¦"
+                                placeholder="Filter repos…"
                                 style={{
                                     width: '100%', padding: '8px 12px 8px 32px', border: 'none',
                                     background: 'transparent', color: 'var(--text-primary)', fontSize: '0.8125rem',

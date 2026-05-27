@@ -7,7 +7,7 @@ export default function OperationSelector({ action, setAction, iconMap, options 
   return (
     <div className="form-field">
       <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
-        1ï¸âƒ£ Select Operation
+        1️⃣ Select Operation
       </label>
       <Select value={action} onValueChange={setAction}>
         <SelectTrigger className="w-full h-11 rounded-xl bg-background/80 border-border/60 text-sm font-semibold">

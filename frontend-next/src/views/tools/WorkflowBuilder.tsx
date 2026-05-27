@@ -96,7 +96,7 @@ export default function WorkflowBuilder() {
 
                     <button className="btn-primary" onClick={handleGenerate} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         {loading
-                            ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Generatingâ€¦</>
+                            ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Generating…</>
                             : <><Sparkles size={16} /> Generate Workflow</>
                         }
                     </button>

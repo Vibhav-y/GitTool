@@ -16,7 +16,7 @@ import { useWorkspace } from '@/contexts/WorkspaceContext';
 import api from '@/lib/apiClient';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-// â"€â"€â"€ CONSTANTS â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// ─── CONSTANTS ──────────────────────────────────────────────────────
 const ACTIONS = [
     'git checkout', 'git branch', 'git merge', 'git rebase',
     'git cherry-pick', 'git stash', 'git reset',
@@ -87,7 +87,7 @@ function timeAgo(date: any) {
     return `${d}d ago`;
 }
 
-// â"€â"€â"€ SYNTAX HIGHLIGHTING â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// ─── SYNTAX HIGHLIGHTING ────────────────────────────────────────────
 function highlightCommand(cmd: any) {
     if (!cmd) return null;
     return cmd.split(' ').map((token: any, i: any) => {
@@ -101,12 +101,12 @@ function highlightCommand(cmd: any) {
     });
 }
 
-// â"€â"€â"€ PLAIN ENGLISH EXPLANATIONS â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// ─── PLAIN ENGLISH EXPLANATIONS ─────────────────────────────────────
 function getExplanation(action: any, st: any) {
     if (action === 'git reset') {
         if (st.resetMode === '--soft') return 'Moves HEAD back one commit. Your changes stay staged — just re-commit them.';
         if (st.resetMode === '--mixed') return 'Moves HEAD back and un-stages changes. Files stay in your working directory.';
-        if (st.resetMode === '--hard') return 'âš ï¸ DANGER: Permanently discards ALL uncommitted changes. Cannot be undone.';
+        if (st.resetMode === '--hard') return '⚠️ DANGER: Permanently discards ALL uncommitted changes. Cannot be undone.';
     }
     if (action === 'git merge' && st.mergeStrategy) {
         if (st.mergeStrategy === 'squash') return 'Squashes all branch commits into a single commit on your current branch.';
@@ -123,11 +123,11 @@ function getExplanation(action: any, st: any) {
     if (action === 'git bisect') return 'Binary search through commits to find the one that introduced a bug.';
     if (action === 'git reflog') return 'Shows where HEAD has been. The ultimate recovery tool for lost commits.';
     if (action === 'git remote') return 'Manage the set of remote repositories you track.';
-    if (st.force) return 'âš ï¸ --force overrides remote safety checks. Prefer --force-with-lease.';
+    if (st.force) return '⚠️ --force overrides remote safety checks. Prefer --force-with-lease.';
     return 'This command is safe to run. It will not modify history or affect remotes.';
 }
 
-// â"€â"€â"€ DANGER LEVEL â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// ─── DANGER LEVEL ───────────────────────────────────────────────────
 function getDangerLevel(action: any, st: any) {
     const D : Record<string, any> = { level: 'destructive', text: 'DESTRUCTIVE', icon: AlertTriangle, color: '#ef4444', bg: 'linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05))', border: 'rgba(239,68,68,0.3)' };
     const C : Record<string, any> = { level: 'caution', text: 'CAUTION', icon: AlertCircle, color: '#f59e0b', bg: 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', border: 'rgba(245,158,11,0.3)' };
@@ -140,7 +140,7 @@ function getDangerLevel(action: any, st: any) {
     return S;
 }
 
-// â"€â"€â"€ TOOLTIP â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// ─── TOOLTIP ────────────────────────────────────────────────────────
 function Tip({ text }: any) {
     const [show, setShow] = useState(false);
     if (!text) return null;
@@ -157,7 +157,7 @@ function Tip({ text }: any) {
     );
 }
 
-// â"€â"€â"€ TOGGLE CARD â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// ─── TOGGLE CARD ────────────────────────────────────────────────────
 function FlagCard({ label, desc, checked, onChange, tooltip, conflict, disabled }: any) {
     return (
         <div
@@ -182,16 +182,16 @@ function FlagCard({ label, desc, checked, onChange, tooltip, conflict, disabled 
     );
 }
 
-// â"€â"€â"€ SECTION HEADING â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// ─── SECTION HEADING ────────────────────────────────────────────────
 function SectionHeading({ children }: any) {
     return <h4 className="text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground/70 mb-4 flex items-center gap-2">
         <span className="w-6 h-px bg-border" />{children}<span className="flex-1 h-px bg-border" />
     </h4>;
 }
 
-// â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"
-// â"€â"€â"€ MAIN COMPONENT â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-// â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"
+// ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+// ─── MAIN COMPONENT ─────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 export default function CommandBuilder() {
     const { selectedRepo: repo, selectedBranch: branch } = useWorkspace();
 
@@ -320,15 +320,15 @@ export default function CommandBuilder() {
     const exportAlias = () => { const a = cmdString.replace(/^git /, '').split(' ')[0] + '-custom'; navigator.clipboard.writeText(`[alias]\n    ${a} = ${cmdString.replace(/^git /, '')}`); };
     const exportShellScript = () => {
         const cmds = chainMode && chainCommands.length ? [...chainCommands, cmdString] : [cmdString];
-        const script = `#!/bin/bash\n# Generated by GitToolPro\n# ${new Date().toISOString()}\nset -e\n\n${cmds.join('\n')}\n\necho "âœ" Done!"`;
+        const script = `#!/bin/bash\n# Generated by GitToolPro\n# ${new Date().toISOString()}\nset -e\n\n${cmds.join('\n')}\n\necho "✓ Done!"`;
         const blob = new Blob([script], { type: 'text/x-shellscript' }); const url = URL.createObjectURL(blob);
         const a = document.createElement('a'); a.href = url; a.download = 'git-commands.sh'; a.click(); URL.revokeObjectURL(url);
     };
 
-    // â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"
+    // ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     return (
         <div className="tool-page">
-            {/* â"€â"€ HEADER â"€â"€ */}
+            {/* ── HEADER ── */}
             <SEO title="Git Command Builder" description="Build complex Git commands visually without memorizing syntax. GitTool's AI command builder generates safe, ready-to-run Git commands." keywords={[]} noIndex={true} />
             <NavbarPortal>
                 <div className="flex items-center gap-3">
@@ -342,7 +342,7 @@ export default function CommandBuilder() {
                 </div>
             </NavbarPortal>
 
-            {/* â"€â"€ RECIPES â"€â"€ */}
+            {/* ── RECIPES ── */}
             {showRecipes && (
                 <div className="rounded-2xl border border-border overflow-hidden mb-6" style={{ background: 'linear-gradient(180deg, var(--card), transparent)' }}>
                     <div className="flex items-center justify-between px-5 py-3 border-b border-border/50">
@@ -364,7 +364,7 @@ export default function CommandBuilder() {
                 </div>
             )}
 
-            {/* â"€â"€ HISTORY â"€â"€ */}
+            {/* ── HISTORY ── */}
             {showHistory && (
                 <div className="rounded-2xl border border-border overflow-hidden mb-6" style={{ background: 'linear-gradient(180deg, var(--card), transparent)' }}>
                     <div className="flex items-center justify-between px-5 py-3 border-b border-border/50">
@@ -388,9 +388,9 @@ export default function CommandBuilder() {
                 </div>
             )}
 
-            {/* â"€â"€ MAIN GRID â"€â"€ */}
+            {/* ── MAIN GRID ── */}
             <div className="grid gap-6 grid-cols-1 lg:grid-cols-[1.3fr_1fr]">
-                {/* â"â"â" LEFT: BUILDER â"â"â" */}
+                {/* ────── LEFT: BUILDER ────── */}
                 <div className="flex flex-col gap-6">
                     <div className="rounded-2xl border border-border overflow-hidden shadow-sm" style={{ background: 'var(--card)' }}>
                         <div style={{ padding: '28px 28px 32px' }}>
@@ -412,7 +412,7 @@ export default function CommandBuilder() {
                                 </div>
                             </div>
 
-                            {/* â"€â"€ DYNAMIC OPTIONS â"€â"€ */}
+                            {/* ── DYNAMIC OPTIONS ── */}
                             <div className="mt-7">
 
                                 {/* RESET */}
@@ -422,7 +422,7 @@ export default function CommandBuilder() {
                                         {[
                                             { mode: '--soft', desc: 'Moves HEAD. Files remain staged.', gradient: 'rgba(16,185,129,0.08)', ring: 'ring-emerald-500/50' },
                                             { mode: '--mixed', desc: 'Moves HEAD. Files become unstaged.', gradient: 'rgba(245,158,11,0.08)', ring: 'ring-amber-500/50' },
-                                            { mode: '--hard', desc: 'Destroys ALL uncommitted changes. âš ï¸', gradient: 'rgba(239,68,68,0.08)', ring: 'ring-red-500/50' },
+                                            { mode: '--hard', desc: 'Destroys ALL uncommitted changes. ⚠️', gradient: 'rgba(239,68,68,0.08)', ring: 'ring-red-500/50' },
                                         ].map((r: any) => (
                                             <div key={r.mode} onClick={() => setResetMode(r.mode)}
                                                 className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${resetMode === r.mode ? `ring-2 ${r.ring} shadow-sm` : 'border-border/50 hover:border-border'}`}
@@ -609,7 +609,7 @@ export default function CommandBuilder() {
                     </div>
                 </div>
 
-                {/* â"â"â" RIGHT: TERMINAL + INFO â"â"â" */}
+                {/* ────── RIGHT: TERMINAL + INFO ────── */}
                 <div className="flex flex-col gap-4">
                     {/* Terminal */}
                     <div className="rounded-2xl overflow-hidden flex flex-col shadow-lg" style={{ background: '#0c1222', minHeight: 420, border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -630,7 +630,7 @@ export default function CommandBuilder() {
                         {/* Body */}
                         <div className="flex-1 px-6 py-5 font-mono text-[13px]" style={{ lineHeight: 2 }}>
                             <div className="flex gap-3 flex-wrap">
-                                <span style={{ color: '#34d399' }}>âžœ</span>
+                                <span style={{ color: '#34d399' }}>➜</span>
                                 <span style={{ color: '#475569' }}>~/projects</span>
                                 <span style={{ color: '#818cf8', fontStyle: 'italic' }}>git({branch || 'main'})</span>
                             </div>
@@ -663,14 +663,14 @@ export default function CommandBuilder() {
                         <div>
                             <h5 className="text-sm font-bold text-foreground">What this does</h5>
                             <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{explanation}</p>
-                            {danger.level === 'destructive' && <p className="text-[11px] text-red-400 mt-2 font-semibold">âš  This operation is destructive and cannot be undone.</p>}
+                            {danger.level === 'destructive' && <p className="text-[11px] text-red-400 mt-2 font-semibold">⚠ This operation is destructive and cannot be undone.</p>}
                         </div>
                     </div>
 
                     {/* Shortcuts */}
                     <div className="text-[10px] text-muted-foreground/60 flex flex-wrap gap-x-5 gap-y-1 px-1">
-                        <span><kbd className="px-1.5 py-0.5 bg-muted/50 rounded border border-border/50 text-[9px] font-mono">Ctrl+â"µ</kbd> Copy</span>
-                        <span><kbd className="px-1.5 py-0.5 bg-muted/50 rounded border border-border/50 text-[9px] font-mono">Ctrl+â"§+R</kbd> Reset</span>
+                        <span><kbd className="px-1.5 py-0.5 bg-muted/50 rounded border border-border/50 text-[9px] font-mono">Ctrl+↵</kbd> Copy</span>
+                        <span><kbd className="px-1.5 py-0.5 bg-muted/50 rounded border border-border/50 text-[9px] font-mono">Ctrl+⇧+R</kbd> Reset</span>
                     </div>
                 </div>
             </div>

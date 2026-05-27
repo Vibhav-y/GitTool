@@ -42,7 +42,7 @@ export default function CommandExplanation({ action, state }: any) {
               <ul className="mt-2 space-y-1 text-xs text-muted-foreground/80">
                 {explanation.effects.map((effect: any, i: any) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">â€¢</span>
+                    <span className="text-primary mt-0.5">•</span>
                     <span>{effect}</span>
                   </li>
                 ))}

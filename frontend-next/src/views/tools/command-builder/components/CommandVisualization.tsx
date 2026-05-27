@@ -10,7 +10,7 @@ function DiffBlock({ before, after }: any) {
         <span className="text-[9px] font-bold uppercase tracking-wider text-red-400 block mb-1.5">Before</span>
         <pre className="text-[11px] font-mono leading-relaxed text-red-300/80 whitespace-pre">{before}</pre>
       </div>
-      <div className="flex items-center justify-center text-muted-foreground/40 text-xs">â†“</div>
+      <div className="flex items-center justify-center text-muted-foreground/40 text-xs">↓</div>
       <div className="rounded-lg p-3 bg-emerald-500/5 border border-emerald-500/15">
         <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-400 block mb-1.5">After</span>
         <pre className="text-[11px] font-mono leading-relaxed text-emerald-300/80 whitespace-pre">{after}</pre>
@@ -32,55 +32,55 @@ export default function CommandVisualization({ action, state }: any) {
     const bName = state.branchName || 'feature/new';
     const base = state.baseBranch || 'main';
     Icon = GitBranch;
-    asciiGraph = `${base}  Aâ”€â”€â”€Bâ”€â”€â”€C
-                  â•²
+    asciiGraph = `${base}  A───B───C
+                  ╲
                    ${bName}  (new)`;
     contextLabels = { 'Base': base, 'New Branch': bName };
     diffData = {
-      before: `HEAD â†’ ${base}\n  Aâ”€â”€â”€Bâ”€â”€â”€C`,
-      after:  `HEAD â†’ ${base}\n  Aâ”€â”€â”€Bâ”€â”€â”€C\n            â•²\n             ${bName}`
+      before: `HEAD → ${base}\n  A───B───C`,
+      after:  `HEAD → ${base}\n  A───B───C\n            ╲\n             ${bName}`
     };
   } else if (action === 'git checkout') {
     const target = state.targetBranch || 'feature';
     Icon = GitBranch;
-    asciiGraph = `main      Aâ”€â”€â”€Bâ”€â”€â”€C  (was here)\n\n${target}  Aâ”€â”€â”€Bâ”€â”€â”€Dâ”€â”€â”€E  â† HEAD now`;
+    asciiGraph = `main      A───B───C  (was here)\n\n${target}  A───B───D───E  ← HEAD now`;
     contextLabels = { 'Switching to': target };
     diffData = {
-      before: `HEAD â†’ main`,
-      after:  `HEAD â†’ ${target}`
+      before: `HEAD → main`,
+      after:  `HEAD → ${target}`
     };
   } else if (action === 'git merge') {
     const target = state.targetBranch || 'feature';
     Icon = GitMerge;
-    asciiGraph = `main    Aâ”€â”€â”€Bâ”€â”€â”€C â”€â”€â”€ M  â† merge commit\n             â•²         â•±\n${target}       Dâ”€â”€â”€Eâ”€â”€â”€F`;
+    asciiGraph = `main    A───B───C ─── M  ← merge commit\n             ╲         ╱\n${target}       D───E───F`;
     contextLabels = { 'Target': target, 'Strategy': state.mergeStrategy ? `--${state.mergeStrategy}` : 'default' };
     diffData = {
-      before: `main:    Aâ”€â”€â”€Bâ”€â”€â”€C\n${target}: Dâ”€â”€â”€Eâ”€â”€â”€F`,
-      after:  `main:    Aâ”€â”€â”€Bâ”€â”€â”€Câ”€â”€â”€M\n${target}: Dâ”€â”€â”€Eâ”€â”€â”€F â•±`
+      before: `main:    A───B───C\n${target}: D───E───F`,
+      after:  `main:    A───B───C───M\n${target}: D───E───F ╱`
     };
   } else if (action === 'git rebase') {
     const target = state.targetBranch || 'main';
     Icon = GitBranch;
-    asciiGraph = `Before:  main Aâ”€â”€â”€Bâ”€â”€â”€C\n               feature Dâ”€â”€â”€E\n\nAfter:   main Aâ”€â”€â”€Bâ”€â”€â”€C\n                        â•²\n               feature   D'â”€â”€â”€E'`;
+    asciiGraph = `Before:  main A───B───C\n               feature D───E\n\nAfter:   main A───B───C\n                        ╲\n               feature   D'───E'`;
     contextLabels = { 'Onto': target };
     diffData = {
-      before: `main    Aâ”€â”€â”€Bâ”€â”€â”€C\nfeature Dâ”€â”€â”€E`,
-      after:  `main    Aâ”€â”€â”€Bâ”€â”€â”€C\n                 â•²\nfeature           D'â”€â”€â”€E'`
+      before: `main    A───B───C\nfeature D───E`,
+      after:  `main    A───B───C\n                 ╲\nfeature           D'───E'`
     };
   } else if (action === 'git reset') {
     const mode = state.resetMode || '--mixed';
     Icon = RotateCcw;
     const modeDesc = mode === '--hard' ? 'discarded entirely' : mode === '--soft' ? 'back to staging' : 'back to unstaged';
-    asciiGraph = `Aâ”€â”€â”€Bâ”€â”€â”€Câ”€â”€â”€D  â† HEAD\n\nAfter ${mode}:\nAâ”€â”€â”€Bâ”€â”€â”€C  â† HEAD\n       [D: ${modeDesc}]`;
+    asciiGraph = `A───B───C───D  ← HEAD\n\nAfter ${mode}:\nA───B───C  ← HEAD\n       [D: ${modeDesc}]`;
     contextLabels = { 'Mode': mode, 'Commit': state.targetCommit || 'HEAD~1' };
     diffData = {
-      before: `Aâ”€â”€â”€Bâ”€â”€â”€Câ”€â”€â”€D  (HEAD)`,
-      after:  `Aâ”€â”€â”€Bâ”€â”€â”€C  (HEAD)\n  [D: ${modeDesc}]`
+      before: `A───B───C───D  (HEAD)`,
+      after:  `A───B───C  (HEAD)\n  [D: ${modeDesc}]`
     };
   } else if (action === 'git commit') {
     Icon = FileCode;
-    asciiGraph = `Working Tree â”€â”€stageâ”€â”€â–¶ Index â”€â”€commitâ”€â”€â–¶ HEAD\n[modified]              [staged]          [history]`;
-    contextLabels = { 'Flow': 'add â†’ commit' };
+    asciiGraph = `Working Tree ──stage──▶ Index ──commit──▶ HEAD\n[modified]              [staged]          [history]`;
+    contextLabels = { 'Flow': 'add → commit' };
   }
 
   return (

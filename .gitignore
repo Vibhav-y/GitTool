@@ -39,3 +39,6 @@ backend/tests/*
 frontend/src/tests/*
 
 frontend-next/node_modules
+
+seo/
+seo

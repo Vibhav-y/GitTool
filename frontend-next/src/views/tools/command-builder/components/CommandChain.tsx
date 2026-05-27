@@ -44,7 +44,7 @@ export default function CommandChain({ chain, setChain, onExport, currentCmd, on
         <Plus size={12} /> Add current command to chain
       </button>
 
-      {/* Chain list â€" visible once there are commands */}
+      {/* Chain list — visible once there are commands */}
       {(active || chain.length > 0) && (
         <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 p-3">
           <div className="flex items-center justify-between mb-2">

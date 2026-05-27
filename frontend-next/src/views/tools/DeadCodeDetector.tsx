@@ -49,7 +49,7 @@ export default function DeadCodeDetector() {
 
             <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
                 <button className="btn-primary" onClick={handleAnalyze} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzingâ€¦</> : <><Trash2 size={16} /> Detect Dead Code</>}
+                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing…</> : <><Trash2 size={16} /> Detect Dead Code</>}
                 </button>
                 {totalFiles > 0 && <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center' }}>Analyzed {totalFiles} code files</span>}
             </div>

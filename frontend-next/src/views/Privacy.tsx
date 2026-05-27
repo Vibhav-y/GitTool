@@ -86,7 +86,7 @@ export default function PrivacyPolicy() {
                     <p>When you choose to generate a README for a specific repository, we temporarily read the following from the GitHub API in real-time:</p>
                     <Bullet items={[
                         'Repository name, description, star count, fork count, license, and topics',
-                        'File and folder names (file tree) â€" not file contents',
+                        'File and folder names (file tree) — not file contents',
                         'Recent commit messages and commit author names (last 15 commits)',
                         'Contents of specific configuration files: package.json, requirements.txt, Dockerfile, docker-compose.yml, vercel.json, netlify.toml, fly.toml, render.yaml, tsconfig.json, vite.config.js, next.config.js, .env.example, Cargo.toml, go.mod, pyproject.toml',
                         'Programming languages detected in the repository',
@@ -146,22 +146,22 @@ export default function PrivacyPolicy() {
 
                 <Sub title="4.1 GitHub (Authentication & API)">
                     <p>We use GitHub OAuth for authentication and the GitHub REST API for fetching repository metadata. Your GitHub access token is stored in your browser's localStorage and sent to our backend only when making API requests. We request only the scopes <code style={{ background: 'var(--muted)', padding: '1px 5px', borderRadius: '3px', fontSize: '0.8rem' }}>repo</code> and <code style={{ background: 'var(--muted)', padding: '1px 5px', borderRadius: '3px', fontSize: '0.8rem' }}>read:user</code>.</p>
-                    <p style={{ marginTop: '6px' }}>â"" <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noreferrer" style={{ color: '#c9956a' }}>GitHub Privacy Statement</a></p>
+                    <p style={{ marginTop: '6px' }}>— <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noreferrer" style={{ color: '#c9956a' }}>GitHub Privacy Statement</a></p>
                 </Sub>
 
                 <Sub title="4.2 Supabase (Database & Authentication)">
                     <p>Supabase hosts our database and manages authentication sessions. Your account data (user ID, email, username), generated README projects, token balances, and payment records are stored in Supabase's infrastructure (AWS, US region by default).</p>
-                    <p style={{ marginTop: '6px' }}>â"" <a href="https://supabase.com/privacy" target="_blank" rel="noreferrer" style={{ color: '#c9956a' }}>Supabase Privacy Policy</a></p>
+                    <p style={{ marginTop: '6px' }}>— <a href="https://supabase.com/privacy" target="_blank" rel="noreferrer" style={{ color: '#c9956a' }}>Supabase Privacy Policy</a></p>
                 </Sub>
 
                 <Sub title="4.3 OpenAI (AI Generation)">
                     <p>Repository context (file names, commit messages, config file contents) and your chat messages are sent to OpenAI's API to generate README content. OpenAI may retain API inputs for a limited period per their data retention policy. We recommend reviewing OpenAI's Enterprise Privacy policy for details.</p>
-                    <p style={{ marginTop: '6px' }}>â"" <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noreferrer" style={{ color: '#c9956a' }}>OpenAI Privacy Policy</a></p>
+                    <p style={{ marginTop: '6px' }}>— <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noreferrer" style={{ color: '#c9956a' }}>OpenAI Privacy Policy</a></p>
                 </Sub>
 
                 <Sub title="4.4 Razorpay (Payments)">
                     <p>Token purchases are processed through Razorpay. Payment information (card details, UPI, etc.) is collected directly by Razorpay and is not accessible to GitTool. Razorpay is PCI-DSS Level 1 compliant.</p>
-                    <p style={{ marginTop: '6px' }}>â"" <a href="https://razorpay.com/privacy/" target="_blank" rel="noreferrer" style={{ color: '#c9956a' }}>Razorpay Privacy Policy</a></p>
+                    <p style={{ marginTop: '6px' }}>— <a href="https://razorpay.com/privacy/" target="_blank" rel="noreferrer" style={{ color: '#c9956a' }}>Razorpay Privacy Policy</a></p>
                 </Sub>
             </Section>
 
@@ -174,7 +174,7 @@ export default function PrivacyPolicy() {
                     <Bullet items={[
                         'All communications between the client and server use HTTPS/TLS encryption',
                         'Authentication is handled via Supabase JWT tokens with short expiry periods',
-                        'Row Level Security (RLS) is enforced on all database tables â€" you can only access your own data',
+                        'Row Level Security (RLS) is enforced on all database tables — you can only access your own data',
                         'GitHub tokens are stored only in browser localStorage and are never persisted server-side',
                         'Rate limiting is applied to all API endpoints to prevent abuse',
                         'Payment signature verification using HMAC-SHA256 for all Razorpay transactions',
@@ -193,7 +193,7 @@ export default function PrivacyPolicy() {
                     'Right to Rectification: Correct inaccurate or incomplete data',
                     'Right to Erasure ("Right to be Forgotten"): Request deletion of your account and all associated data',
                     'Right to Data Portability: Request your generated README content in a machine-readable format',
-                    'Right to Withdraw Consent: Revoke GitHub OAuth access at any time from your GitHub Settings â"" Applications',
+                    'Right to Withdraw Consent: Revoke GitHub OAuth access at any time from your GitHub Settings — Applications',
                     'Right to Object: Object to processing of your personal data in certain circumstances',
                 ]} />
                 <p style={{ marginTop: '12px' }}>To exercise any of these rights, contact us at: <a href="mailto:privacy@gittool.dev" style={{ color: '#c9956a' }}>privacy@gittool.dev</a></p>
@@ -220,9 +220,9 @@ export default function PrivacyPolicy() {
                 <p>If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please reach out:</p>
                 <div style={{ marginTop: '12px', padding: '20px', borderRadius: '10px', border: '1px solid var(--border)', background: 'var(--card)' }}>
                     <div style={{ marginBottom: '8px' }}><strong style={{ color: 'var(--foreground)' }}>GitTool</strong></div>
-                    <div>ðŸ"§ Privacy: <a href="mailto:privacy@gittool.dev" style={{ color: '#c9956a' }}>privacy@gittool.dev</a></div>
-                    <div>ðŸ"§ Support: <a href="mailto:support@gittool.dev" style={{ color: '#c9956a' }}>support@gittool.dev</a></div>
-                    <div>ðŸŒ Website: <a href="https://gittool.dev" style={{ color: '#c9956a' }}>gittool.dev</a></div>
+                    <div>🔧 Privacy: <a href="mailto:privacy@gittool.dev" style={{ color: '#c9956a' }}>privacy@gittool.dev</a></div>
+                    <div>🔧 Support: <a href="mailto:support@gittool.dev" style={{ color: '#c9956a' }}>support@gittool.dev</a></div>
+                    <div>🌐 Website: <a href="https://gittool.dev" style={{ color: '#c9956a' }}>gittool.dev</a></div>
                 </div>
             </Section>
 

@@ -36,7 +36,7 @@ export default function TodoToIssue() {
         setCreating((prev: any) => ({ ...prev, [index]: true }));
         try {
             const title = `${todo.type}: ${todo.text.slice(0, 80)}`;
-            const body = `**Found in:** \`${todo.file}\` at line ${todo.line}\n\n**Comment:**\n\`\`\`\n${todo.type}: ${todo.text}\n\`\`\`\n\n*Created by [GitTool](https://gittool.dev) TODO â"" Issue converter.*`;
+            const body = `**Found in:** \`${todo.file}\` at line ${todo.line}\n\n**Comment:**\n\`\`\`\n${todo.type}: ${todo.text}\n\`\`\`\n\n*Created by [GitTool](https://gittool.dev) TODO — Issue converter.*`;
             const labels = todo.type === 'BUG' || todo.type === 'FIXME' ? ['bug'] : ['enhancement'];
             const result = await api.post(`/tools/${o}/${repo.name}/create-issue`, { title, body, labels });
             setCreatedIssues((prev: any) => ({ ...prev, [index]: result }));
@@ -59,18 +59,18 @@ export default function TodoToIssue() {
                         <FileSearch size={18} />
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                        <h2 className="tool-page-title">TODO â"" Issue Converter</h2>
+                        <h2 className="tool-page-title">TODO — Issue Converter</h2>
                     </div>
                 </div>
             </NavbarPortal>
 
             <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
                 <button className="btn-primary" onClick={handleScan} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Scanningâ€¦</> : <><FileSearch size={16} /> Scan Repository</>}
+                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Scanning…</> : <><FileSearch size={16} /> Scan Repository</>}
                 </button>
                 {meta && (
                     <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center' }}>
-                        Scanned {meta.scannedFiles} / {meta.totalFiles} files Â· Found {todos.length} comments
+                        Scanned {meta.scannedFiles} / {meta.totalFiles} files · Found {todos.length} comments
                     </span>
                 )}
             </div>
@@ -129,7 +129,7 @@ export default function TodoToIssue() {
                                                         {creating[i]
                                                             ? <Loader2 size={12} style={{ animation: 'spin 1s linear infinite' }} />
                                                             : <GitBranch size={12} />}
-                                                        {creating[i] ? 'Creatingâ€¦' : 'Create Issue'}
+                                                        {creating[i] ? 'Creating…' : 'Create Issue'}
                                                     </button>
                                                 )}
                                             </td>

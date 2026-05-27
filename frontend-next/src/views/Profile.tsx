@@ -64,7 +64,7 @@ export default function Profile() {
 
     return (
         <div className="mx-auto w-full max-w-5xl space-y-8 pb-12">
-            {/* â"€â"€ Profile Header â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Profile Header ───────────────────────────────────── */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                 <div className="flex items-center gap-6">
                     {avatarUrl ? (
@@ -84,7 +84,7 @@ export default function Profile() {
                             {user?.user_metadata?.user_name ? `@${user.user_metadata.user_name}` : 'Developer'}
                         </p>
                         <p className="mt-2 text-xs font-semibold text-primary/80">
-                            Member since {user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'â€"'}
+                            Member since {user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : '—'}
                         </p>
                     </div>
                 </div>
@@ -94,7 +94,7 @@ export default function Profile() {
                 </div>
             </div>
 
-            {/* â"€â"€ Main Grid â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+            {/* ── Main Grid ────────────────────────────────────────── */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
                 
                 {/* Left Column (Wider) */}
@@ -267,7 +267,7 @@ export default function Profile() {
                                 <div className="flex items-center justify-between p-5">
                                     <div className="flex items-center gap-4">
                                         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-2xl">
-                                            ðŸ™
+                                            🐙
                                         </div>
                                         <div>
                                             <p className="font-bold text-sm">GitHub</p>
@@ -295,7 +295,7 @@ export default function Profile() {
                                 <div className="flex items-center justify-between border-t border-border/50 p-5">
                                     <div className="flex items-center gap-4">
                                         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-2xl">
-                                            ðŸ¦Š
+                                            🦊
                                         </div>
                                         <p className="font-bold text-sm">GitLab</p>
                                     </div>
@@ -308,7 +308,7 @@ export default function Profile() {
                                 <div className="flex items-center justify-between border-t border-border/50 p-5">
                                     <div className="flex items-center gap-4">
                                         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-2xl">
-                                            ðŸª£
+                                            🪣
                                         </div>
                                         <p className="font-bold text-sm">Bitbucket</p>
                                     </div>

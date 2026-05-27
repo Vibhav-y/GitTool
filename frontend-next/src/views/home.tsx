@@ -201,7 +201,7 @@ export default function Home() {
                     <div className="flex items-center gap-3 mb-10 t1">
                         <div className="gold-dot" />
                         <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-                            Git automation platform â€" 30+ tools
+                            Git automation platform — 30+ tools
                         </span>
                     </div>
                     <h1 style={{ fontSize: 'clamp(2.8rem,10vw,8.5rem)', fontWeight: 900, letterSpacing: '-0.045em', lineHeight: 0.92, marginBottom: 32 }} className="t2">
@@ -209,7 +209,7 @@ export default function Home() {
                         <span className="gold-text">automated.</span>
                     </h1>
                     <p className="t3" style={{ fontSize: '1.125rem', color: 'rgba(255,255,255,0.45)', maxWidth: 480, lineHeight: 1.7, marginBottom: 48 }}>
-                        README generation, security scanning, branch analysis â€" all from your browser. No installation required.
+                        README generation, security scanning, branch analysis — all from your browser. No installation required.
                     </p>
                     <div className="flex flex-wrap items-center gap-4 t4">
                         {user ? (
@@ -308,7 +308,7 @@ export default function Home() {
                             <div className="flex-1">
                                 <div className="icon-box mb-6"><BarChart3 size={17} className="text-white/45" /></div>
                                 <h3 style={{ fontSize: '1.35rem', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: 8 }}>Repository Analytics</h3>
-                                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.87rem', lineHeight: 1.65 }}>Commit patterns, contributor velocity, code growth â€" visualized.</p>
+                                <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.87rem', lineHeight: 1.65 }}>Commit patterns, contributor velocity, code growth — visualized.</p>
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, flexShrink: 0 }}>
                                 {[{ n: '1.2K', l: 'commits' }, { n: '87%', l: 'health' }, { n: '24', l: 'contributors' }, { n: '+34%', l: 'growth' }].map(({ n, l }) => (
@@ -334,7 +334,7 @@ export default function Home() {
                         <div style={{ fontSize: '3.2rem', fontWeight: 800, color: '#C9A84C', lineHeight: 1 }}>+24</div>
                         <div>
                             <h3 style={{ fontWeight: 700, marginBottom: 8, fontSize: '0.95rem' }}>More Tools</h3>
-                            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>Gitignore gen, PR simulator, AI triage, branch prunerâ€¦</p>
+                            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.6 }}>Gitignore gen, PR simulator, AI triage, branch pruner…</p>
                         </div>
                     </div>
                 </div>
@@ -401,7 +401,7 @@ export default function Home() {
             <section className="max-w-7xl mx-auto px-6 py-20 border-t border-white/[0.06]">
                 <div className="gold-border-card p-7 sm:p-12 md:p-20">
                     <div style={{ maxWidth: 560 }}>
-                        <div style={{ fontSize: '0.68rem', color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: 16 }}>Get started â€" free</div>
+                        <div style={{ fontSize: '0.68rem', color: '#C9A84C', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: 16 }}>Get started — free</div>
                         <h2 style={{ fontSize: 'clamp(2.6rem,6vw,5.25rem)', fontWeight: 900, letterSpacing: '-0.045em', lineHeight: 0.93, marginBottom: 20 }}>
                             Your repo,<br /><span className="gold-text">supercharged.</span>
                         </h2>

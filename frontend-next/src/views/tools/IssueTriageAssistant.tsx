@@ -49,7 +49,7 @@ export default function IssueTriageAssistant() {
 
             <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
                 <button className="btn-primary" onClick={handleTriage} disabled={loading} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing issuesâ€¦</> : <><Sparkles size={16} /> Triage Issues</>}
+                    {loading ? <><Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> Analyzing issues…</> : <><Sparkles size={16} /> Triage Issues</>}
                 </button>
                 {issues.length > 0 && <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center' }}>Analyzed {issues.length} open issues</span>}
             </div>

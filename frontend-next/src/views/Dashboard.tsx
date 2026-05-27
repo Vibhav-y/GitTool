@@ -12,7 +12,7 @@ import { useRepos, useTokenBalance } from '@/hooks/useQueryHooks';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 import GitBranchGraph from '@/components/GitBranchGraph';
 
-// â"€â"€ Language color map â"€â"€
+// ── Language color map ──
 const LANG_COLORS : Record<string, any> = {
     JavaScript: '#f1e05a', TypeScript: '#3178c6', Python: '#3572A5',
     Java: '#b07219', Go: '#00ADD8', Rust: '#dea584', Ruby: '#701516',
@@ -20,7 +20,7 @@ const LANG_COLORS : Record<string, any> = {
     Shell: '#89e051', PHP: '#4F5D95', Swift: '#F05138', Kotlin: '#A97BFF',
 };
 
-// â"€â"€ Shared card style (depth + border) â"€â"€
+// ── Shared card style (depth + border) ──
 const CARD = "rounded-xl border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-white/[0.01] backdrop-blur-sm shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_10px_25px_rgba(0,0,0,0.35)] transition-all duration-200";
 const CARD_HOVER = `${CARD} hover:border-white/[0.12] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_15px_35px_rgba(0,0,0,0.45)] hover:-translate-y-[3px]`;
 
@@ -41,7 +41,7 @@ export default function Dashboard() {
     const { data: repos = [], isLoading: loadingRepos, error: repoErr } = useRepos();
     const { data: balance = null } = useTokenBalance();
 
-    // â"€â"€ Repo filtering â"® â"€â"€
+    // ── Repo filtering ── ──
     const [repoFilter, setRepoFilter] = useState('all');
 
     const loading = loadingRepos;
@@ -69,19 +69,19 @@ export default function Dashboard() {
 
     const recentlyUpdated = repos.slice(0, 5);
 
-    // â"€â"€ Loading state â"€â"€
+    // ── Loading state ──
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="text-center">
                     <Loader2 size={48} className="text-primary mx-auto" style={{ animation: 'spin 1s linear infinite', marginBottom: 16 }} />
-                    <p className="text-muted-foreground text-sm">Loading your workspaceâ€¦</p>
+                    <p className="text-muted-foreground text-sm">Loading your workspace…</p>
                 </div>
             </div>
         );
     }
 
-    // â"€â"€ Error state â"€â"€
+    // ── Error state ──
     if (error) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
@@ -107,13 +107,13 @@ export default function Dashboard() {
                 noIndex={true}
             />
 
-            {/* â"¬ Subtle background gradient */}
+            {/* ── Subtle background gradient */}
             <div className="pointer-events-none fixed inset-0 z-0"
                  style={{ background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37,99,235,0.08), transparent 60%)' }} />
 
             <div className="relative z-10 flex flex-col gap-8">
 
-                {/* â"â"â" QUICK ACTIONS â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â" */}
+                {/* ────── QUICK ACTIONS ────────────────────────────────────────────────────── */}
                 <div>
                     <div className="mb-3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -124,7 +124,7 @@ export default function Dashboard() {
                             <div className="flex items-center gap-2 text-[13px]">
                                 <Zap size={14} className="text-primary" />
                                 <span className="text-muted-foreground">Credits:</span>
-                                <span className="font-bold">{balance.balance?.toLocaleString() ?? 'â€"'}</span>
+                                <span className="font-bold">{balance.balance?.toLocaleString() ?? '—'}</span>
                             </div>
                         )}
                     </div>
@@ -152,15 +152,15 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* â"â"â" STATS GRID â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â"â" */}
+                {/* ────── STATS GRID ────────────────────────────────────────────────────────── */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     {/* Repo Stats */}
                     <div className={`${CARD} px-4 py-3.5 flex flex-col items-center justify-center text-center`}>
                         <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Total Repos</p>
                         <p className="font-mono text-3xl font-bold leading-none">{repos.length}</p>
                         <div className="mt-2 flex gap-3 text-[11px]">
-                            <span className="text-emerald-400">â" {publicCount} public</span>
-                            <span className="text-amber-400">â" {privateCount} private</span>
+                            <span className="text-emerald-400">─ {publicCount} public</span>
+                            <span className="text-amber-400">─ {privateCount} private</span>
                         </div>
                     </div>
 
@@ -205,17 +205,17 @@ export default function Dashboard() {
                                     className="text-left text-xs font-medium text-primary/80 hover:text-primary transition-colors flex items-center gap-1.5"
                                     onClick={() => router.push(n.route)}
                                 >
-                                    <span className="text-primary/40">â""</span> {n.label}
+                                    <span className="text-primary/40">—</span> {n.label}
                                 </button>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* â"â"â" MAIN CONTENT: Repos (left) + Activity Panel (right) â"â"â" */}
+                {/* ────── MAIN CONTENT: Repos (left) + Activity Panel (right) ────── */}
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
 
-                    {/* â"€â"€ Left: Repositories â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── Left: Repositories ─────────────────── */}
                     <div className="min-w-0">
                         <div className="mb-3 flex items-center justify-between flex-wrap gap-2">
                             <h2 className="text-[15px] font-bold m-0">Your Repositories</h2>
@@ -301,7 +301,7 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    {/* â"€â"€ Right: Activity Panel (sticky) â"€â"€â"€â"€â"€â"€â"€â"€ */}
+                    {/* ── Right: Activity Panel (sticky) ──────── */}
                     <div className="min-w-0">
                         <div className="lg:sticky lg:top-5 flex flex-col gap-4">
 
