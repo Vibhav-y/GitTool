@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import rehypeSlug from 'rehype-slug';
 import { ArrowLeft, Calendar, Clock, Eye } from 'lucide-react';
 import TableOfContents from '@/components/blog/TableOfContents';
 import RelatedPosts from '@/components/blog/RelatedPosts';
@@ -211,7 +212,10 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
               prose-thead:border-border prose-th:text-foreground prose-th:font-semibold prose-th:py-2 prose-th:px-3
               prose-td:py-2 prose-td:px-3 prose-td:border-border
               prose-img:rounded-xl prose-img:border prose-img:border-border">
-              <MDXRemote source={post.rawContent || ''} />
+              <MDXRemote
+                source={post.rawContent || ''}
+                options={{ mdxOptions: { rehypePlugins: [rehypeSlug] } }}
+              />
             </article>
 
             <div className="px-6 md:px-10 pb-20">
