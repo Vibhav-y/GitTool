@@ -182,6 +182,8 @@ export default function Home() {
                     <div className="flex items-center gap-4 sm:gap-8">
                         <a href="#features" className="nav-link text-sm hidden sm:inline">Features</a>
                         <a href="#testimonials" className="nav-link text-sm hidden sm:inline">Reviews</a>
+                        <Link href="/blog" className="nav-link text-sm hidden sm:inline">Blog</Link>
+                        <Link href="/learn" className="nav-link text-sm hidden sm:inline">Learn</Link>
                         {user ? (
                             <Link href="/dashboard" className="flex items-center gap-2 px-4 py-2 border border-white/[0.12] text-sm text-white/55 hover:border-[#C9A84C]/45 hover:text-[#C9A84C] transition-all duration-300">
                                 Dashboard <ArrowUpRight size={13} />
