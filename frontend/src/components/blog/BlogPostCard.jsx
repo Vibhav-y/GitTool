@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Clock, Calendar, ArrowRight } from 'lucide-react';
 
 export default function BlogPostCard({ post }) {
@@ -16,7 +18,7 @@ export default function BlogPostCard({ post }) {
           {(post.categories || []).map((cat) => (
             <Link
               key={cat}
-              to={`/blog/category/${cat}`}
+              href={`/blog/category/${cat}`}
               onClick={(e) => e.stopPropagation()}
               className="inline-flex items-center rounded-full border border-border bg-muted/50 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
             >
@@ -27,7 +29,7 @@ export default function BlogPostCard({ post }) {
 
         {/* Title */}
         <h2 className="text-base font-semibold leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary">
-          <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
         </h2>
 
         {/* Excerpt */}
@@ -50,7 +52,7 @@ export default function BlogPostCard({ post }) {
             )}
           </div>
           <Link
-            to={`/blog/${post.slug}`}
+            href={`/blog/${post.slug}`}
             className="flex items-center gap-1 text-xs font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100"
           >
             Read <ArrowRight size={12} />
@@ -60,3 +62,4 @@ export default function BlogPostCard({ post }) {
     </article>
   );
 }
+

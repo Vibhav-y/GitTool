@@ -1,11 +1,13 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Clock, Calendar } from 'lucide-react';
 
 export default function FeaturedBlogCard({ post, className = '' }) {
   return (
     <Link
-      to={`/blog/${post.slug}`}
+      href={`/blog/${post.slug}`}
       className={`group relative flex flex-col overflow-hidden rounded-2xl border border-white/8 bg-card transition-all duration-300 hover:-translate-y-1 hover:border-white/15 hover:shadow-2xl ${className}`}
     >
       {/* Gradient banner */}
@@ -58,3 +60,4 @@ export default function FeaturedBlogCard({ post, className = '' }) {
     </Link>
   );
 }
+

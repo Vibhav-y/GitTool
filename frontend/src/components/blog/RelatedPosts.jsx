@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 export default function RelatedPosts({ posts }) {
   if (!posts || posts.length === 0) return null;
@@ -23,7 +25,7 @@ export default function RelatedPosts({ posts }) {
         {posts.map((post) => (
           <Link
             key={post.slug}
-            to={`/blog/${post.slug}`}
+            href={`/blog/${post.slug}`}
             className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-200 hover:-translate-y-1 hover:border-white/15 hover:shadow-lg"
           >
             {/* Gradient thumbnail */}
@@ -46,3 +48,4 @@ export default function RelatedPosts({ posts }) {
     </section>
   );
 }
+

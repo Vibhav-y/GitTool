@@ -1,9 +1,11 @@
+'use client';
+
 import api from '../lib/apiClient';
 import { useQuery } from '@tanstack/react-query';
 
 /**
  * Cached hook for the user's GitHub repositories.
- * staleTime: 5 minutes — repos rarely change mid-session.
+ * staleTime: 5 minutes - repos rarely change mid-session.
  */
 export function useRepos() {
     return useQuery({
@@ -35,7 +37,7 @@ export function useBranches(repo) {
 
 /**
  * Cached hook for recent commits of a repo.
- * staleTime: 1 minute — commits change more frequently.
+ * staleTime: 1 minute - commits change more frequently.
  */
 export function useCommits(repo) {
     const owner = repo?.owner?.login || repo?.full_name?.split('/')[0];
@@ -89,7 +91,7 @@ export function useTokenTransactions() {
 }
 
 /**
- * Generic tool data hook — caches per repo + tool endpoint.
+ * Generic tool data hook - caches per repo + tool endpoint.
  * Use for any `/tools/:owner/:repo/:endpoint` call.
  * 
  * Usage: useToolData(repo, 'code-scanning')
@@ -126,4 +128,5 @@ export function useCommitGraph(repo) {
         refetchOnWindowFocus: false,
     });
 }
+
 
