@@ -33,6 +33,7 @@ export const fetchDecryptedToken = async (userId) => {
     if (error || !data) {
         const err = new Error("GitHub account disconnected or token missing. Please reconnect GitHub in your profile to proceed.");
         err.status = 401;
+        err.code = "GITHUB_AUTH";
         throw err;
     }
     try {
@@ -40,6 +41,7 @@ export const fetchDecryptedToken = async (userId) => {
     } catch (decryptErr) {
         const err = new Error("Stored GitHub token is invalid or corrupted. Please reconnect GitHub in your profile to proceed.");
         err.status = 401;
+        err.code = "GITHUB_AUTH";
         throw err;
     }
 };
