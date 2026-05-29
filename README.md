@@ -331,6 +331,6 @@ MIT © [Vibhav Y](https://github.com/Vibhav-y)
 
 <div align="center">
 
-Made by [Vibhav](https://github.com/Vibhav-y) · [gittool.dev](https://gittool.dev) · [linkedin.com/in/vibhav-y](https://linkedin.com/in/vibhav-y)
+Made by [Vibhav](https://github.com/Vibhav-y) · [gittool.dev](https://gittool.dev) · [linkedin.com/in/vibhav-y](https://linkedin.com/in/vibhav-y) · [vibhavy.dev](https://vibhavy.dev/)
 
 </div>
